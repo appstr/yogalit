@@ -1,0 +1,27 @@
+<h1>Teacher Sunday TimeFrame</h1>
+
+  <%= form_tag(@teacher_sunday_time_frame) do %>
+    <%= label_tag :start_time %>
+    <br />
+    <%= text_field_tag :start_time %>
+    <br />
+    <%= label_tag :end_time %>
+    <br />
+    <%= text_field_tag :end_time %>
+    <br />
+    <%= submit_tag "Submit", class:'btn' %>
+  <% end %>
+<br />
+<br />
+
+<h1>Added Time Frames</h1>
+<h4>Time Zone: <%= @teacher[:timezone] %></h4>
+
+  <% @teacher_sunday_time_frames.each do |tf| %>
+    <p>
+      <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+      <-->
+      <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %>
+      <%= link_to "Delete", teacher_sunday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+    </p>
+  <% end %>
