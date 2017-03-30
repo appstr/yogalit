@@ -2,7 +2,7 @@ class YogaType < ActiveRecord::Base
   belongs_to :teacher
 
   ENUMS = {
-    "All"              => 1,
+    "Bikram"           => 1,
     "Ashtanga"         => 2,
     "Beginner Yoga"    => 3,
     "Fusion"           => 4,
@@ -19,6 +19,5 @@ class YogaType < ActiveRecord::Base
     "Yoga for Seniors" => 15,
     "Pilates"          => 16,
     "Iyengar"          => 17,
-    "Bikram"           => 18
   }
 end

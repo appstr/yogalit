@@ -3,6 +3,11 @@ class TeachersController < ApplicationController
 
   def index
     @teacher = Teacher.where(user_id: current_user).first
+    yoga_types = YogaType.where(teacher_id: @teacher)
+    @type_ids = []
+    yoga_types.each do |yt|
+      @type_ids << yt.type_id
+    end
   end
 
   def new
