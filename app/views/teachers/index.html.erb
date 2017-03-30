@@ -52,12 +52,13 @@
   <%= submit_tag "Update", class:'btn' %>
 <% end %>
 
-<h3>Teachers Photos</h3>
+<h3>Add Photo</h3>
 <%= form_for @teacher_image, url: teacher_images_path, html: { multipart: true } do |f| %>
   <%= f.file_field :image %><br />
   <%= f.submit "Submit", class:"btn" %>
 <% end %>
 
+<h3>Added Photos</h3>
 <div class="container">
   <div class="row">
     <% @teacher_images.each do |ti| %>
@@ -68,4 +69,21 @@
     <% end %>
   </div>
 </div>
-<h3>Added Images</h3>
+
+<h3>Add Video</h3>
+<%= form_for @teacher_video, url: teacher_videos_path, html: { multipart: true } do |f| %>
+  <%= f.file_field :video %><br />
+  <%= f.submit "Submit", class:"btn" %>
+<% end %>
+
+<h3>Added Videos</h3>
+<div class="container">
+  <div class="row">
+    <% @teacher_videos.each do |tv| %>
+      <div class="col s6 m6">
+        <%= video_tag(tv.video.url, :size => "320x240", :controls => true, :autobuffer => true) %>
+        <%= link_to "Delete", teacher_video_path(id: tv), data:{confirm: "Are you sure you want to delete this video?"}, method: :delete %>
+      </div>
+    <% end %>
+  </div>
+</div>

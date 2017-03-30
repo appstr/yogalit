@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170330163412) do
+ActiveRecord::Schema.define(version: 20170330185219) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,6 +128,18 @@ ActiveRecord::Schema.define(version: 20170330163412) do
   end
 
   add_index "teacher_tuesday_time_frames", ["teacher_id"], name: "index_teacher_tuesday_time_frames_on_teacher_id", using: :btree
+
+  create_table "teacher_videos", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "video_file_name"
+    t.string   "video_content_type"
+    t.integer  "video_file_size"
+    t.datetime "video_updated_at"
+  end
+
+  add_index "teacher_videos", ["teacher_id"], name: "index_teacher_videos_on_teacher_id", using: :btree
 
   create_table "teacher_wednesday_time_frames", force: :cascade do |t|
     t.integer   "teacher_id"

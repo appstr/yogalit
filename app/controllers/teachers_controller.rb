@@ -3,9 +3,14 @@ class TeachersController < ApplicationController
 
   def index
     @teacher = Teacher.where(user_id: current_user).first
+    # Returns an array of type_ids associated to the Teacher --> @type_ids
     get_teacher_yoga_types
+    # Teacher Images
     @teacher_image = TeacherImage.new
     @teacher_images = TeacherImage.where(teacher_id: @teacher)
+    # Teacher Videos
+    @teacher_video = TeacherVideo.new
+    @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
   end
 
   def new

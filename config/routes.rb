@@ -12,5 +12,6 @@ Rails.application.routes.draw do
   resources :teacher_sunday_time_frames
   resources :yoga_types
   resources :teacher_images
+  resources :teacher_videos
   root to: 'users#index'
 end
