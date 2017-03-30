@@ -16,6 +16,9 @@
 <%= link_to "Saturday", new_teacher_saturday_time_frame_path %><br />
 <%= link_to "Sunday", new_teacher_sunday_time_frame_path %>
 
+<h3>Teacher Holidays</h3>
+<%= link_to "Create/Edit Holiday", new_teacher_holiday_path %>
+
 
 <h3>Yoga Types</h3>
 <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
