@@ -1,6 +1,10 @@
 <h1>Teacher Dashboard</h1>
 
 <h3>Teacher Profile</h3>
+<p>First: <%= @teacher[:first_name] %></p>
+<p>Last: <%= @teacher[:last_name] %></p>
+<p>Phone: <%= @teacher[:phone] %></p>
+<p>Timezone: <%= @teacher[:timezone] %></p>
 <%= link_to "Edit Teacher Profile", edit_teacher_path(@teacher) %>
 
 <h3>Hours of Operation</h3>
