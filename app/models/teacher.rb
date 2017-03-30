@@ -10,5 +10,6 @@ class Teacher < ActiveRecord::Base
   has_many :teacher_friday_time_frames
   has_many :teacher_saturday_time_frames
   has_many :teacher_sunday_time_frames
+  has_many :teacher_images
   has_one :teacher_price_range
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327034443) do
+ActiveRecord::Schema.define(version: 20170330163412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,18 @@ ActiveRecord::Schema.define(version: 20170327034443) do
   end
 
   add_index "teacher_holidays", ["teacher_id"], name: "index_teacher_holidays_on_teacher_id", using: :btree
+
+  create_table "teacher_images", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
+  add_index "teacher_images", ["teacher_id"], name: "index_teacher_images_on_teacher_id", using: :btree
 
   create_table "teacher_monday_time_frames", force: :cascade do |t|
     t.integer   "teacher_id"

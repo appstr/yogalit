@@ -3,11 +3,9 @@ class TeachersController < ApplicationController
 
   def index
     @teacher = Teacher.where(user_id: current_user).first
-    yoga_types = YogaType.where(teacher_id: @teacher)
-    @type_ids = []
-    yoga_types.each do |yt|
-      @type_ids << yt.type_id
-    end
+    get_teacher_yoga_types
+    @teacher_image = TeacherImage.new
+    @teacher_images = TeacherImage.where(teacher_id: @teacher)
   end
 
   def new
@@ -49,4 +47,13 @@ class TeachersController < ApplicationController
   def teacher_params
     params.require(:teacher).permit(:user_id, :first_name, :last_name, :phone, :timezone)
   end
+
+  def get_teacher_yoga_types
+    yoga_types = YogaType.where(teacher_id: @teacher)
+    @type_ids = []
+    yoga_types.each do |yt|
+      @type_ids << yt.type_id
+    end
+  end
+
 end
