@@ -156,8 +156,9 @@ ActiveRecord::Schema.define(version: 20170330185219) do
     t.string   "last_name"
     t.string   "phone"
     t.string   "timezone"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "average_rating", limit: 8
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "teachers", ["user_id"], name: "index_teachers_on_user_id", using: :btree

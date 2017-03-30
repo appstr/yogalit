@@ -6,6 +6,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.string :last_name
       t.string :phone
       t.string :timezone
+      t.bigint :average_rating
       t.timestamps null: false
     end
   end

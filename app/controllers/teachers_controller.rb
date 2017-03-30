@@ -14,12 +14,15 @@ class TeachersController < ApplicationController
   end
 
   def new
+    return redirect_to request.referrer if teacher_exists?
     @teacher = Teacher.new
   end
 
   def create
+    return redirect_to request.referrer if teacher_exists?
     teacher = Teacher.new(teacher_params)
     teacher[:user_id] = current_user[:id]
+    teacher[:average_rating] = 0
     path = teacher.save! ? teachers_path : request.referrer
     return redirect_to path
   end
@@ -50,7 +53,7 @@ class TeachersController < ApplicationController
   private
 
   def teacher_params
-    params.require(:teacher).permit(:user_id, :first_name, :last_name, :phone, :timezone)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone)
   end
 
   def get_teacher_yoga_types
@@ -59,6 +62,10 @@ class TeachersController < ApplicationController
     yoga_types.each do |yt|
       @type_ids << yt.type_id
     end
+  end
+
+  def teacher_exists?
+    return Teacher.where(user_id: current_user).first.nil? ? false : true
   end
 
 end
