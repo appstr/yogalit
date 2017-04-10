@@ -4,13 +4,9 @@ module ApplicationHelper
     return date.strftime("%l:%M%P")
   end
 
-  def sanitize_date_for_view(date)
-    # sanitizes date for view. --> "2017-03-31" formatted to: "03/31/2017"
-    new_date = []
-    split_date = date.to_s.split("-")
-    new_date << split_date[1]
-    new_date << split_date[2]
-    new_date << split_date[0]
-    return new_date.join("/")
+  def sanitize_date_for_view(date_range, timezone)
+    start_date = Time.at(date_range.first).in_time_zone(timezone)
+    end_date = Time.at(date_range.last).in_time_zone(timezone)
+    return "#{start_date} - #{end_date}"
   end
 end

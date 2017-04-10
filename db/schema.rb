@@ -38,11 +38,11 @@ ActiveRecord::Schema.define(version: 20170330185219) do
   add_index "teacher_friday_time_frames", ["teacher_id"], name: "index_teacher_friday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_holidays", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.date     "holiday_date"
-    t.string   "description"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer   "teacher_id"
+    t.int8range "holiday_date_range"
+    t.string    "description"
+    t.datetime  "created_at",         null: false
+    t.datetime  "updated_at",         null: false
   end
 
   add_index "teacher_holidays", ["teacher_id"], name: "index_teacher_holidays_on_teacher_id", using: :btree

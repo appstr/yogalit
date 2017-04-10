@@ -9,9 +9,15 @@ class TeacherHolidaysController < ApplicationController
 
   def create
     teacher = Teacher.where(user_id: current_user).first
-    convert_to_date(teacher)
-    teacher_holiday = TeacherHoliday.new(teacher_holiday_params)
+    Time.zone = teacher[:timezone]
+    holiday_range = params[:teacher_holiday][:holiday_date_range].split(" - ")
+    split_start_date(holiday_range[0])
+    split_end_date(holiday_range[1])
+    params[:teacher_holiday][:holiday_date_range] = (Time.zone.local(@start_year, @start_month, @start_day, 00, 00, 00).to_i..Time.zone.local(@end_year, @end_month, @end_day, 23, 59, 00).to_i)
+    teacher_holiday = TeacherHoliday.new
     teacher_holiday[:teacher_id] = teacher[:id]
+    teacher_holiday[:holiday_date_range] = params[:teacher_holiday][:holiday_date_range]
+    teacher_holiday[:description] = params[:teacher_holiday][:description]
     if teacher_holiday.save!
       flash[:notice] = "Your Holiday was created successfully!"
       path = teachers_path
@@ -27,22 +33,20 @@ class TeacherHolidaysController < ApplicationController
     TeacherHoliday.where(id: params[:id], teacher_id: teacher[:id]).first.delete
     return redirect_to request.referrer
   end
+
   private
 
-  def teacher_holiday_params
-    params.require(:teacher_holiday).permit(:holiday_date, :description)
+  def split_start_date(start_date)
+    split_date = start_date.split("/")
+    @start_year = split_date[2].to_i
+    @start_month = split_date[0].to_i
+    @start_day = split_date[1].to_i
   end
 
-  def convert_to_date(teacher)
-    Time.zone = teacher[:timezone]
-    separate_date
-    params[:teacher_holiday][:holiday_date] = Time.zone.local(@year, @month, @day, 00, 00, 00)
-  end
-
-  def separate_date
-    split_date = params[:teacher_holiday][:holiday_date].split("/")
-    @year = split_date[2].to_i
-    @day = split_date[1].to_i
-    @month = split_date[0].to_i
+  def split_end_date(end_date)
+    split_date = end_date.split("/")
+    @end_year = split_date[2].to_i
+    @end_month = split_date[0].to_i
+    @end_day = split_date[1].to_i
   end
 end
