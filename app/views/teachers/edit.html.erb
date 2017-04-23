@@ -15,5 +15,13 @@
   <small>If TimeZone is changed, your hours of operations will change as well. ex: 9am MT will be 8am PST.</small>
   <br />
   <br />
+  <%= f.label :profile_pic, "Main profile picture" %>
+  <div class="row">
+    <div class="col s12 m2">
+      <%= image_tag @teacher.profile_pic.url %>
+    </div>
+  </div>
+  <%= f.file_field :profile_pic %>
+  <br />
   <%= f.submit "Submit", class:"btn" %>
 <% end %>

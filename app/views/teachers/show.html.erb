@@ -1,0 +1,24 @@
+<h1>Searched Teacher Show Page</h1>
+<br />
+<h4>Teacher Schedule</h4>
+<h5>Teacher Name: <%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
+<h5>Type of Yoga: <%= params[:yoga_type] %></h5>
+<h5>Day: <%= params[:day_of_week] %></h5>
+<h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
+<h5>Time Zone: <%= @student[:timezone] %></h5>
+<h6>Hours of Operation:</h6>
+<% @teacher_time_frames.each do |tf| %>
+  <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])) %> -
+  <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])) %><br />
+<% end %>
+<h6>Available Time Frames:</h6>
+<div class="available-booking-times">
+  <%= select_tag :duration, options_for_select(@filtered_booking_time_options) %>
+</div>
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('select').material_select();
+  });
+</script>

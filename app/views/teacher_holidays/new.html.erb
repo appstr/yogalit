@@ -14,7 +14,7 @@
 
 <h3>Listed Holidays</h3>
 <% @teacher_holidays.each do |holiday| %>
-  <%= sanitize_date_for_view(holiday[:holiday_date_range], @teacher[:timezone]) %><br />
+  <%= sanitize_date_range_for_view(holiday[:holiday_date_range], @teacher[:timezone]) %><br />
   <%= holiday[:description] %><br />
   <%= link_to "Delete", teacher_holiday_path(id: holiday[:id]), data:{confirm: "Are you sure you want to delete this Holiday listed?"}, method: :delete %>
   <br />

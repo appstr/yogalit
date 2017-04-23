@@ -1,12 +1,18 @@
 <h2>Sign up</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.hidden_field :teacher_or_student, value: "teacher" %>
   <%= devise_error_messages! %>
 
   <div class="field">
     <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true %>
+  </div>
+
+  <div class="field">
+      <input name="user[teacher_or_student]" type="radio" id="user_student_radio_btn" value="student" />
+      <label for="user_student_radio_btn">Student</label><br />
+      <input name="user[teacher_or_student]" type="radio" id="user_teacher_radio_btn" value="teacher" />
+      <label for="user_teacher_radio_btn">Teacher</label>
   </div>
 
   <div class="field">

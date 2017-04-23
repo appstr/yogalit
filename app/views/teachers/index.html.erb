@@ -1,6 +1,11 @@
 <h1>Teacher Dashboard</h1>
 
 <h3>Teacher Profile</h3>
+<div class="row">
+  <div class="col s12 m2">
+    <%= image_tag @teacher.profile_pic.url %>
+  </div>
+</div>
 <p>First: <%= @teacher[:first_name] %></p>
 <p>Last: <%= @teacher[:last_name] %></p>
 <p>Phone: <%= @teacher[:phone] %></p>

@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <h1>Student Dashboard</h1>
+
+      <h3>Student Profile</h3>
+      <p>First: <%= @student[:first_name] %></p>
+      <p>Last: <%= @student[:last_name] %></p>
+      <p>Phone: <%= @student[:phone] %></p>
+      <p>Timezone: <%= @student[:timezone] %></p>
+      <%= link_to "Edit Teacher Profile", edit_student_path(@student) %>
+
+      <h3>Search for a Yoga Teacher</h3>
+      <%= render partial: "shared/yoga_teacher_search_form" %>
+    </div>
+  </div>
+</div>

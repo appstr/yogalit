@@ -1,7 +1,6 @@
 class DeviseRegistrationsController < Devise::RegistrationsController
   def create
     params[:user][:email].downcase!
-
     build_resource(sign_up_params)
     resource.save
     yield resource if block_given?

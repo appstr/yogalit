@@ -14,10 +14,10 @@ class YogaType < ActiveRecord::Base
     "Pre/Postnatal"    => 10,
     "Restorative"      => 11,
     "Vinyasa"          => 12,
-    "Yin Yoga"         => 13,
+    "Yin"              => 13,
     "Yoga at Work"     => 14,
     "Yoga for Seniors" => 15,
     "Pilates"          => 16,
-    "Iyengar"          => 17,
+    "Iyengar"          => 17
   }
 end

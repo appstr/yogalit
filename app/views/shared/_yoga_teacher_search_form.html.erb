@@ -1,0 +1,22 @@
+<%= form_tag({controller:"yoga_teacher_searches", action:"search_for_teachers"}, method: :get) do %>
+  <%= label_tag :date %>
+  <%= text_field_tag :date, nil, class:"datepicker", type:"date" %><br />
+  <%= label_tag :type_of_yoga %>
+  <%= select_tag :type_of_yoga, options_for_select(yoga_type_options.sort)%><br />
+  <%= label_tag :duration %>
+  <%= select_tag :duration, options_for_select(yoga_session_duration_options) %>
+  <%= submit_tag "Search", class:"btn" %>
+  <br />
+  <br />
+<% end %>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('select').material_select();
+    $('.datepicker').pickadate({
+      selectMonths: false,
+      selectYears: false,
+      min: new Date()
+    });
+  });
+</script>

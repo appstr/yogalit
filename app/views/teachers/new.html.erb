@@ -17,6 +17,9 @@
   <br />
   <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: "Eastern Time (US & Canada)"}, class:"browser-default" %>
   <br />
+  <%= f.label :profile_pic, "Main profile picture" %>
+  <br />
+  <%= f.file_field :profile_pic %>
   <br />
   <%= f.submit "Submit", class:'btn' %>
 <% end %>
