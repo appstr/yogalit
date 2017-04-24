@@ -52,8 +52,22 @@ class TeachersController < ApplicationController
 
   def show
     @teacher = Teacher.find(params[:id])
-    @teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
     @student = Student.where(user_id: current_user).first
+    duration = get_duration_in_seconds
+    # timezone_difference = student_teacher_timezone_difference
+    @teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
+    available_booking_times = build_teacher_time_frame(duration)
+    extra_booking_times = get_teacher_extra_time_frames_for(params[:day_of_week], duration)
+    available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
+    filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
+    @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
+  end
+
+  def merge_booking_times(available_booking_times, extra_booking_times)
+    return available_booking_times.merge(extra_booking_times)
+  end
+
+  def get_duration_in_seconds
     if params[:duration] == "30"
       duration = 1800
     elsif params[:duration] == "60"
@@ -61,9 +75,7 @@ class TeachersController < ApplicationController
     elsif params[:duration] == "90"
       duration = 5400
     end
-    available_booking_times = build_teacher_time_frame(duration)
-    filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
-    @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
+    return duration
   end
 
   def get_res_filtered_booking_times(available_booking_times, duration)
@@ -131,7 +143,6 @@ class TeachersController < ApplicationController
     return available_times
   end
 
-
   def get_teacher_time_frames_for(day_of_week)
     if day_of_week == "Monday"
       time_frames = TeacherMondayTimeFrame.where(teacher_id: @teacher[:id])
@@ -149,6 +160,87 @@ class TeachersController < ApplicationController
       time_frames = TeacherSundayTimeFrame.where(teacher_id: @teacher[:id])
     end
     return time_frames
+  end
+
+  def get_teacher_extra_time_frames_for(day_of_week, duration)
+    if day_of_week == "Monday"
+        after_time_frames = TeacherTuesdayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherSundayTimeFrame.where(teacher_id: @teacher[:id])
+    elsif day_of_week == "Tuesday"
+        after_time_frames = TeacherWednesdayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherMondayTimeFrame.where(teacher_id: @teacher[:id])
+    elsif day_of_week == "Wednesday"
+        after_time_frames = TeacherThursdayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherTuesdayTimeFrame.where(teacher_id: @teacher[:id])
+    elsif day_of_week == "Thursday"
+        after_time_frames = TeacherFridayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherWednesdayTimeFrame.where(teacher_id: @teacher[:id])
+    elsif day_of_week == "Friday"
+        after_time_frames = TeacherSaturdayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherThursdayTimeFrame.where(teacher_id: @teacher[:id])
+    elsif day_of_week == "Saturday"
+        after_time_frames = TeacherSundayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherFridayTimeFrame.where(teacher_id: @teacher[:id])
+    else
+        after_time_frames = TeacherMondayTimeFrame.where(teacher_id: @teacher[:id])
+        before_time_frames = TeacherSaturdayTimeFrame.where(teacher_id: @teacher[:id])
+    end
+    return nil if (before_time_frames.empty? && after_time_frames.empty?)
+    return build_extra_relevant(before_time_frames, after_time_frames, duration)
+  end
+
+  def build_extra_relevant(before_time_frames, after_time_frames, added_time)
+    available_times = {}
+    if !before_time_frames.empty?
+      before_time_frames.each do |tf|
+        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone]).day
+        teacher_last_day_in_student_tz = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone]).day
+        if teacher_start_day < teacher_last_day_in_student_tz
+          start_time = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])
+          end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
+          end_time += 59 if end_time.strftime("%M").to_i == 59
+          while (start_time.day < teacher_last_day_in_student_tz && start_time < end_time) do
+            start_time = start_time + 1800
+          end
+          while (start_time + added_time <= end_time) do
+            if available_times.empty?
+              available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
+                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+              start_time = (start_time + 1800)
+            elsif (start_time + added_time <= end_time)
+              available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
+                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+              start_time = (start_time + 1800)
+            end # if available_times.empty?
+          end # while loop
+        end # if teacher_start_day < teacher_last_day_in_student_tz
+      end # before_time_frames.each
+    end # if !before_time_frames.empty?
+    if !after_time_frames.empty?
+      after_time_frames.each do |tf|
+        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone]).day
+        teacher_start_day_in_student_tz = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]).day
+        if teacher_start_day > teacher_start_day_in_student_tz
+          start_time = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])
+          end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
+          while (end_time.day > teacher_start_day_in_student_tz && start_time < end_time)
+            end_time = end_time - 1800
+          end
+          while (start_time + added_time <= end_time) do
+            if available_times.empty?
+              available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
+                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+              start_time = (Time.at(start_time).in_time_zone(@student[:timezone]) + 1800)
+            elsif (start_time + added_time <= end_time)
+              available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
+                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+              start_time = (start_time + 1800)
+            end # if available_times.empty?
+          end # while loop
+        end
+      end # after_time_frames.each
+    end # if !after_time_frames.empty?
+    return available_times
   end
 
   private
