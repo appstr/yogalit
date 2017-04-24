@@ -117,7 +117,10 @@ class TeachersController < ApplicationController
     filtered_booking_times.each do |obj|
       formatted_times << [obj[0], obj[1]]
     end
-    return formatted_times
+    sorted_formatted_times = formatted_times.sort_by do |a,b|
+      b.first.strftime("%k%M").to_i
+    end
+    return sorted_formatted_times
   end
 
   def build_teacher_time_frame(added_time)
