@@ -7,13 +7,8 @@
 <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
 <h5>Time Zone: <%= @student[:timezone] %></h5>
 <h5>Duration: <%= params[:duration] %> minutes</h5>
-<h6>Hours of Operation:</h6>
-<% @teacher_time_frames.each do |tf| %>
-  <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])) %> -
-  <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])) %><br />
-<% end %>
 <br />
-<h6>Available Time Frames:</h6>
+<h6>Available Times for Today:</h6>
 <div class="available-booking-times">
   <%= select_tag :duration, options_for_select(@filtered_booking_time_options) %>
 </div>

@@ -54,9 +54,8 @@ class TeachersController < ApplicationController
     @teacher = Teacher.find(params[:id])
     @student = Student.where(user_id: current_user).first
     duration = get_duration_in_seconds
-    # timezone_difference = student_teacher_timezone_difference
-    @teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
-    available_booking_times = build_teacher_time_frame(duration)
+    teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
+    available_booking_times = build_teacher_time_frame(teacher_time_frames, duration)
     extra_booking_times = get_teacher_extra_time_frames_for(params[:day_of_week], duration)
     available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
     filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
@@ -123,12 +122,12 @@ class TeachersController < ApplicationController
     return sorted_formatted_times
   end
 
-  def build_teacher_time_frame(added_time)
+  def build_teacher_time_frame(teacher_time_frames, added_time)
     available_times = {}
     start_time = Date.today
     end_time = Date.today
     Time.zone = @student[:timezone]
-    @teacher_time_frames.each do |tf|
+    teacher_time_frames.each do |tf|
       start_time = (Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]))
       end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
       while (start_time + added_time <= end_time) do
