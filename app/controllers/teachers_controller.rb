@@ -119,7 +119,18 @@ class TeachersController < ApplicationController
     sorted_formatted_times = formatted_times.sort_by do |a,b|
       b.first.strftime("%k%M").to_i
     end
+    return remove_times_before_now(sorted_formatted_times) if Date.parse(params["session_date"]) == Date.today
     return sorted_formatted_times
+  end
+
+  def remove_times_before_now(sorted_formatted_times)
+    new_times = []
+    sorted_formatted_times.each do |obj|
+      if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(@student[:timezone]).strftime("%k%M").to_i)
+        new_times << [obj[0], obj[1]]
+      end
+    end
+    return new_times
   end
 
   def build_teacher_time_frame(teacher_time_frames, added_time)
