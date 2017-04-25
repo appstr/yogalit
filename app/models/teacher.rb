@@ -34,4 +34,49 @@ class Teacher < ActiveRecord::Base
   def self.teacher_exists?(current_user)
     return Teacher.where(user_id: current_user).first.nil? ? false : true
   end
+
+  def self.qualifies_for_search?(current_user)
+    teacher = Teacher.where(user_id: current_user).first
+    teacher_yoga_types = YogaType.where(teacher_id: teacher).first
+    teacher_price_ranges = TeacherPriceRange.where(teacher_id: teacher).first
+    teacher_has_time_frame = check_if_teacher_has_time_frame(teacher)
+    if !teacher_yoga_types.nil? && !teacher_price_ranges.nil? && teacher_has_time_frame
+      teacher[:is_searchable] = true
+      val = true
+    else
+      teacher[:is_searchable] = false
+      val = false
+    end
+    teacher.save!
+    return val
+  end
+
+  def self.check_if_teacher_has_time_frame(teacher)
+    time_frame_found = false
+    while time_frame_found == false
+      if !TeacherMondayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherTuesdayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherWednesdayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherThursdayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherFridayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherSaturdayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      elsif !TeacherSundayTimeFrame.where(teacher_id: teacher).first.nil?
+        time_frame_found = true
+      else
+        break
+      end # if statement
+      break if time_frame_found
+    end # while loop
+    if time_frame_found
+      return true
+    else
+      return false
+    end
+  end
 end

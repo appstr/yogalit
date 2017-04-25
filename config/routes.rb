@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   resources :teacher_images
   resources :teacher_videos
   resources :teacher_holidays
+  resources :payments
+  resources :teacher_price_ranges
   root to: 'users#index'
 
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers

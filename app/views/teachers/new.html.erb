@@ -1,6 +1,7 @@
 <h1>Teacher Continued Registration</h1>
 
 <%= form_for(@teacher) do |f| %>
+  <%= f.hidden_field :is_searchable, value: false %>
   <%= f.label :first_name %>
   <br />
   <%= f.text_field :first_name %>

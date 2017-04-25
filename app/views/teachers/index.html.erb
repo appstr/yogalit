@@ -1,5 +1,9 @@
 <h1>Teacher Dashboard</h1>
-
+<% if @teacher[:is_searchable] %>
+  <h3 style="color:green">Your account is searchable</h3>
+<% else %>
+  <h3 style="color:red">Your account is not yet searchable, please follow the directions below.</h3>
+<% end %>
 <h3>Teacher Profile</h3>
 <div class="row">
   <div class="col s12 m2">
@@ -13,6 +17,10 @@
 <%= link_to "Edit Teacher Profile", edit_teacher_path(@teacher) %>
 
 <h3>Hours of Operation</h3>
+<% if !@teacher[:is_searchable] %>
+  <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+  <br />
+<% end %>
 <%= link_to "Monday", new_teacher_monday_time_frame_path %><br />
 <%= link_to "Tuesday", new_teacher_tuesday_time_frame_path %><br />
 <%= link_to "Wednesday", new_teacher_wednesday_time_frame_path %><br />
@@ -24,8 +32,10 @@
 <h3>Teacher Holidays</h3>
 <%= link_to "Create/Edit Holiday", new_teacher_holiday_path %>
 
-
 <h3>Yoga Types</h3>
+<% if !@teacher[:is_searchable] %>
+  <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+<% end %>
 <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
   <%= check_box_tag :ashtanga, "2", (:checked if @type_ids.include?(2)), name:"yoga_types[ashtanga]" %>
   <%= label_tag :ashtanga %><br />
@@ -99,3 +109,39 @@
     <% end %>
   </div>
 </div>
+
+<h3>Add Session Prices and Tax amount</h3>
+<% if !@teacher[:is_searchable] %>
+  <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+<% end %>
+<%= form_for(@teacher_price_range_form) do |f| %>
+  <%= f.label :thirty_minute_session, "30 Minute Price:" %>
+  <% if !@teacher_price_ranges.nil? %>
+    <%= f.text_field :thirty_minute_session, value: @teacher_price_ranges[:thirty_minute_session] %>
+  <% else %>
+    <%= f.text_field :thirty_minute_session %>
+  <% end %>
+  <br />
+  <%= f.label :sixty_minute_session, "60 Minute Price:" %>
+  <% if !@teacher_price_ranges.nil? %>
+    <%= f.text_field :sixty_minute_session, value: @teacher_price_ranges[:sixty_minute_session] %>
+  <% else %>
+    <%= f.text_field :sixty_minute_session %>
+  <% end %>
+  <br />
+  <%= f.label :ninety_minute_session, "90 Minute Price:" %>
+  <% if !@teacher_price_ranges.nil? %>
+    <%= f.text_field :ninety_minute_session, value: @teacher_price_ranges[:ninety_minute_session] %>
+  <% else %>
+    <%= f.text_field :ninety_minute_session %>
+  <% end %>
+  <br />
+  <%= f.label :sales_tax, "Sales Tax:" %>
+  <% if !@teacher_price_ranges.nil? %>
+    <%= f.text_field :sales_tax, value: @teacher_price_ranges[:sales_tax] %>
+  <% else %>
+    <%= f.text_field :sales_tax %>
+  <% end %>
+  <br />
+  <%= f.submit "Submit", class:"btn" %>
+<% end %>

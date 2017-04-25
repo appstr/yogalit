@@ -8,7 +8,7 @@
       <p>Last: <%= @student[:last_name] %></p>
       <p>Phone: <%= @student[:phone] %></p>
       <p>Timezone: <%= @student[:timezone] %></p>
-      <%= link_to "Edit Teacher Profile", edit_student_path(@student) %>
+      <%= link_to "Edit Student Profile", edit_student_path(@student) %>
 
       <h3>Search for a Yoga Teacher</h3>
       <%= render partial: "shared/yoga_teacher_search_form" %>

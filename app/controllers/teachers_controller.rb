@@ -12,6 +12,8 @@ class TeachersController < ApplicationController
     # Teacher Videos
     @teacher_video = TeacherVideo.new
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
+    @teacher_price_range_form = TeacherPriceRange.new
+    @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
   end
 
   def new
@@ -267,6 +269,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable)
   end
 end

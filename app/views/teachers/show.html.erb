@@ -5,14 +5,15 @@
 <h5>Type of Yoga: <%= params[:yoga_type] %></h5>
 <h5>Day: <%= params[:day_of_week] %></h5>
 <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
-<h5>Time Zone: <%= @student[:timezone] %></h5>
 <h5>Duration: <%= params[:duration] %> minutes</h5>
 <br />
-<h6>Available Times for Today:</h6>
-<div class="available-booking-times">
-  <%= select_tag :duration, options_for_select(@filtered_booking_time_options) %>
-</div>
-
+<%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
+  <%= hidden_field_tag :search_params, nil, value: params.to_json %>
+  <%= label_tag :session_time, "Available Times for this date in #{@student[:timezone]}:" %>
+  <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
+  <br />
+  <%= submit_tag "Select", class:"btn" %>
+<% end %>
 
 <script type="text/javascript">
   $(document).ready(function(){

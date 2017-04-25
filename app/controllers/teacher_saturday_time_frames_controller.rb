@@ -27,6 +27,7 @@ class TeacherSaturdayTimeFramesController < ApplicationController
     teacher_saturday_time_frame[:time_range] = (Time.zone.local(2017, 04, 01, @start_hour, @start_minute, 00)..Time.zone.local(2017, 04, 01, @end_hour, @end_minute, 00))
     teacher_saturday_time_frame[:teacher_id] = teacher[:id]
     if teacher_saturday_time_frame.save!
+      Teacher.qualifies_for_search?(current_user)
       if params[:commit] == "Save and Add Another TimeFrame"
         flash[:notice] = "TimeFrame saved successfully!"
         path = request.referrer
@@ -43,6 +44,7 @@ class TeacherSaturdayTimeFramesController < ApplicationController
 
   def destroy
     TeacherSaturdayTimeFrame.find(params[:id]).delete
+    Teacher.qualifies_for_search?(current_user)
     return redirect_to request.referrer
   end
 

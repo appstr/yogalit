@@ -7,6 +7,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.string :phone
       t.string :timezone
       t.bigint :average_rating
+      t.boolean :is_searchable
       t.timestamps null: false
     end
   end

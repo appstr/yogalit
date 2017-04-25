@@ -80,12 +80,16 @@ ActiveRecord::Schema.define(version: 20170422192733) do
   add_index "teacher_monday_time_frames", ["teacher_id"], name: "index_teacher_monday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_price_ranges", force: :cascade do |t|
+    t.integer  "teacher_id"
     t.float    "thirty_minute_session"
     t.float    "sixty_minute_session"
     t.float    "ninety_minute_session"
+    t.float    "sales_tax"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
   end
+
+  add_index "teacher_price_ranges", ["teacher_id"], name: "index_teacher_price_ranges_on_teacher_id", using: :btree
 
   create_table "teacher_ratings", force: :cascade do |t|
     t.integer  "teacher_id"
@@ -168,6 +172,7 @@ ActiveRecord::Schema.define(version: 20170422192733) do
     t.string   "phone"
     t.string   "timezone"
     t.integer  "average_rating",           limit: 8
+    t.boolean  "is_searchable"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "profile_pic_file_name"
