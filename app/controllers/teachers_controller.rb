@@ -54,7 +54,7 @@ class TeachersController < ApplicationController
 
   def show
     @teacher = Teacher.find(params[:id])
-    @student = Student.where(user_id: current_user).first
+    @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
     duration = get_duration_in_seconds
     teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
     available_booking_times = build_teacher_time_frame(teacher_time_frames, duration)
@@ -91,8 +91,8 @@ class TeachersController < ApplicationController
       available_start = av_bt[1].first
       available_end = av_bt[1].last
       teacher_booked_times.each do |t_bt|
-        booked_start = Time.at(t_bt[:time_range].first).in_time_zone(@student[:timezone])
-        booked_end = Time.at(t_bt[:time_range].last).in_time_zone(@student[:timezone])
+        booked_start = Time.at(t_bt[:time_range].first).in_time_zone(params[:student_timezone])
+        booked_end = Time.at(t_bt[:time_range].last - 1).in_time_zone(params[:student_timezone])
         if ((booked_start).between?(available_start, available_end)) || ((booked_end).between?(available_start, available_end))
           if booked_start != available_end && available_start != booked_end
             if !filtered_times[("#{sanitize_date_for_time_only(available_start)} - #{sanitize_date_for_time_only(available_end)}")].nil?
@@ -128,7 +128,7 @@ class TeachersController < ApplicationController
   def remove_times_before_now(sorted_formatted_times)
     new_times = []
     sorted_formatted_times.each do |obj|
-      if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(@student[:timezone]).strftime("%k%M").to_i)
+      if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i)
         new_times << [obj[0], obj[1]]
       end
     end
@@ -139,18 +139,18 @@ class TeachersController < ApplicationController
     available_times = {}
     start_time = Date.today
     end_time = Date.today
-    Time.zone = @student[:timezone]
+    Time.zone = params[:student_timezone]
     teacher_time_frames.each do |tf|
-      start_time = (Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]))
-      end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
+      start_time = (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]))
+      end_time = Time.at(tf[:time_range].last).in_time_zone(params[:student_timezone])
       while (start_time + added_time <= end_time) do
         if available_times.empty?
           available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                          (Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])..(Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]) + added_time))
-          start_time = (Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]) + 1800)
+                          (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone])..(Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]) + added_time))
+          start_time = (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]) + 1800)
         elsif (start_time + added_time <= end_time)
           available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                          (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+                          (Time.at(start_time).in_time_zone(params[:student_timezone])..(Time.at(start_time).in_time_zone(params[:student_timezone]) + added_time))
           start_time = (start_time + 1800)
         end
       end
@@ -208,11 +208,11 @@ class TeachersController < ApplicationController
     available_times = {}
     if !before_time_frames.empty?
       before_time_frames.each do |tf|
-        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone]).day
-        teacher_last_day_in_student_tz = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone]).day
+        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(params[:teacher_timezone]).day
+        teacher_last_day_in_student_tz = Time.at(tf[:time_range].last).in_time_zone(params[:student_timezone]).day
         if teacher_start_day < teacher_last_day_in_student_tz
-          start_time = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])
-          end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
+          start_time = Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone])
+          end_time = Time.at(tf[:time_range].last).in_time_zone(params[:student_timezone])
           end_time += 59 if end_time.strftime("%M").to_i == 59
           while (start_time.day < teacher_last_day_in_student_tz && start_time < end_time) do
             start_time = start_time + 1800
@@ -220,11 +220,11 @@ class TeachersController < ApplicationController
           while (start_time + added_time <= end_time) do
             if available_times.empty?
               available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+                              (Time.at(start_time).in_time_zone(params[:student_timezone])..(Time.at(start_time).in_time_zone(params[:student_timezone]) + added_time))
               start_time = (start_time + 1800)
             elsif (start_time + added_time <= end_time)
               available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+                              (Time.at(start_time).in_time_zone(params[:student_timezone])..(Time.at(start_time).in_time_zone(params[:student_timezone]) + added_time))
               start_time = (start_time + 1800)
             end # if available_times.empty?
           end # while loop
@@ -233,22 +233,22 @@ class TeachersController < ApplicationController
     end # if !before_time_frames.empty?
     if !after_time_frames.empty?
       after_time_frames.each do |tf|
-        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone]).day
-        teacher_start_day_in_student_tz = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone]).day
+        teacher_start_day = Time.at(tf[:time_range].first).in_time_zone(params[:teacher_timezone]).day
+        teacher_start_day_in_student_tz = Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]).day
         if teacher_start_day > teacher_start_day_in_student_tz
-          start_time = Time.at(tf[:time_range].first).in_time_zone(@student[:timezone])
-          end_time = Time.at(tf[:time_range].last).in_time_zone(@student[:timezone])
+          start_time = Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone])
+          end_time = Time.at(tf[:time_range].last).in_time_zone(params[:student_timezone])
           while (end_time.day > teacher_start_day_in_student_tz && start_time < end_time)
             end_time = end_time - 1800
           end
           while (start_time + added_time <= end_time) do
             if available_times.empty?
               available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
-              start_time = (Time.at(start_time).in_time_zone(@student[:timezone]) + 1800)
+                              (Time.at(start_time).in_time_zone(params[:student_timezone])..(Time.at(start_time).in_time_zone(params[:student_timezone]) + added_time))
+              start_time = (Time.at(start_time).in_time_zone(params[:student_timezone]) + 1800)
             elsif (start_time + added_time <= end_time)
               available_times[("#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + added_time)}")] =
-                              (Time.at(start_time).in_time_zone(@student[:timezone])..(Time.at(start_time).in_time_zone(@student[:timezone]) + added_time))
+                              (Time.at(start_time).in_time_zone(params[:student_timezone])..(Time.at(start_time).in_time_zone(params[:student_timezone]) + added_time))
               start_time = (start_time + 1800)
             end # if available_times.empty?
           end # while loop
@@ -258,8 +258,6 @@ class TeachersController < ApplicationController
     return available_times
   end
 
-  private
-
   def get_teacher_yoga_types
     yoga_types = YogaType.where(teacher_id: @teacher)
     @type_ids = []
@@ -267,6 +265,8 @@ class TeachersController < ApplicationController
       @type_ids << yt.type_id
     end
   end
+
+  private
 
   def teacher_params
     params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable)

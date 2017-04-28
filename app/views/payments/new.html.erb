@@ -1,1 +1,36 @@
 <h1>New Payment</h1>
+
+<h5>Teacher Name: <%= "#{@teacher[:first_name].capitalize} #{@teacher[:last_name].capitalize}" %></h5>
+<h5>Session Date: <%= "#{@search_params["day_of_week"]}, #{sanitize_date_for_view(@search_params["session_date"])}" %></h5>
+<h5>Session Time: <%= "#{sanitize_date_for_time_only(@session_time.first)}-#{sanitize_date_for_time_only(@session_time.last)}, #{@search_params["student_timezone"]}" %></h5>
+<h5>Session Duration: <%= @search_params["duration"] %> minutes</h5>
+<h5>Type of Yoga: <%= @search_params["yoga_type"] %></h5>
+<h5>Sales Price: $<%= @price_without_tax %></h5>
+<h5>Sales Tax: <%= @sales_tax %>%</h5>
+<h5>Total Price: $<%= @total_price %></h5>
+<br />
+<br />
+<br />
+
+<h3>Payment</h3>
+<%= form_tag({controller:"payments", action:"create"}) do %>
+  <%= hidden_field_tag :search_params, nil, value: @search_params.to_json %>
+  <%= hidden_field_tag :session_time, nil, value: ((@session_time.first)..(@session_time.last)) %>
+  <%= hidden_field_tag :price_without_tax, nil, value: @price_without_tax %>
+  <%= hidden_field_tag :sales_tax, nil, value: @sales_tax %>
+  <%= hidden_field_tag :total_price, nil, value: @total_price %>
+  <%= label_tag :cc_first_name, "First name on CC" %>
+  <%= text_field_tag :cc_first_name %>
+  <%= label_tag :cc_last_name, "Last name on CC" %>
+  <%= text_field_tag :cc_last_name %>
+  <%= label_tag :cc_number, "CC number" %>
+  <%= text_field_tag :cc_number %>
+  <%= label_tag :month, "CC month expiration" %>
+  <%= text_field_tag :month %>
+  <%= label_tag :year, "CC year expiration" %>
+  <%= text_field_tag :year %>
+  <%= label_tag :verification_value, "CC verification_value expiration" %>
+  <%= text_field_tag :verification_value %>
+  <br />
+  <%= submit_tag "Pay Now", class:"btn" %>
+<% end %>

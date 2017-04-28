@@ -3,7 +3,7 @@
 <div class="row center-align">
   <% @yoga_teachers.each do |yt| %>
     <div class="col s12 m3">
-      <%= link_to(teacher_path(id: yt, day_of_week: @day_of_week, session_date: @session_date, yoga_type: @yoga_type, duration: @duration)) do %>
+      <%= link_to(teacher_path(id: yt, day_of_week: @day_of_week, session_date: @session_date, yoga_type: @yoga_type, duration: @duration, student_timezone: @student_timezone, teacher_timezone: yt[:timezone])) do %>
         <%= image_tag yt.profile_pic.url %><br />
         <%= yt[:first_name].capitalize %>
         <%= yt[:last_name].capitalize %><br />

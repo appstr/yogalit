@@ -1,4 +1,5 @@
 class StudentsController < ApplicationController
+  before_action :authenticate_user!
   def new
     @student = Student.new
     return redirect_to students_path if Student.student_exists?(current_user)
@@ -30,7 +31,6 @@ class StudentsController < ApplicationController
     student[:first_name] = params[:student][:first_name].downcase
     student[:last_name] = params[:student][:last_name].downcase
     student[:phone] = params[:student][:phone]
-    student[:timezone] = params[:student][:timezone]
     if student.save!
       flash[:notice] = "Your profile info was update successfully!"
       path = students_path
@@ -44,6 +44,6 @@ class StudentsController < ApplicationController
   private
 
   def student_params
-    params.require(:student).permit(:user_id, :first_name, :last_name, :phone, :timezone)
+    params.require(:student).permit(:user_id, :first_name, :last_name, :phone)
   end
 end

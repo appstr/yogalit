@@ -1,4 +1,5 @@
 class TeacherImagesController < ApplicationController
+  before_action :authenticate_user!
   def create
     teacher_image = TeacherImage.new(teacher_image_params)
     teacher_image[:teacher_id] = Teacher.where(user_id: current_user).first.id

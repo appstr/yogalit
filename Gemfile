@@ -14,6 +14,8 @@ gem 'paperclip-ffmpeg'
 gem 'figaro'
 gem 'aws-sdk'
 gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'activemerchant'
+gem 'opentok', '~> 2.3'
 
 # Font
 # gem 'materialize-sass'

@@ -23,6 +23,11 @@ GEM
     activejob (4.2.6)
       activesupport (= 4.2.6)
       globalid (>= 0.3.0)
+    activemerchant (1.61.0)
+      activesupport (>= 3.2.14, < 5.1)
+      builder (>= 2.1.2, < 4.0.0)
+      i18n (>= 0.6.9)
+      nokogiri (~> 1.4)
     activemodel (4.2.6)
       activesupport (= 4.2.6)
       builder (~> 3.1)
@@ -36,6 +41,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.5.1)
+      public_suffix (~> 2.0, >= 2.0.2)
     arel (6.0.4)
     aws-sdk (2.7.0)
       aws-sdk-resources (= 2.7.0)
@@ -77,6 +84,9 @@ GEM
       thor (~> 0.14)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
+    httparty (0.13.7)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.8.0)
     jbuilder (2.6.1)
       activesupport (>= 3.0.0, < 5.1)
@@ -100,8 +110,13 @@ GEM
     mini_portile2 (2.1.0)
     minitest (5.10.1)
     multi_json (1.12.1)
+    multi_xml (0.6.0)
     nokogiri (1.7.0.1)
       mini_portile2 (~> 2.1.0)
+    opentok (2.3.4)
+      activesupport (>= 2.0)
+      addressable (~> 2.3)
+      httparty (~> 0.13.1)
     orm_adapter (0.5.0)
     paperclip (5.0.0)
       activemodel (>= 4.2.0)
@@ -125,6 +140,7 @@ GEM
     pry-stack_explorer (0.4.9.2)
       binding_of_caller (>= 0.7)
       pry (>= 0.9.11)
+    public_suffix (2.0.5)
     rack (1.6.5)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -202,6 +218,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activemerchant
   aws-sdk
   byebug
   coffee-rails (~> 4.1.0)
@@ -209,6 +226,7 @@ DEPENDENCIES
   figaro
   jbuilder (~> 2.0)
   jquery-rails
+  opentok (~> 2.3)
   paperclip (~> 5.0.0)
   paperclip-ffmpeg
   pg (~> 0.15)

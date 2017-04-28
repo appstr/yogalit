@@ -1,10 +1,12 @@
 class YogaTeacherSearchesController < ApplicationController
+  before_action :authenticate_user!
   def search_for_teachers
     yoga_teacher_ids = yoga_teacher_ids_matching_yoga_type
     int_search_date = format_search_date_to_int
     yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, int_search_date)
     @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
     @duration = params[:duration]
+    @student_timezone = params["student_timezone"]["time_zone"]
     @session_date = Time.new(@year, @month, @day)
     @day_of_week = @session_date.strftime("%A")
     yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)

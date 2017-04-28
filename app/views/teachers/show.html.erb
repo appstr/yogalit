@@ -6,10 +6,14 @@
 <h5>Day: <%= params[:day_of_week] %></h5>
 <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
 <h5>Duration: <%= params[:duration] %> minutes</h5>
+<h5>Pricing:</h5>
+<h6>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></h6>
+<h6>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></h6>
+<h6>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></h6>
 <br />
 <%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
   <%= hidden_field_tag :search_params, nil, value: params.to_json %>
-  <%= label_tag :session_time, "Available Times for this date in #{@student[:timezone]}:" %>
+  <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
   <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
   <br />
   <%= submit_tag "Select", class:"btn" %>
