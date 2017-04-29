@@ -14,6 +14,7 @@ class TeachersController < ApplicationController
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
     @teacher_price_range_form = TeacherPriceRange.new
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
+    @upcoming_yoga_sessions = get_upcoming_yoga_sessions
   end
 
   def new
@@ -267,6 +268,37 @@ class TeachersController < ApplicationController
   end
 
   private
+
+  def get_upcoming_yoga_sessions
+    upcoming_yoga_sessions = {}
+    next_booked_times = TeacherBookedTime.where("session_date >= ?", Date.today).where(teacher_id: @teacher).limit(15).order(session_date: :asc)
+    if next_booked_times.empty?
+      return "no-upcoming-sessions"
+    else
+      counter = 1
+      next_booked_times.each do |bt|
+        yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
+        student = Student.find(yoga_session[:student_id])
+        date = sanitize_date_for_view(bt[:session_date].to_s)
+        day_of_week = bt[:session_date].strftime("%A")
+        time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
+        split_time_range = time_range.split(" - ")
+        start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone]))
+        end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:teacher_timezone]))
+        upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = student[:first_name]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = student[:last_name]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = day_of_week
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:teacher_timezone]
+        counter += 1
+      end
+      return upcoming_yoga_sessions
+    end
+  end
 
   def teacher_params
     params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable)

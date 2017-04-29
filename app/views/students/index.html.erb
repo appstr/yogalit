@@ -1,3 +1,22 @@
+<style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      text-align: center;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+</style>
+
 <div class="container">
   <div class="row">
     <div class="col s12">
@@ -11,6 +30,30 @@
 
       <h3>Search for a Yoga Teacher</h3>
       <%= render partial: "shared/yoga_teacher_search_form" %>
+      <br />
+      <h3>Upcoming YogaSessions</h3>
+      <table>
+        <tr>
+          <th>Teacher Name</th>
+          <th>Date</th>
+          <th>Day Of Week</th>
+          <th>Time Frame</th>
+          <th>Duration</th>
+          <th>Time Zone</th>
+          <th></th>
+        </tr>
+        <% @upcoming_yoga_sessions.each do |k, v| %>
+          <tr>
+            <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+            <td><%= v["date"] %></td>
+            <td><%= v["day_of_week"] %></td>
+            <td><%= v["time_range"] %></td>
+            <td><%= v["duration"] %> min</td>
+            <td><%= v["timezone"] %></td>
+            <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
+          </tr>
+        <% end %>
+      </table>
     </div>
   </div>
 </div>

@@ -1,5 +1,7 @@
 class StudentsController < ApplicationController
   before_action :authenticate_user!
+  include ApplicationHelper
+
   def new
     @student = Student.new
     return redirect_to students_path if Student.student_exists?(current_user)
@@ -20,6 +22,38 @@ class StudentsController < ApplicationController
 
   def index
     @student = Student.where(user_id: current_user).first
+    @upcoming_yoga_sessions = get_upcoming_yoga_sessions
+  end
+
+  def get_upcoming_yoga_sessions
+    upcoming_yoga_sessions = {}
+    next_booked_times = TeacherBookedTime.where("session_date >= ?", Date.today).where(student_id: @student).limit(15).order(session_date: :asc)
+    if next_booked_times.empty?
+      return "no-upcoming-sessions"
+    else
+      counter = 1
+      next_booked_times.each do |bt|
+        yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
+        teacher = Teacher.find(yoga_session[:teacher_id])
+        date = sanitize_date_for_view(bt[:session_date].to_s)
+        day_of_week = bt[:session_date].strftime("%A")
+        time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
+        split_time_range = time_range.split(" - ")
+        start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:student_timezone]))
+        end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:student_timezone]))
+        upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = day_of_week
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
+        counter += 1
+      end
+      return upcoming_yoga_sessions
+    end
   end
 
   def edit

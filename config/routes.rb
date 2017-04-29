@@ -20,4 +20,5 @@ Rails.application.routes.draw do
   root to: 'users#index'
 
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers
+  get '/live_yoga_session', to: 'yoga_sessions#live_yoga_session', as: :live_yoga_session
 end
