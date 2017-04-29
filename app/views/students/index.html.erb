@@ -32,28 +32,32 @@
       <%= render partial: "shared/yoga_teacher_search_form" %>
       <br />
       <h3>Upcoming YogaSessions</h3>
-      <table>
-        <tr>
-          <th>Teacher Name</th>
-          <th>Date</th>
-          <th>Day Of Week</th>
-          <th>Time Frame</th>
-          <th>Duration</th>
-          <th>Time Zone</th>
-          <th></th>
-        </tr>
-        <% @upcoming_yoga_sessions.each do |k, v| %>
+      <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+        <h5>No upcoming Yoga-Sessions</h5>
+      <% else %>
+        <table>
           <tr>
-            <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
-            <td><%= v["date"] %></td>
-            <td><%= v["day_of_week"] %></td>
-            <td><%= v["time_range"] %></td>
-            <td><%= v["duration"] %> min</td>
-            <td><%= v["timezone"] %></td>
-            <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
+            <th>Teacher's Name</th>
+            <th>Date</th>
+            <th>Day Of Week</th>
+            <th>Time Frame</th>
+            <th>Duration</th>
+            <th>Time Zone</th>
+            <th></th>
           </tr>
-        <% end %>
-      </table>
+          <% @upcoming_yoga_sessions.each do |k, v| %>
+            <tr>
+              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+              <td><%= v["date"] %></td>
+              <td><%= v["day_of_week"] %></td>
+              <td><%= v["time_range"] %></td>
+              <td><%= v["duration"] %> min</td>
+              <td><%= v["timezone"] %></td>
+              <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
     </div>
   </div>
 </div>
