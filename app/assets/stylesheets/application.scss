@@ -1,4 +1,11 @@
-// @import "materialize";
+// Import all .scss files
+@import "devise_sessions";
+@import "devise_registrations";
+@import "header";
+@import "mixins";
+
+// Google Fonts
+@import url('https://fonts.googleapis.com/css?family=Eagle+Lake');
 
 video, img {
   width: 100%;

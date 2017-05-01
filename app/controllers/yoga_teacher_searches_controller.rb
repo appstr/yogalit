@@ -13,7 +13,6 @@ class YogaTeacherSearchesController < ApplicationController
     @yoga_teachers = get_filtered_teachers(yoga_teacher_ids)
   end
 
-  private
 
   def get_filtered_teachers(yoga_teacher_ids)
     yoga_teachers = []

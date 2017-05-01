@@ -39,6 +39,7 @@ class PaymentsController < ApplicationController
             yoga_session[:transaction_id] = transaction_id
             if yoga_session.save!
               flash[:notice] = "Your Yoga Session was booked successfully!"
+              create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
               return redirect_to payment_path(id: yoga_session)
             else
               flash[:notice] = "Yoga Session did not save."
@@ -69,13 +70,13 @@ class PaymentsController < ApplicationController
 
   private
 
-  def create_yoga_session
-    yoga_session = YogaSession.new
-    yoga_session[:payment_id] = @payment[:id]
-    yoga_session[:teacher_id] = @teacher[:id]
-    yoga_session[:student_id] = @student[:id]
-    yoga_session[:teacher_booked_time_id] = @booked_time[:id]
-    yoga_session[:opentok_session_id] = @opentok_session_id
+  def create_favorite_teacher_for_student(teacher_id, student_id)
+    if FavoriteTeacher.where(student_id: student_id, teacher_id: teacher_id).first.nil?
+      favorite_teacher = FavoriteTeacher.new
+      favorite_teacher[:student_id] = student_id
+      favorite_teacher[:teacher_id] = teacher_id
+      favorite_teacher.save!
+    end
   end
 
   def create_teacher_booked_time

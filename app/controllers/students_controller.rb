@@ -23,6 +23,16 @@ class StudentsController < ApplicationController
   def index
     @student = Student.where(user_id: current_user).first
     @upcoming_yoga_sessions = get_upcoming_yoga_sessions
+    @favorite_teachers = get_favorite_teachers
+  end
+
+  def get_favorite_teachers
+    teachers = []
+    favorite_teachers = FavoriteTeacher.where(student_id: @student)
+    favorite_teachers.each do |ft|
+      teachers << Teacher.find(ft[:teacher_id])
+    end
+    return teachers
   end
 
   def get_upcoming_yoga_sessions
@@ -38,9 +48,13 @@ class StudentsController < ApplicationController
         date = sanitize_date_for_view(bt[:session_date].to_s)
         day_of_week = bt[:session_date].strftime("%A")
         time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
+        split_date = bt[:session_date].to_s.split("-")
+        Time.zone = bt[:student_timezone]
         split_time_range = time_range.split(" - ")
         start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:student_timezone]))
         end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:student_timezone]))
+        timestamp_time = Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone])
+        timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
         upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
         upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
@@ -50,9 +64,10 @@ class StudentsController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["timestamp"] = timestamp
         counter += 1
       end
-      return upcoming_yoga_sessions
+      return sorted = upcoming_yoga_sessions.sort_by{|k, v| v["timestamp"]}
     end
   end
 

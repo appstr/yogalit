@@ -1,23 +1,31 @@
-<h1>Searched Teacher Show Page</h1>
-<br />
-<h4>Teacher Schedule</h4>
-<h5>Teacher Name: <%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
-<h5>Type of Yoga: <%= params[:yoga_type] %></h5>
-<h5>Day: <%= params[:day_of_week] %></h5>
-<h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
-<h5>Duration: <%= params[:duration] %> minutes</h5>
-<h5>Pricing:</h5>
-<h6>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></h6>
-<h6>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></h6>
-<h6>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></h6>
-<br />
-<%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
-  <%= hidden_field_tag :search_params, nil, value: params.to_json %>
-  <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
-  <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
-  <br />
-  <%= submit_tag "Select", class:"btn" %>
-<% end %>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br>
+      <h1>Searched Teacher Show Page</h1>
+      <br />
+      <h4>Teacher Schedule</h4>
+      <h5>Teacher Name: <%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
+      <h5>Type of Yoga: <%= params[:yoga_type] %></h5>
+      <h5>Day: <%= params[:day_of_week] %></h5>
+      <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
+      <h5>Duration: <%= params[:duration] %> minutes</h5>
+      <h5>Pricing:</h5>
+      <h6>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></h6>
+      <h6>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></h6>
+      <h6>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></h6>
+      <br />
+      <%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
+        <%= hidden_field_tag :search_params, nil, value: params.to_json %>
+        <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
+        <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
+        <br />
+        <%= submit_tag "Select", class:"btn" %>
+      <% end %>
+
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
   $(document).ready(function(){

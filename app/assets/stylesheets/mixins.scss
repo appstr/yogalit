@@ -1,0 +1,7 @@
+@mixin backgroundShorthand($imgpath,$position:0 0,$repeat: no-repeat) {
+    background: transparent url(#{$imgpath}) $repeat $position;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}

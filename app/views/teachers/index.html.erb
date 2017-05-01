@@ -19,6 +19,7 @@
 <div class="container">
   <div class="row">
     <div class="col s12">
+      <br />
       <h1>Teacher Dashboard</h1>
       <% if @teacher[:is_searchable] %>
         <h3 style="color:green">Your account is searchable</h3>
@@ -35,7 +36,8 @@
       <p>Last: <%= @teacher[:last_name] %></p>
       <p>Phone: <%= @teacher[:phone] %></p>
       <p>Timezone: <%= @teacher[:timezone] %></p>
-      <%= link_to "Edit Teacher Profile", edit_teacher_path(@teacher) %>
+      <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
+      <%= link_to "Edit Sign-In", edit_user_registration_path %>
 
       <h3>Hours of Operation</h3>
       <% if !@teacher[:is_searchable] %>

@@ -6,6 +6,7 @@
 
 <!-- Compiled and minified JavaScript -->
   <title>Yogalit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
@@ -21,9 +22,19 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <%= link_to "Home", '/' %><br />
-  <%= link_to "Back", :back %><br />
-  <%= link_to('Logout', destroy_user_session_path, :method => :delete) if user_signed_in? %>
+  <div id="nav_bar" class="container-fluid">
+    <div class="row">
+      <div class="col s6">
+        <h6>Yogalit</h6>
+      </div>
+      <div class="col s6">
+        <div class="header-links">
+          <%= link_to "Home", '/' %>
+          <%= link_to('Logout', destroy_user_session_path, :method => :delete) if user_signed_in? %>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 <%= yield %>

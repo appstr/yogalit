@@ -1,15 +1,22 @@
-<h1>Student Edit Profile</h1>
+<div class="container">]
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Student Edit Profile</h1>
 
-<%= form_for(@student) do |f| %>
-  <%= f.label :first_name %>
-  <%= f.text_field :first_name %>
-  <br />
-  <%= f.label :last_name %>
-  <%= f.text_field :last_name %>
-  <br />
-  <%= f.label :phone %>
-  <%= f.text_field :phone %>
-  <br />
-  <br />
-  <%= f.submit "Submit", class:"btn" %>
-<% end %>
+      <%= form_for(@student) do |f| %>
+        <%= f.label :first_name %>
+        <%= f.text_field :first_name %>
+        <br />
+        <%= f.label :last_name %>
+        <%= f.text_field :last_name %>
+        <br />
+        <%= f.label :phone %>
+        <%= f.text_field :phone %>
+        <br />
+        <br />
+        <%= f.submit "Submit", class:"btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>

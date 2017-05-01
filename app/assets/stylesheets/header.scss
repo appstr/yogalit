@@ -1,0 +1,19 @@
+#nav_bar {
+  position: fixed;
+  width: 100%;
+  background-color: green;
+
+  h6{
+    font-family: 'Eagle Lake', cursive;
+    font-size: 25px;
+    margin-bottom: -0.5em;
+    color: white;
+    padding-top: 0.1em;
+    padding-bottom: 0.2em;
+  }
+
+  .header-links{
+    text-align: right;
+    word-spacing: 1em;
+  }
+}

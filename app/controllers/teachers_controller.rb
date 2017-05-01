@@ -54,6 +54,19 @@ class TeachersController < ApplicationController
   end
 
   def show
+    if params[:from_teacher_profile]
+      build_params_from_teacher_profile
+      not_on_holiday_ids = YogaTeacherSearchesController.new.yoga_teachers_not_on_holiday([params[:id]], Time.parse(params[:session_date]).to_i)
+      if not_on_holiday_ids.empty?
+        flash[:notice] = "Teacher is on Holiday for this date."
+        return false
+      end
+      available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids)
+      if available_on_day_of_week.empty?
+        flash[:notice] = "Teacher is not available on #{params[:day_of_week]}'s."
+        return false
+      end
+    end
     @teacher = Teacher.find(params[:id])
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
     duration = get_duration_in_seconds
@@ -63,6 +76,27 @@ class TeachersController < ApplicationController
     available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
     filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
     @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
+  end
+
+  def teacher_profile
+    @teacher = Teacher.find(params[:id])
+    @teacher_available_yoga_types = get_teacher_available_yoga_types
+  end
+
+  def get_teacher_available_yoga_types
+    available_types = []
+    yoga_types = YogaType.where(teacher_id: @teacher)
+    yoga_types.each do |yt|
+      available_types << [YogaType::ENUMS.key(yt[:type_id]), yt[:type_id]]
+    end
+    return available_types
+  end
+
+  def build_params_from_teacher_profile
+    params[:day_of_week] = Date.parse(params[:session_date]).strftime("%A")
+    params[:student_timezone] = params[:student_timezone].first
+    params[:session_date] = Date.parse(params[:session_date]).to_time.to_s
+    params[:yoga_type] = YogaType::ENUMS.key(params[:yoga_type].to_i)
   end
 
   def merge_booking_times(available_booking_times, extra_booking_times)
@@ -128,18 +162,21 @@ class TeachersController < ApplicationController
 
   def remove_times_before_now(sorted_formatted_times)
     new_times = []
+    new_times_true = false
     sorted_formatted_times.each do |obj|
-      if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i)
-        new_times << [obj[0], obj[1]]
+      if Time.now.in_time_zone(params[:student_timezone]) >= Date.parse(params[:session_date]).in_time_zone("Hawaii")
+        new_times_true = true
+        if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i)
+          new_times << [obj[0], obj[1]]
+        end
       end
     end
-    return new_times
+    return new_times if new_times_true
+    return sorted_formatted_times
   end
 
   def build_teacher_time_frame(teacher_time_frames, added_time)
     available_times = {}
-    start_time = Date.today
-    end_time = Date.today
     Time.zone = params[:student_timezone]
     teacher_time_frames.each do |tf|
       start_time = (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]))
@@ -281,10 +318,14 @@ class TeachersController < ApplicationController
         student = Student.find(yoga_session[:student_id])
         date = sanitize_date_for_view(bt[:session_date].to_s)
         day_of_week = bt[:session_date].strftime("%A")
+        split_date = bt[:session_date].to_s.split("-")
+        Time.zone = bt[:teacher_timezone]
         time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
         split_time_range = time_range.split(" - ")
         start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone]))
         end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:teacher_timezone]))
+        timestamp_time = Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone])
+        timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
         upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
         upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = student[:first_name]
@@ -294,9 +335,10 @@ class TeachersController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:teacher_timezone]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["timestamp"] = timestamp
         counter += 1
       end
-      return upcoming_yoga_sessions
+      return sorted = upcoming_yoga_sessions.sort_by{|k, v| v["timestamp"]}
     end
   end
 

@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425100920) do
+ActiveRecord::Schema.define(version: 20170501045725) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "favorite_teachers", force: :cascade do |t|
+    t.integer  "student_id"
+    t.integer  "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "favorite_teachers", ["student_id"], name: "index_favorite_teachers_on_student_id", using: :btree
+  add_index "favorite_teachers", ["teacher_id"], name: "index_favorite_teachers_on_teacher_id", using: :btree
 
   create_table "payments", force: :cascade do |t|
     t.integer  "student_id"
