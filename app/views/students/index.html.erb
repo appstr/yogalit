@@ -61,6 +61,34 @@
         </table>
       <% end %>
 
+      <h3>Most Recent Yoga-Sessions</h3>
+      <% if @most_recent_yoga_sessions.nil? %>
+        <h5>No Recent Yoga Sessions</h5>
+      <% else %>
+        <table>
+          <tr>
+            <th>Teacher's Name</th>
+            <th>Date</th>
+            <th>Day Of Week</th>
+            <th>Time Frame</th>
+            <th>Duration</th>
+            <th>Time Zone</th>
+            <th></th>
+          </tr>
+          <% @most_recent_yoga_sessions.each do |k, v| %>
+            <tr>
+              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+              <td><%= v["date"] %></td>
+              <td><%= v["day_of_week"] %></td>
+              <td><%= v["time_range"] %></td>
+              <td><%= v["duration"] %> min</td>
+              <td><%= v["timezone"] %></td>
+              <td><%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+
       <% if !@favorite_teachers.blank? %>
         <h3>My Favorite Yoga Teachers</h3>
         <small>Click on a Teacher's name to begin scheduling!</small>

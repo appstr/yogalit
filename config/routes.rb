@@ -21,5 +21,7 @@ Rails.application.routes.draw do
 
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers
   get '/live_yoga_session', to: 'yoga_sessions#live_yoga_session', as: :live_yoga_session
+  get '/report_a_yoga_session_problem', to: 'yoga_sessions#report_a_yoga_session_problem', as: :report_a_yoga_session_problem
+  post '/submit_yoga_session_problem', to: 'yoga_sessions#submit_yoga_session_problem', as: :submit_yoga_session_problem
   get '/teacher_profile', to: 'teachers#teacher_profile', as: :teacher_profile
 end

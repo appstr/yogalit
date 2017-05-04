@@ -14,8 +14,9 @@ gem 'paperclip-ffmpeg'
 gem 'figaro'
 gem 'aws-sdk'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'activemerchant'
+# gem 'activemerchant'
 gem 'opentok', '~> 2.3'
+gem 'paypal-sdk-rest'
 
 # Font
 # gem 'materialize-sass'

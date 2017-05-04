@@ -40,12 +40,4 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  config.after_initialize do
-    ActiveMerchant::Billing::Base.mode = :test
-    ::GATEWAY = ActiveMerchant::Billing::PaypalGateway.new(
-      :login => ENV["paypal_username"],
-      :password => ENV["paypal_password"],
-      :signature => ENV["paypal_signature"]
-    )
-  end
 end

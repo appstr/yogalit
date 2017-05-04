@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170501045725) do
+ActiveRecord::Schema.define(version: 20170504024633) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,12 +32,29 @@ ActiveRecord::Schema.define(version: 20170501045725) do
     t.float    "sales_tax"
     t.float    "price_without_tax"
     t.float    "total_price"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.float    "yogalit_tax"
+    t.float    "yogalit_fee_amount"
+    t.float    "teacher_payout_amount"
+    t.string   "transaction_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   add_index "payments", ["student_id"], name: "index_payments_on_student_id", using: :btree
   add_index "payments", ["teacher_id"], name: "index_payments_on_teacher_id", using: :btree
+
+  create_table "reported_yoga_sessions", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.integer  "student_id"
+    t.integer  "yoga_session_id"
+    t.string   "description"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "reported_yoga_sessions", ["student_id"], name: "index_reported_yoga_sessions_on_student_id", using: :btree
+  add_index "reported_yoga_sessions", ["teacher_id"], name: "index_reported_yoga_sessions_on_teacher_id", using: :btree
+  add_index "reported_yoga_sessions", ["yoga_session_id"], name: "index_reported_yoga_sessions_on_yoga_session_id", using: :btree
 
   create_table "students", force: :cascade do |t|
     t.integer  "user_id"
@@ -234,10 +251,14 @@ ActiveRecord::Schema.define(version: 20170501045725) do
     t.integer  "student_id"
     t.integer  "teacher_booked_time_id"
     t.string   "opentok_session_id"
-    t.string   "transaction_id"
-    t.string   "opentok_archive_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.datetime "session_date_time"
+    t.boolean  "teacher_payout_made"
+    t.boolean  "video_under_review"
+    t.boolean  "video_reviewed"
+    t.boolean  "voided_session"
+    t.boolean  "student_requested_refund"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "yoga_sessions", ["payment_id"], name: "index_yoga_sessions_on_payment_id", using: :btree

@@ -11,12 +11,7 @@ class PaymentsController < ApplicationController
 
   def create
     @search_params = JSON.parse(params["search_params"])
-    if Rails.env.development?
-      remote_ip = "73.0.227.118"
-    else
-      remote_ip = request.remote_ip
-    end
-    credit_card_processed = Payment.payment_processed?(get_credit_card_params, params[:total_price].to_i, remote_ip)
+    credit_card_processed = Payment.payment_processed?(get_credit_card_params, params[:total_price].to_s, get_billing_address_params)
     if credit_card_processed[0]
       transaction_id = credit_card_processed[1]
       @student = Student.where(user_id: current_user).first
@@ -27,6 +22,11 @@ class PaymentsController < ApplicationController
       payment[:sales_tax] = params[:sales_tax]
       payment[:price_without_tax] = params[:price_without_tax]
       payment[:total_price] = params[:total_price]
+      payment[:yogalit_tax] = ENV["yogalit_tax_amount"].to_f
+      payment[:yogalit_fee_amount] = @yogalit_fee_amount
+      payment[:teacher_payout_amount] = @teacher_payout_amount
+      payment[:transaction_id] = transaction_id
+      get_payout_params
       if payment.save!
         if create_open_tok_session
           if create_teacher_booked_time
@@ -35,8 +35,13 @@ class PaymentsController < ApplicationController
             yoga_session[:teacher_id] = @teacher[:id]
             yoga_session[:student_id] = @student[:id]
             yoga_session[:teacher_booked_time_id] = @booked_time[:id]
+            yoga_session[:session_date_time] = @session_date
+            yoga_session[:teacher_payout_made] = false
+            yoga_session[:video_under_review] = false
+            yoga_session[:video_reviewed] = false
+            yoga_session[:voided_session] = false
+            yoga_session[:student_requested_refund] = false
             yoga_session[:opentok_session_id] = @opentok_session_id
-            yoga_session[:transaction_id] = transaction_id
             if yoga_session.save!
               flash[:notice] = "Your Yoga Session was booked successfully!"
               create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
@@ -59,7 +64,7 @@ class PaymentsController < ApplicationController
       end
       return payment_path(id: 1)
     else
-      flash[:notice] = "Credit Card failed to process."
+      flash[:notice] = credit_card_processed[1]
       return redirect_to request.referrer
     end
   end
@@ -69,6 +74,11 @@ class PaymentsController < ApplicationController
   end
 
   private
+
+  def get_payout_params
+    @yogalit_fee_amount = params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)
+    @teacher_payout_amount = params[:total_price].to_f - @yogalit_fee_amount
+  end
 
   def create_favorite_teacher_for_student(teacher_id, student_id)
     if FavoriteTeacher.where(student_id: student_id, teacher_id: teacher_id).first.nil?
@@ -162,10 +172,20 @@ class PaymentsController < ApplicationController
     return {
       first_name: params[:cc_first_name],
       last_name: params[:cc_last_name],
-      number: params[:cc_number],
+      card_number: params[:cc_number],
       exp_month: params[:month],
       exp_year: params[:year],
-      security_code: params[:verification_value]
+      security_code: params[:verification_value],
+      card_type: params[:card_type]
+    }
+  end
+
+  def get_billing_address_params
+    return {
+      street_address: params[:billing_street_address],
+      city: params[:billing_city],
+      state: params[:billing_state],
+      postal: params[:billing_postal],
     }
   end
 

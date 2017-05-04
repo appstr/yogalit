@@ -18,6 +18,7 @@
 
       <h3>Payment</h3>
       <%= form_tag({controller:"payments", action:"create"}) do %>
+        <h4>Credit Card Info</h4>
         <%= hidden_field_tag :search_params, nil, value: @search_params.to_json %>
         <%= hidden_field_tag :session_time, nil, value: ((@session_time.first)..(@session_time.last)) %>
         <%= hidden_field_tag :price_without_tax, nil, value: @price_without_tax %>
@@ -27,14 +28,25 @@
         <%= text_field_tag :cc_first_name %>
         <%= label_tag :cc_last_name, "Last name on CC" %>
         <%= text_field_tag :cc_last_name %>
+        <%= label_tag :card_type %>
+        <%= select_tag :card_type, options_for_select(credit_card_type_options) %><br />
         <%= label_tag :cc_number, "CC number" %>
         <%= text_field_tag :cc_number %>
         <%= label_tag :month, "CC month expiration" %>
         <%= text_field_tag :month %>
         <%= label_tag :year, "CC year expiration" %>
         <%= text_field_tag :year %>
-        <%= label_tag :verification_value, "CC verification_value expiration" %>
+        <%= label_tag :verification_value, "CC verification_value" %>
         <%= text_field_tag :verification_value %>
+        <h4>Billing Info</h4>
+        <%= label_tag :billing_street_address, "Street Adress" %>
+        <%= text_field_tag :billing_street_address %>
+        <%= label_tag :billing_city, "City" %>
+        <%= text_field_tag :billing_city %>
+        <%= label_tag :billing_state, "State/Province" %>
+        <%= select_tag :billing_state, options_for_select(state_options) %><br />
+        <%= label_tag :billing_postal, "Postal Code" %>
+        <%= text_field_tag :billing_postal %>
         <br />
         <%= submit_tag "Pay Now", class:"btn" %>
       <% end %>

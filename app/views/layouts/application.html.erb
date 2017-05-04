@@ -36,6 +36,11 @@
     </div>
   </div>
 
+  <% if flash[:notice] %>
+    <script type="text/javascript">
+      Materialize.toast("<%= flash[:notice] %>", 4000)
+    </script>
+  <% end %>
 
 <%= yield %>
 

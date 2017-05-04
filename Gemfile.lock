@@ -23,11 +23,6 @@ GEM
     activejob (4.2.6)
       activesupport (= 4.2.6)
       globalid (>= 0.3.0)
-    activemerchant (1.61.0)
-      activesupport (>= 3.2.14, < 5.1)
-      builder (>= 2.1.2, < 4.0.0)
-      i18n (>= 0.6.9)
-      nokogiri (~> 1.4)
     activemodel (4.2.6)
       activesupport (= 4.2.6)
       builder (~> 3.1)
@@ -127,6 +122,9 @@ GEM
     paperclip-ffmpeg (1.2.0)
       paperclip (>= 2.5.2)
       rails
+    paypal-sdk-rest (1.6.0)
+      multi_json (~> 1.0)
+      xml-simple
     pg (0.19.0)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -213,12 +211,12 @@ GEM
       binding_of_caller (>= 0.7.2)
       railties (>= 4.0)
       sprockets-rails (>= 2.0, < 4.0)
+    xml-simple (1.1.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  activemerchant
   aws-sdk
   byebug
   coffee-rails (~> 4.1.0)
@@ -229,6 +227,7 @@ DEPENDENCIES
   opentok (~> 2.3)
   paperclip (~> 5.0.0)
   paperclip-ffmpeg
+  paypal-sdk-rest
   pg (~> 0.15)
   pry
   pry-byebug

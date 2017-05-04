@@ -1,0 +1,2 @@
+module YogalitAdminsHelper
+end

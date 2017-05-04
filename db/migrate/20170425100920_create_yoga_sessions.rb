@@ -6,8 +6,12 @@ class CreateYogaSessions < ActiveRecord::Migration
       t.belongs_to :student, index: true
       t.belongs_to :teacher_booked_time, index: true
       t.string :opentok_session_id
-      t.string :transaction_id
-      t.string :opentok_archive_id
+      t.datetime :session_date_time
+      t.boolean :teacher_payout_made
+      t.boolean :video_under_review
+      t.boolean :video_reviewed
+      t.boolean :voided_session
+      t.boolean :student_requested_refund
       t.timestamps null: false
     end
   end

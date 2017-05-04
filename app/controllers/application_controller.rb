@@ -28,4 +28,12 @@ class ApplicationController < ActionController::Base
     minute << time_split[1][1]
     @end_minute = minute.join("").to_i
   end
+
+  def authenticate_admin
+    if current_user[:teacher_or_student] == "admin" && ["chris@admin.com"].include?(current_user[:email])
+      return true
+    else
+      return false
+    end
+  end
 end

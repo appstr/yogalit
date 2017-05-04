@@ -40,8 +40,49 @@ body, html {
     <div id="publisher"></div>
 </div>
 
-
 <script type="text/javascript">
+  var session = OT.initSession("<%= ENV['opentok_api_key'] %>", "<%= @opentok_session_id %>");
+  session.connect("<%= @opentokToken %>", function(error) {
+
+  // If the connection is successful, initialize a publisher and publish to the session
+  if (!error) {
+    var publisherOptions = {
+      insertMode: 'append',
+      width: '100%',
+      height: '100%'
+    };
+    var publisher = OT.initPublisher('publisher', publisherOptions, function(error) {
+      if (error) {
+        console.log('There was an error initilizing the publisher: ', error.name, error.message);
+        return;
+      }
+      session.publish(publisher);
+    });
+  } else {
+    console.log('There was an error connecting to the session:', error.name, error.message);
+  }
+});
+
+session.on('sessionDisconnected', function(event) {
+  console.log('You were disconnected from the session.', event.reason);
+});
+
+session.on('streamCreated', function(event) {
+  var subscriberOptions = {
+    insertMode: 'append',
+    width: '100%',
+    height: '100%'
+  };
+  session.subscribe(event.stream, 'subscriber', subscriberOptions, function(error) {
+    if (error) {
+      console.log('There was an error publishing: ', error.name, error.message);
+    }
+  });
+});
+</script>
+
+
+<!-- <script type="text/javascript">
   var session = OT.initSession("<%= ENV['opentok_api_key'] %>", "<%= @opentok_session_id %>");
 
   // Subscribe to a newly created stream
@@ -72,4 +113,4 @@ body, html {
     }
   });
 
-</script>
+</script> -->

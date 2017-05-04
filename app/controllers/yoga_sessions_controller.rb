@@ -27,6 +27,46 @@ class YogaSessionsController < ApplicationController
       })
   end
 
+  def report_a_yoga_session_problem
+    yoga_session = YogaSession.find(params[:id])
+    if yoga_session[:video_under_review] || yoga_session[:video_reviewed]
+      flash[:notice] = "This video has already had a report filed."
+      return redirect_to request.referrer
+    end
+    booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
+    get_date_and_time_separated(booked_time)
+    Time.zone = booked_time[:teacher_timezone]
+    if Time.now.in_time_zone(booked_time[:teacher_timezone]) < Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00)
+      flash[:notice] = "This session has not started yet."
+      return redirect_to request.referrer
+    elsif Time.now.in_time_zone(booked_time[:teacher_timezone]) > (Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00) + 86400)
+      flash[:notice] = "The ability to report this session has expired."
+      return redirect_to request.referrer
+    end
+    @teacher = Teacher.find(yoga_session[:teacher_id])
+    @booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
+  end
+
+  def submit_yoga_session_problem
+    yoga_session = YogaSession.find(params[:id])
+    yoga_session[:video_under_review] = true
+    yoga_session[:student_requested_refund] = true if params[:requesting_refund]
+    if yoga_session.save!
+      reported_yoga_session = ReportedYogaSession.new
+      reported_yoga_session[:teacher_id] = yoga_session[:teacher_id]
+      reported_yoga_session[:student_id] = yoga_session[:student_id]
+      reported_yoga_session[:yoga_session_id] = yoga_session[:id]
+      reported_yoga_session[:description] = params[:description]
+      reported_yoga_session.save!
+      # Send email to YogalitAdmin notifying them of the report.
+      # Send email to Student and Teacher notifying them of the report.
+      flash[:notice] = "Your report was made and a Yogalit administrator will contact your email with any further questions or information."
+    else
+      flash[:notice] = "Your report was not made. Please try again or contact Yogalit through the Contact link in the header."
+    end
+    return redirect_to root_path
+  end
+
   private
 
   def allow_yoga_session?(booked_time)
