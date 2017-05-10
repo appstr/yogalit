@@ -45,6 +45,7 @@
             <th>Time Frame</th>
             <th>Duration</th>
             <th>Time Zone</th>
+            <th>Type of Yoga</th>
             <th></th>
           </tr>
           <% @upcoming_yoga_sessions.each do |k, v| %>
@@ -55,6 +56,7 @@
               <td><%= v["time_range"] %></td>
               <td><%= v["duration"] %> min</td>
               <td><%= v["timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
               <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
             </tr>
           <% end %>
@@ -73,6 +75,7 @@
             <th>Time Frame</th>
             <th>Duration</th>
             <th>Time Zone</th>
+            <th>Type of Yoga</th>
             <th></th>
           </tr>
           <% @most_recent_yoga_sessions.each do |k, v| %>
@@ -83,14 +86,15 @@
               <td><%= v["time_range"] %></td>
               <td><%= v["duration"] %> min</td>
               <td><%= v["timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
               <td><%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %></td>
             </tr>
           <% end %>
         </table>
       <% end %>
 
+      <h3>My Favorite Yoga Teachers</h3>
       <% if !@favorite_teachers.blank? %>
-        <h3>My Favorite Yoga Teachers</h3>
         <small>Click on a Teacher's name to begin scheduling!</small>
         <br />
         <br />
@@ -98,7 +102,11 @@
           <a class="waves-effect waves-light btn" href="<%= teacher_profile_path(id: ft[:id]) %>">
             <%= "#{ft[:first_name].capitalize} #{ft[:last_name].capitalize}" %>
           </a>
+          <br />
+          <%= link_to "Delete #{ft[:first_name].capitalize}", destroy_favorite_teacher_path(id: ft[:id]), data: {confirm: "Are you sure you want to delete this Teacher?"}, method: :delete %>
         <% end %>
+      <% else %>
+        <h5>No Teachers added to Favorites.</h5>
       <% end %>
     </div>
   </div>

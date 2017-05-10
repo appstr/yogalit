@@ -1,6 +1,7 @@
 class TeachersController < ApplicationController
   before_action :authenticate_user!
   include ApplicationHelper
+  require 'signet/oauth_2/client'
 
   def index
     @teacher = Teacher.where(user_id: current_user).first
@@ -28,8 +29,11 @@ class TeachersController < ApplicationController
     teacher = Teacher.new(teacher_params)
     teacher[:user_id] = current_user[:id]
     teacher[:average_rating] = 0
-    path = teacher.save! ? teachers_path : request.referrer
-    return redirect_to path
+    if teacher.save!
+      return google_authorize_teacher
+    else
+      return redirect_to path
+    end
   end
 
   def edit
@@ -59,12 +63,12 @@ class TeachersController < ApplicationController
       not_on_holiday_ids = YogaTeacherSearchesController.new.yoga_teachers_not_on_holiday([params[:id]], Time.parse(params[:session_date]).to_i)
       if not_on_holiday_ids.empty?
         flash[:notice] = "Teacher is on Holiday for this date."
-        return false
+        return redirect_to request.referrer
       end
       available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids)
       if available_on_day_of_week.empty?
         flash[:notice] = "Teacher is not available on #{params[:day_of_week]}'s."
-        return false
+        return redirect_to request.referrer
       end
     end
     @teacher = Teacher.find(params[:id])
@@ -76,11 +80,119 @@ class TeachersController < ApplicationController
     available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
     filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
     @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
+    @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
   end
 
   def teacher_profile
     @teacher = Teacher.find(params[:id])
     @teacher_available_yoga_types = get_teacher_available_yoga_types
+    @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
+  end
+
+  def google_authorize_teacher
+    client = Signet::OAuth2::Client.new({
+      client_id: ENV["google_calendar_client_id"],
+      client_secret: ENV["google_calendar_client_secret"],
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      scope: "https://www.googleapis.com/auth/calendar",
+      redirect_uri: "http://localhost:3000/new_teacher_interview"
+    })
+    return redirect_to client.authorization_uri.to_s
+  end
+
+  def new_teacher_interview
+    @teacher = Teacher.where(user_id: current_user).first
+    if session[:google_calendar_access_token].nil?
+      client = Signet::OAuth2::Client.new({
+        client_id: ENV["google_calendar_client_id"],
+        client_secret: ENV["google_calendar_client_secret"],
+        token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+        redirect_uri: "http://localhost:3000/new_teacher_interview",
+        code: request.query_parameters["code"]
+      })
+      data = client.fetch_access_token!
+      session[:google_calendar_access_token] = data["access_token"]
+    end
+    @available_times = get_available_interview_times(params[:session_date])
+    if params[:new_date_request]
+      return render json: {success: true, available_times: @available_times}
+    end
+  end
+
+
+  def get_available_interview_times(session_date)
+    if session_date.nil?
+      @session_date = Time.now.in_time_zone(@teacher[:timezone])
+    else
+      split_date(Date.parse(params[:session_date]))
+      Time.zone = @teacher[:timezone]
+      @session_date = Time.zone.local(@year, @month, @day, 00, 00, 00)
+    end
+    taken_start_times = get_taken_start_times_on(@session_date)
+    all_times = create_all_times_obj(@session_date)
+    @filtered_available_times = filter_available_interview_times(all_times, taken_start_times)
+  end
+
+  def filter_available_interview_times(all_times, taken_start_times)
+    filtered_times = []
+    # Iterate through all_times (array of arrays) --> [["9:30-10:00", 2017-05-10:9:00:00..2017-05-10:10:00:00]]
+    # Check if taken_start_times (array) --> [2017-05-10:9:00:00, 2017-05-10:10:30:00, 2017-05-10:14:30:00]
+    if taken_start_times.blank?
+      filtered_times = all_times
+    else
+      all_times.each do |at|
+        filtered_times << at if !taken_start_times.include?(at[1].first)
+      end
+    end
+    if Date.parse(@session_date.to_s) == Date.parse(Time.now.in_time_zone(@teacher[:timezone]).to_s)
+      filtered_times = remove_times_before_now_for_interview(filtered_times)
+    end
+    return filtered_times
+  end
+
+  def remove_times_before_now_for_interview(filtered_times)
+    new_times = []
+    if !filtered_times.blank?
+      filtered_times.each do |ft|
+        new_times << ft if ft[1].first > (Time.now.in_time_zone(@teacher[:timezone]) + 3600)
+      end
+    end
+    return new_times
+  end
+
+  def get_taken_start_times_on(session_date)
+    start_times = []
+    taken_times = InterviewBookedTime.where("interview_date = ?", Date.parse(session_date.to_s))
+    if !taken_times.blank?
+      taken_times.each do |tt|
+        start_times << Time.at(tt[:time_range].first).in_time_zone(@teacher[:timezone])
+      end
+    end
+    return start_times
+  end
+
+  def create_all_times_obj(session_date)
+    # return all times for the @session_date given, regardless if Date.today.
+    all_times = []
+    Time.zone = @teacher[:timezone]
+    split_date(session_date)
+    start_time = Time.zone.local(@year, @month, @day, 00, 00, 00)
+    while(Date.parse(session_date.to_s) == Date.parse(start_time.to_s)) do
+      all_times << ["#{sanitize_date_for_time_only(start_time)} - #{sanitize_date_for_time_only(start_time + 1800)}",
+                    (start_time..(start_time + 1800))
+                   ]
+      start_time = start_time + 1800
+    end
+    return all_times
+  end
+
+  def split_date(session_date)
+    @year = session_date.strftime("%Y").to_i
+    @month = session_date.strftime("%m").to_i
+    @day = session_date.strftime("%d").to_i
+  end
+
+  def confirm_teacher_interview
   end
 
   def get_teacher_available_yoga_types
@@ -328,6 +440,7 @@ class TeachersController < ApplicationController
         timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
         upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
         upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = student[:first_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = student[:last_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
@@ -343,6 +456,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified)
   end
 end

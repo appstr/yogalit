@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>New Teacher Interview</h1>
+      <%= form_tag({controller: "teachers", action: "confirm_teacher_interview"}) do %>
+        <%= label_tag :date, "Interview Date" %>
+        <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
+        <br />
+        <div id="interview_time_range_select">
+          <%= label_tag :time_range, "Interview Times" %>
+          <%= select_tag :time_range, options_for_select(@available_times) %>
+        </div>
+        <br />
+        <%= submit_tag "Submit", class:"btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('select').material_select();
+    $('.datepicker').pickadate({
+      selectMonths: false,
+      selectYears: false,
+      min: new Date()
+    });
+  });
+
+  function changeTimeRanges(){
+    $("#interview_time_range_select").find("li").remove();
+    $("#time_range").find("option").remove();
+    var session_date = $("#date").val();
+    var requestData = {"session_date": session_date, "new_date_request": true};
+    var url = "/new_teacher_interview";
+    var request = $.ajax({
+      method: "GET",
+      url: url,
+      data: requestData,
+      success: function(result){
+        var selectValues = result.available_times;
+        if(selectValues.length > 0){
+          var length = selectValues.length;
+          for(var i = 0; length > i; i++){
+            $("#interview_time_range_select").find("ul").append('<li onclick="timeRangeActiveOption(this);" value='+selectValues[i][1]+'><span>'+selectValues[i][0]+'</span></li>');
+            $("#time_range").append('<option value="'+selectValues[i][1]+'">'+selectValues[i][0]+'</option>');
+          }
+        }
+      }
+    });
+  }
+
+  function timeRangeActiveOption(l){
+    $("#interview_time_range_select").find("li").removeClass("active");
+    $(l).toggleClass("active selected");
+    $("#time_range").val(l.value);
+    $('#time_range').material_select();
+  }
+</script>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170504024633) do
+ActiveRecord::Schema.define(version: 20170510170646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 20170504024633) do
 
   add_index "favorite_teachers", ["student_id"], name: "index_favorite_teachers_on_student_id", using: :btree
   add_index "favorite_teachers", ["teacher_id"], name: "index_favorite_teachers_on_teacher_id", using: :btree
+
+  create_table "interview_booked_times", force: :cascade do |t|
+    t.integer   "teacher_id"
+    t.date      "interview_date"
+    t.int8range "time_range"
+    t.string    "teacher_timezone"
+    t.datetime  "created_at",       null: false
+    t.datetime  "updated_at",       null: false
+  end
+
+  add_index "interview_booked_times", ["teacher_id"], name: "index_interview_booked_times_on_teacher_id", using: :btree
 
   create_table "payments", force: :cascade do |t|
     t.integer  "student_id"
@@ -216,6 +227,7 @@ ActiveRecord::Schema.define(version: 20170504024633) do
     t.string   "timezone"
     t.integer  "average_rating",           limit: 8
     t.boolean  "is_searchable"
+    t.boolean  "is_verified"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "profile_pic_file_name"
@@ -255,8 +267,9 @@ ActiveRecord::Schema.define(version: 20170504024633) do
     t.boolean  "teacher_payout_made"
     t.boolean  "video_under_review"
     t.boolean  "video_reviewed"
-    t.boolean  "voided_session"
     t.boolean  "student_requested_refund"
+    t.boolean  "student_refund_given"
+    t.integer  "yoga_type"
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
   end

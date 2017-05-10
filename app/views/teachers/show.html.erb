@@ -4,8 +4,8 @@
       <br>
       <h1>Searched Teacher Show Page</h1>
       <br />
-      <h4>Teacher Schedule</h4>
       <h5>Teacher Name: <%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
+      <%= link_to "Favorite #{@favorite_teacher_count}", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %>
       <h5>Type of Yoga: <%= params[:yoga_type] %></h5>
       <h5>Day: <%= params[:day_of_week] %></h5>
       <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>

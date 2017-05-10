@@ -36,11 +36,12 @@ class PaymentsController < ApplicationController
             yoga_session[:student_id] = @student[:id]
             yoga_session[:teacher_booked_time_id] = @booked_time[:id]
             yoga_session[:session_date_time] = @session_date
+            yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
             yoga_session[:teacher_payout_made] = false
             yoga_session[:video_under_review] = false
             yoga_session[:video_reviewed] = false
-            yoga_session[:voided_session] = false
             yoga_session[:student_requested_refund] = false
+            yoga_session[:student_refund_given] = false
             yoga_session[:opentok_session_id] = @opentok_session_id
             if yoga_session.save!
               flash[:notice] = "Your Yoga Session was booked successfully!"

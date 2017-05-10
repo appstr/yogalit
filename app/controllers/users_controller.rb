@@ -16,6 +16,8 @@ class UsersController < ApplicationController
       else
         path = students_path
       end
+    elsif current_user[:teacher_or_student] == "admin"
+      path = yogalit_admins_path
     end
     return redirect_to path
   end

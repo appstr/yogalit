@@ -182,6 +182,7 @@
             <th>Time Frame</th>
             <th>Duration</th>
             <th>Time Zone</th>
+            <th>Type of Yoga</th>
             <th></th>
           </tr>
           <% @upcoming_yoga_sessions.each do |k, v| %>
@@ -192,6 +193,7 @@
               <td><%= v["time_range"] %></td>
               <td><%= v["duration"] %> min</td>
               <td><%= v["timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
               <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
             </tr>
           <% end %>

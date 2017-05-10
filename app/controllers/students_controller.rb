@@ -60,6 +60,7 @@ class StudentsController < ApplicationController
       timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
       most_recent["yoga_session_#{counter}"] = {}
       most_recent["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+      most_recent["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
       most_recent["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
       most_recent["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
       most_recent["yoga_session_#{counter}"]["date"] = date
@@ -88,6 +89,23 @@ class StudentsController < ApplicationController
     @end_minute = end_time.strftime("%M")
   end
 
+  def add_favorite_teacher
+    if FavoriteTeacher.where(teacher_id: params[:id], student_id: Student.where(user_id: current_user).first.id).blank?
+      favorite_teacher = FavoriteTeacher.new
+      favorite_teacher[:teacher_id] = params[:id]
+      favorite_teacher[:student_id] = Student.where(user_id: current_user).first.id
+      if favorite_teacher.save!
+        flash[:notice] = "Teacher has been saved to favorites!"
+      else
+        flash[:notice] = "Teacher was unable to be saved to favorites. Please try again."
+      end
+      return redirect_to request.referrer
+    else
+      flash[:notice] = "Teacher has already been added to your favorites."
+      return redirect_to request.referrer
+    end
+  end
+
   def get_favorite_teachers
     teachers = []
     favorite_teachers = FavoriteTeacher.where(student_id: @student)
@@ -95,6 +113,16 @@ class StudentsController < ApplicationController
       teachers << Teacher.find(ft[:teacher_id])
     end
     return teachers
+  end
+
+  def destroy_favorite_teacher
+    favorite_teacher = FavoriteTeacher.where(teacher_id: params[:id], student_id: Student.where(user_id: current_user).first.id).first
+    if favorite_teacher.delete
+      flash[:notice] = "Yoga Teacher deleted successfully!"
+    else
+      flash[:notice] = "Yoga Teacher DID NOT delete. Please try again."
+    end
+    return redirect_to request.referrer
   end
 
   def get_upcoming_yoga_sessions
@@ -119,6 +147,7 @@ class StudentsController < ApplicationController
         timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
         upcoming_yoga_sessions["yoga_session_#{counter}"] = {}
         upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date

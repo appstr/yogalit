@@ -84,7 +84,8 @@ class YogaTeacherSearchesController < ApplicationController
     yoga_types.each do |yt|
       if yoga_instructor_ids.empty? || !yoga_instructor_ids.include?(yt[:teacher_id])
         is_searchable = Teacher.find(yt[:teacher_id]).is_searchable
-        yoga_instructor_ids << yt[:teacher_id] if is_searchable
+        is_verified = Teacher.find(yt[:teacher_id]).is_verified
+        yoga_instructor_ids << yt[:teacher_id] if is_searchable && is_verified
       end
     end
     return yoga_instructor_ids

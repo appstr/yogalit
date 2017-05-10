@@ -1,0 +1,46 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Reported Yoga-Sessions not requesting refunds</h1>
+      <% if @reported_sessions == "no_data" %>
+        <h5>No upcoming Yoga-Sessions</h5>
+      <% else %>
+        <table>
+          <tr>
+            <th>Yoga-Session-ID</th>
+            <th>Teacher Name</th>
+            <th>Teacher Email</th>
+            <th>Student Name</th>
+            <th>Student Email</th>
+            <th>Teacher Time Frame</th>
+            <th>Teacher TimeZone</th>
+            <th>Student TimeZone</th>
+            <th>Type of Yoga</th>
+            <th>Duration</th>
+            <th>Reported Session Description</th>
+            <th>OpenTok-Session-ID</th>
+            <th></th>
+          </tr>
+          <% @reported_sessions.each do |k, v| %>
+            <tr>
+              <td><%= v["yoga_session_id"] %></td>
+              <td><%= v["teacher_name"] %></td>
+              <td><%= v["teacher_email"] %></td>
+              <td><%= v["student_name"] %></td>
+              <td><%= v["student_email"] %> min</td>
+              <td><%= v["teacher_time_range"] %></td>
+              <td><%= v["teacher_timezone"] %></td>
+              <td><%= v["student_timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
+              <td><%= v["duration"] %></td>
+              <td><%= v["reported_session_description"] %></td>
+              <td><%= v["opentok_session_id"] %></td>
+              <td>TAKE ACTION BTN</td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

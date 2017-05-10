@@ -8,6 +8,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.string :timezone
       t.bigint :average_rating
       t.boolean :is_searchable
+      t.boolean :is_verified
       t.timestamps null: false
     end
   end

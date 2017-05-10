@@ -67,6 +67,52 @@ class YogaSessionsController < ApplicationController
     return redirect_to root_path
   end
 
+  def refund_yoga_session
+    yoga_session = YogaSession.find(params[:id])
+    payment = Payment.find(yoga_session[:payment_id])
+    transaction_id = payment[:transaction_id]
+    if Payment.refund_successful?(transaction_id)
+      yoga_session[:video_under_review] = false
+      yoga_session[:video_reviewed] = true
+      yoga_session[:student_refund_given] = true
+      if yoga_session.save!
+        # TODO send email notifying Student and Teacher of refund. UserMailer.refund(amount)
+        flash[:notice] = "Refund processed successfully!"
+        return redirect_to request.referrer
+      end
+    end
+    flash[:notice] = "Refund DID NOT process successfully."
+    return redirect_to request.referrer
+  end
+
+  def general_refund_denial
+    yoga_session = YogaSession.find(params[:id])
+    yoga_session[:video_under_review] = false
+    yoga_session[:video_reviewed] = true
+    yoga_session[:student_refund_given] = false
+    if yoga_session.save!
+      # TODO send email to Student denying refund. UserMailer.general_denial_refund
+      flash[:notice] = "Student refund denial info saved!"
+    else
+      flash[:notice] = "Student refund denial info did not save."
+    end
+    return redirect_to request.referrer
+  end
+
+  def custom_refund_denial
+    yoga_session = YogaSession.find(params[:id])
+    yoga_session[:video_under_review] = false
+    yoga_session[:video_reviewed] = true
+    yoga_session[:student_refund_given] = false
+    if yoga_session.save!
+      # TODO send email to Student denying refund. UserMailer.custom_denial_refund(params[:denial_reason])
+      flash[:notice] = "Student refund denial info saved!"
+    else
+      flash[:notice] = "Student refund denial info did not save."
+    end
+    return redirect_to request.referrer
+  end
+
   private
 
   def allow_yoga_session?(booked_time)
