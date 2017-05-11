@@ -8,7 +8,7 @@
         <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
         <br />
         <div id="interview_time_range_select">
-          <%= label_tag :time_range, "Interview Times" %>
+          <%= label_tag :time_range, "Interview Times" %><br />
           <%= select_tag :time_range, options_for_select(@available_times) %>
         </div>
         <br />
@@ -47,6 +47,7 @@
             $("#time_range").append('<option value="'+selectValues[i][1]+'">'+selectValues[i][0]+'</option>');
           }
         }
+        $('#time_range').material_select();
       }
     });
   }

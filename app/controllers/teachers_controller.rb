@@ -19,11 +19,30 @@ class TeachersController < ApplicationController
   end
 
   def new
-    return redirect_to teachers_path if Teacher.teacher_exists?(current_user)
+    if Teacher.teacher_exists?(current_user)
+      teacher = Teacher.where(user_id: current_user).first
+      if teacher[:is_verified]
+        return redirect_to teachers_path
+      elsif session[:google_calendar_access_token].nil?
+        return google_authorize_teacher
+      else
+        return redirect_to new_teacher_interview_path
+      end
+    end
     @teacher = Teacher.new
   end
 
   def create
+    if Teacher.teacher_exists?(current_user)
+      teacher = Teacher.where(user_id: current_user).first
+      if teacher[:is_verified]
+        return redirect_to teachers_path
+      elsif session[:google_calendar_access_token].nil?
+        return google_authorize_teacher
+      else
+        return redirect_to new_teacher_interview_path
+      end
+    end
     params[:teacher][:first_name].downcase!
     params[:teacher][:last_name].downcase!
     teacher = Teacher.new(teacher_params)
@@ -48,7 +67,7 @@ class TeachersController < ApplicationController
     teacher[:timezone] = params[:teacher][:timezone]
     teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
     if teacher.save!
-      flash[:notice] = "Your profile info was update successfully!"
+      flash[:notice] = "Your profile info was updated successfully!"
       path = teachers_path
     else
       flash[:notice] = "Your profile info was not updated."
@@ -90,6 +109,7 @@ class TeachersController < ApplicationController
   end
 
   def google_authorize_teacher
+    session[:google_calendar_access_token] = nil
     client = Signet::OAuth2::Client.new({
       client_id: ENV["google_calendar_client_id"],
       client_secret: ENV["google_calendar_client_secret"],
@@ -194,14 +214,20 @@ class TeachersController < ApplicationController
 
   def confirm_teacher_interview
     teacher = Teacher.where(user_id: current_user).first
-    interview = InterviewBookedTime.new
+    interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
+    if interview.nil?
+      interview = InterviewBookedTime.new
+    else
+      interview.delete
+      interview = InterviewBookedTime.new
+    end
     interview[:teacher_id] = teacher[:id]
     interview[:interview_date] = Date.parse(params[:date])
     split_time_range = params[:time_range].split("..")
     interview[:time_range] = (Time.parse(split_time_range[0]).to_i..Time.parse(split_time_range[1]).to_i)
     interview[:teacher_timezone] = teacher[:timezone]
     if interview.save!
-      response = Typhoeus::Request.new(
+      request = Typhoeus::Request.new(
         "https://www.googleapis.com/calendar/v3/calendars/calendarId/events",
         method: :post,
         body: {
@@ -220,9 +246,18 @@ class TeachersController < ApplicationController
               }.to_json,
         params: { access_token: session[:google_calendar_access_token], calendarId: "primary", sendNotifications: true },
         headers: {"Content-Type": "application/json"}
-      ).run
-      return redirect_to teachers_path
+      )
+      response = request.run
+      if response.success?
+        flash[:notice] = "A Calendar Event was created successfully!"
+        # TODO Send email to Student explaining that they will be invited via Google Hangouts to the interview.
+        return redirect_to teachers_path
+      else
+        flash[:notice] = "An error occurred while trying to book the Calendar Event. Please try again."
+        return google_authorize_teacher
+      end
     end
+    flash[:notice] = "An error occurred while trying to book the Calendar Event. Please try again."
     return redirect_to request.referrer
   end
 
