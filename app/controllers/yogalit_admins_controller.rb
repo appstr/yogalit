@@ -47,5 +47,38 @@ class YogalitAdminsController < ApplicationController
     end
   end
 
+  def teacher_interviews
+    @user = User.where(email: params[:teacher_email].downcase).first if params[:email_given]
+  end
+
+  def verify_teacher
+    teacher = Teacher.where(user_id: params[:id]).first
+    interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
+    teacher[:is_verified] = true
+    interview[:completed] = true
+    if teacher.save! && interview.save!
+      flash[:notice] = "Teacher has been approved!"
+      # TODO Send email to Teacher notifying them of their verification.
+      return redirect_to yogalit_admins_path
+    else
+      flash[:notice] = "Something went wrong, please try again."
+      return redirect_to request.referrer
+    end
+  end
+
+  def deny_teacher
+    user = User.find(params[:id])
+    teacher = Teacher.where(user_id: params[:id]).first
+    interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
+    interview[:completed] = true
+    if teacher.delete && user.delete && interview.save!
+      flash[:notice] = "Teacher has been denied!"
+      # TODO Send email to Teacher notifying them of their denial.
+      return redirect_to yogalit_admins_path
+    else
+      flash[:notice] = "Something went wrong, please try again."
+      return redirect_to request.referrer
+    end
+  end
 
 end

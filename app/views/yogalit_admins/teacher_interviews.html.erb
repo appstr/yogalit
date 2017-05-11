@@ -1,0 +1,60 @@
+<style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      text-align: center;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Teacher Interviews</h1>
+      <%= form_tag({controller:"yogalit_admins", action:"teacher_interviews"}, method: :get) do %>
+        <%= hidden_field_tag :email_given, nil, value: true %>
+        <%= label_tag :teacher_email %>
+        <%= text_field_tag :teacher_email %>
+        <br />
+        <%= submit_tag "Search", class:"btn" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <h3>Search Results</h3>
+      <% if @user.nil? %>
+        <h5>No Results...</h5>
+      <% else %>
+        <table>
+          <tr>
+            <th>
+              Email
+            </th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>
+              <%= @user[:email] %>
+            </td>
+            <td>
+              <%= link_to "Approve", admins_verify_teacher_path(id: @user[:id]), data: {confirm: "Are you sure you want to Approve #{@user[:email]}"}, method: :post %><br />
+              <%= link_to "Deny", admins_deny_teacher_path(id: @user[:id]), data: {confirm: "Are you sure you want to Deny #{@user[:email]}"}, method: :post %><br />
+            </td>
+          </tr>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

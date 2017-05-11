@@ -6,7 +6,7 @@ class CreateInterviewBookedTimes < ActiveRecord::Migration
       t.int8range :time_range
       t.string :teacher_timezone
       t.boolean :teacher_cancelled
-      t.boolean :interview_completed
+      t.boolean :completed
       t.timestamps null: false
     end
   end

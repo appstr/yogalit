@@ -27,9 +27,9 @@ Rails.application.routes.draw do
   get '/live_yoga_session', to: 'yoga_sessions#live_yoga_session', as: :live_yoga_session
   get '/report_a_yoga_session_problem', to: 'yoga_sessions#report_a_yoga_session_problem', as: :report_a_yoga_session_problem
   post '/submit_yoga_session_problem', to: 'yoga_sessions#submit_yoga_session_problem', as: :submit_yoga_session_problem
-  post 'refund_yoga_session', to: 'yoga_sessions#refund_yoga_session', as: :refund_yoga_session
-  post 'general_refund_denial', to: 'yoga_sessions#general_refund_denial', as: :general_refund_denial
-  post 'custom_refund_denial', to: 'yoga_sessions#custom_refund_denial', as: :custom_refund_denial
+  post '/refund_yoga_session', to: 'yoga_sessions#refund_yoga_session', as: :refund_yoga_session
+  post '/general_refund_denial', to: 'yoga_sessions#general_refund_denial', as: :general_refund_denial
+  post '/custom_refund_denial', to: 'yoga_sessions#custom_refund_denial', as: :custom_refund_denial
 
   # Teachers
   get '/teacher_profile', to: 'teachers#teacher_profile', as: :teacher_profile
@@ -44,4 +44,8 @@ Rails.application.routes.draw do
   # YogalitAdmins
   get '/reported_non_refund_requested_yoga_sessions', to: 'yogalit_admins#reported_non_refund_requested_yoga_sessions', as: :admins_reported_non_refund_requested_yoga_sessions
   get '/reported_refund_requested_yoga_sessions', to: 'yogalit_admins#reported_refund_requested_yoga_sessions', as: :admins_reported_refund_reuqested_yoga_sessions
+  get '/teacher_interviews', to: 'yogalit_admins#teacher_interviews', as: :admins_teacher_interviews
+  post '/verify_teacher', to: 'yogalit_admins#verify_teacher', as: :admins_verify_teacher
+  post '/deny_teacher', to: 'yogalit_admins#deny_teacher', as: :admins_deny_teacher
+
 end

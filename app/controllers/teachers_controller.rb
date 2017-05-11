@@ -226,6 +226,8 @@ class TeachersController < ApplicationController
     split_time_range = params[:time_range].split("..")
     interview[:time_range] = (Time.parse(split_time_range[0]).to_i..Time.parse(split_time_range[1]).to_i)
     interview[:teacher_timezone] = teacher[:timezone]
+    interview[:teacher_cancelled] = false
+    interview[:completed] = false
     if interview.save!
       request = Typhoeus::Request.new(
         "https://www.googleapis.com/calendar/v3/calendars/calendarId/events",

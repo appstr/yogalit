@@ -32,9 +32,9 @@ ActiveRecord::Schema.define(version: 20170510170646) do
     t.int8range "time_range"
     t.string    "teacher_timezone"
     t.boolean   "teacher_cancelled"
-    t.boolean   "interview_completed"
-    t.datetime  "created_at",          null: false
-    t.datetime  "updated_at",          null: false
+    t.boolean   "completed"
+    t.datetime  "created_at",        null: false
+    t.datetime  "updated_at",        null: false
   end
 
   add_index "interview_booked_times", ["teacher_id"], name: "index_interview_booked_times_on_teacher_id", using: :btree
@@ -185,11 +185,6 @@ ActiveRecord::Schema.define(version: 20170510170646) do
   end
 
   add_index "teacher_thursday_time_frames", ["teacher_id"], name: "index_teacher_thursday_time_frames_on_teacher_id", using: :btree
-
-  create_table "teacher_time_frame_blacklists", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
 
   create_table "teacher_tuesday_time_frames", force: :cascade do |t|
     t.integer   "teacher_id"
