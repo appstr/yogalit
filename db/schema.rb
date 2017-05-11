@@ -31,8 +31,10 @@ ActiveRecord::Schema.define(version: 20170510170646) do
     t.date      "interview_date"
     t.int8range "time_range"
     t.string    "teacher_timezone"
-    t.datetime  "created_at",       null: false
-    t.datetime  "updated_at",       null: false
+    t.boolean   "teacher_cancelled"
+    t.boolean   "interview_completed"
+    t.datetime  "created_at",          null: false
+    t.datetime  "updated_at",          null: false
   end
 
   add_index "interview_booked_times", ["teacher_id"], name: "index_interview_booked_times_on_teacher_id", using: :btree
