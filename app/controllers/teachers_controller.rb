@@ -193,6 +193,37 @@ class TeachersController < ApplicationController
   end
 
   def confirm_teacher_interview
+    teacher = Teacher.where(user_id: current_user).first
+    interview = InterviewBookedTime.new
+    interview[:teacher_id] = teacher[:id]
+    interview[:interview_date] = Date.parse(params[:date])
+    split_time_range = params[:time_range].split("..")
+    interview[:time_range] = (Time.parse(split_time_range[0]).to_i..Time.parse(split_time_range[1]).to_i)
+    interview[:teacher_timezone] = teacher[:timezone]
+    if interview.save!
+      response = Typhoeus::Request.new(
+        "https://www.googleapis.com/calendar/v3/calendars/calendarId/events",
+        method: :post,
+        body: {
+                start: {
+                  dateTime: Time.parse(split_time_range[0])
+                },
+                end: {
+                  dateTime: Time.parse(split_time_range[1])
+                },
+                attendees: [
+                  {
+                    email: "#{ENV["yogalit_interview_email"]}"
+                  }
+                ],
+                summary: "Yogalit Interview"
+              }.to_json,
+        params: { access_token: session[:google_calendar_access_token], calendarId: "primary", sendNotifications: true },
+        headers: {"Content-Type": "application/json"}
+      ).run
+      return redirect_to teachers_path
+    end
+    return redirect_to request.referrer
   end
 
   def get_teacher_available_yoga_types
