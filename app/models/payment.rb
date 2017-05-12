@@ -47,27 +47,27 @@ class Payment < ActiveRecord::Base
 
 # Create Payment and return the status(true or false)
     if payment.create
-      return [true, payment.id]
+      return [true, payment.transactions[0].related_resources[0].sale.id]
     else
       return [false, payment.error]
     end
   end
 
   def self.refund_successful?(transaction_id)
-    # require 'paypal-sdk-rest'
-    # include PayPal::SDK::REST
-    # include PayPal::SDK::Core::Logging
-    # PayPal::SDK::REST.set_config(
-    #   :mode => "sandbox", # "sandbox" or "live"
-    #   :client_id => ENV["paypal_client_id"],
-    #   :client_secret => ENV["paypal_client_secret"])
-    # payment = Payment.find(transaction_id)
-    # refund = payment.refund_request({})
-    # if refund.success?
-    #   return true
-    # else
-    #   return false
-    # end
-    return true
+    require 'paypal-sdk-rest'
+    include PayPal::SDK::REST
+    include PayPal::SDK::Core::Logging
+    PayPal::SDK::REST.set_config(
+      :mode => "sandbox", # "sandbox" or "live"
+      :client_id => ENV["paypal_client_id"],
+      :client_secret => ENV["paypal_client_secret"])
+    sale = Sale.find(transaction_id)
+    refund = sale.refund_request({})
+    if refund.success?
+      return true
+    else
+      return false
+    end
   end
+
 end
