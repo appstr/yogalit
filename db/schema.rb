@@ -225,6 +225,7 @@ ActiveRecord::Schema.define(version: 20170510170646) do
     t.integer  "average_rating",           limit: 8
     t.boolean  "is_searchable"
     t.boolean  "is_verified"
+    t.boolean  "vacation_mode"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "profile_pic_file_name"

@@ -9,6 +9,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.bigint :average_rating
       t.boolean :is_searchable
       t.boolean :is_verified
+      t.boolean :vacation_mode
       t.timestamps null: false
     end
   end

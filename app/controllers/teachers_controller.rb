@@ -108,6 +108,17 @@ class TeachersController < ApplicationController
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
   end
 
+  def toggle_vacation_mode
+    teacher = Teacher.find(params[:id])
+    teacher[:vacation_mode] = teacher[:vacation_mode] ? false : true
+    if teacher.save!
+      flash[:notice] = teacher[:vacation_mode] ? "Vacation Mode: ON" : "Vacation Mode: OFF"
+    else
+      flash[:notice] = "Your account could not be updated. Please try again or contact Yogalit directly."
+    end
+    return redirect_to request.referrer
+  end
+
   def google_authorize_teacher
     session[:google_calendar_access_token] = nil
     client = Signet::OAuth2::Client.new({
@@ -223,7 +234,7 @@ class TeachersController < ApplicationController
     end
     interview[:teacher_id] = teacher[:id]
     interview[:interview_date] = Date.parse(params[:date])
-    split_time_range = params[:time_range].split("..")
+    split_time_range = params[:time_range_select].split("..")
     interview[:time_range] = (Time.parse(split_time_range[0]).to_i..Time.parse(split_time_range[1]).to_i)
     interview[:teacher_timezone] = teacher[:timezone]
     interview[:teacher_cancelled] = false
@@ -494,7 +505,8 @@ class TeachersController < ApplicationController
     else
       counter = 1
       next_booked_times.each do |bt|
-        yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
+        yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+        next if yoga_session.nil?
         student = Student.find(yoga_session[:student_id])
         date = sanitize_date_for_view(bt[:session_date].to_s)
         day_of_week = bt[:session_date].strftime("%A")
@@ -524,6 +536,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :vacation_mode)
   end
 end

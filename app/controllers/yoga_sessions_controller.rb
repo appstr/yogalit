@@ -13,13 +13,14 @@ class YogaSessionsController < ApplicationController
       booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
     end
     if !allow_yoga_session?(booked_time)
-      flash[:notice] = "The Yoga Session is not ready to be joined yet. Sessions open 5 minutes before the scheduled start-time."
+      flash[:notice] = "The Yoga Session is not ready to be joined yet or has already ended."
       return redirect_to request.referrer
     end
     data = {"yoga_session_id" => yoga_session[:id]}.to_json
     @opentok_session_id = yoga_session[:opentok_session_id]
     opentok = OpenTok::OpenTok.new ENV["opentok_api_key"], ENV["opentok_api_secret"]
     Time.zone = booked_time[:teacher_timezone]
+    convert_end_time_to_gmt(booked_time[:teacher_timezone])
     @opentokToken = opentok.generate_token(@opentok_session_id, {
         :role        => :publisher,
         :expire_time => Time.zone.local(@year, @month, @day, @end_hour, @end_minute, 00).to_i,
@@ -67,50 +68,9 @@ class YogaSessionsController < ApplicationController
     return redirect_to root_path
   end
 
-  def refund_yoga_session
-    yoga_session = YogaSession.find(params[:id])
-    payment = Payment.find(yoga_session[:payment_id])
-    transaction_id = payment[:transaction_id]
-    if Payment.refund_successful?(transaction_id)
-      yoga_session[:video_under_review] = false
-      yoga_session[:video_reviewed] = true
-      yoga_session[:student_refund_given] = true
-      if yoga_session.save!
-        # TODO send email notifying Student and Teacher of refund. UserMailer.refund(amount)
-        flash[:notice] = "Refund processed successfully!"
-        return redirect_to request.referrer
-      end
-    end
-    flash[:notice] = "Refund DID NOT process successfully."
-    return redirect_to request.referrer
-  end
-
-  def general_refund_denial
-    yoga_session = YogaSession.find(params[:id])
-    yoga_session[:video_under_review] = false
-    yoga_session[:video_reviewed] = true
-    yoga_session[:student_refund_given] = false
-    if yoga_session.save!
-      # TODO send email to Student denying refund. UserMailer.general_denial_refund
-      flash[:notice] = "Student refund denial info saved!"
-    else
-      flash[:notice] = "Student refund denial info did not save."
-    end
-    return redirect_to request.referrer
-  end
-
-  def custom_refund_denial
-    yoga_session = YogaSession.find(params[:id])
-    yoga_session[:video_under_review] = false
-    yoga_session[:video_reviewed] = true
-    yoga_session[:student_refund_given] = false
-    if yoga_session.save!
-      # TODO send email to Student denying refund. UserMailer.custom_denial_refund(params[:denial_reason])
-      flash[:notice] = "Student refund denial info saved!"
-    else
-      flash[:notice] = "Student refund denial info did not save."
-    end
-    return redirect_to request.referrer
+  def convert_end_time_to_gmt(teacher_timezone)
+    Time.zone = teacher_timezone
+    @gmt_end_time = Time.zone.local(@year, @month, @day, @end_hour, @end_minute, 00).in_time_zone("GMT").to_s
   end
 
   private
@@ -118,7 +78,7 @@ class YogaSessionsController < ApplicationController
   def allow_yoga_session?(booked_time)
     Time.zone = booked_time[:teacher_timezone]
     get_date_and_time_separated(booked_time)
-    if Time.now.in_time_zone(booked_time[:teacher_timezone]) >= (Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00) - 300)
+    if Time.now.in_time_zone(booked_time[:teacher_timezone]) >= (Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00) - 300) && Time.now.in_time_zone(booked_time[:teacher_timezone]) < Time.zone.local(@year, @month, @day, @end_hour, @end_minute, 00)
       return true
     else
       return false

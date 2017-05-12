@@ -16,6 +16,7 @@
       background-color: #dddddd;
   }
 </style>
+
 <div class="container">
   <div class="row">
     <div class="col s12">
@@ -23,6 +24,15 @@
       <h1>Teacher Dashboard</h1>
       <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
         <h3 style="color:green">Your account is searchable</h3>
+        <% if @teacher[:vacation_mode] %>
+          <%= link_to "Turn OFF Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
+          <br />
+          <small>Vacation Mode: ON</small>
+        <% else %>
+          <%= link_to "Turn ON Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
+          <br />
+          <small>Vacation Mode: OFF</small>
+        <% end %>
       <% elsif @teacher[:is_searchable] && !@teacher[:is_verified] %>
         <h3 style="color:green">You have completed all of the required fields. After you have been verified through your interview, your account will become searchable.</h3>
         <small>If you feel you are receiving this message in error, please contact Yogalit immediately!</small>
@@ -174,6 +184,7 @@
 
       <br />
       <h3>Upcoming YogaSessions</h3>
+      <small>Yoga Sessions can be joined 5 minutes before the posted "start time"</small>
       <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
         <h5>No upcoming Yoga-Sessions</h5>
       <% else %>

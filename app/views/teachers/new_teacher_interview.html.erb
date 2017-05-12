@@ -8,8 +8,8 @@
         <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
         <br />
         <div id="interview_time_range_select">
-          <%= label_tag :time_range, "Interview Times" %><br />
-          <%= select_tag :time_range, options_for_select(@available_times) %>
+          <%= label_tag :time_range_select, "Interview Times" %><br />
+          <%= select_tag :time_range_select, options_for_select(@available_times) %>
         </div>
         <br />
         <%= submit_tag "Submit", class:"btn" %>
@@ -30,7 +30,7 @@
 
   function changeTimeRanges(){
     $("#interview_time_range_select").find("li").remove();
-    $("#time_range").find("option").remove();
+    $("#time_range_select").find("option").remove();
     var session_date = $("#date").val();
     var requestData = {"session_date": session_date, "new_date_request": true};
     var url = "/new_teacher_interview";
@@ -44,10 +44,10 @@
           var length = selectValues.length;
           for(var i = 0; length > i; i++){
             $("#interview_time_range_select").find("ul").append('<li onclick="timeRangeActiveOption(this);" value='+selectValues[i][1]+'><span>'+selectValues[i][0]+'</span></li>');
-            $("#time_range").append('<option value="'+selectValues[i][1]+'">'+selectValues[i][0]+'</option>');
+            $("#time_range_select").append('<option value="'+selectValues[i][1]+'">'+selectValues[i][0]+'</option>');
           }
         }
-        $('#time_range').material_select();
+        $('#time_range_select').material_select();
       }
     });
   }
@@ -55,7 +55,7 @@
   function timeRangeActiveOption(l){
     $("#interview_time_range_select").find("li").removeClass("active");
     $(l).toggleClass("active selected");
-    $("#time_range").val(l.value);
-    $('#time_range').material_select();
+    $("#time_range_select").val(l.value);
+    $('#time_range_select').material_select();
   }
 </script>

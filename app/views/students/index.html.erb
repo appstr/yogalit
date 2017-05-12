@@ -34,6 +34,7 @@
       <%= render partial: "shared/yoga_teacher_search_form" %>
       <br />
       <h3>Upcoming YogaSessions</h3>
+      <small>Yoga Sessions can be joined 5 minutes before the posted "start time"</small>
       <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
         <h5>No upcoming Yoga-Sessions</h5>
       <% else %>
@@ -57,13 +58,17 @@
               <td><%= v["duration"] %> min</td>
               <td><%= v["timezone"] %></td>
               <td><%= v["yoga_type"] %></td>
-              <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
+              <td>
+                <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %>
+                <%= link_to "Refund", student_refund_request_path(id: v["yoga_session_id"]), method: :post %>
+              </td>
             </tr>
           <% end %>
         </table>
       <% end %>
 
       <h3>Most Recent Yoga-Sessions</h3>
+      <small>Yoga Sessions can be reported once the "start time" has been reached</small>
       <% if @most_recent_yoga_sessions.nil? %>
         <h5>No Recent Yoga Sessions</h5>
       <% else %>

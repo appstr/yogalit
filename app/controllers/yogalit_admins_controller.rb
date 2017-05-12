@@ -69,6 +69,10 @@ class YogalitAdminsController < ApplicationController
   def deny_teacher
     user = User.find(params[:id])
     teacher = Teacher.where(user_id: params[:id]).first
+    if teacher[:is_verified]
+      flash[:notice] = "This Teacher has already been verified."
+      return redirect_to request.referrer
+    end
     interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
     interview[:completed] = true
     if teacher.delete && user.delete && interview.save!

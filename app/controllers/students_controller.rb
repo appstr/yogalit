@@ -46,7 +46,8 @@ class StudentsController < ApplicationController
     most_recent = {}
     counter = 1
     recent_booked_times.each do |bt|
-      yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
+      yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+      next if yoga_session.nil?
       teacher = Teacher.find(yoga_session[:teacher_id])
       date = sanitize_date_for_view(bt[:session_date].to_s)
       day_of_week = bt[:session_date].strftime("%A")
@@ -133,7 +134,8 @@ class StudentsController < ApplicationController
     else
       counter = 1
       next_booked_times.each do |bt|
-        yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
+        yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+        next if yoga_session.nil?
         teacher = Teacher.find(yoga_session[:teacher_id])
         date = sanitize_date_for_view(bt[:session_date].to_s)
         day_of_week = bt[:session_date].strftime("%A")

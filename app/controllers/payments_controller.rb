@@ -74,6 +74,80 @@ class PaymentsController < ApplicationController
     @yoga_session = YogaSession.find(params[:id])
   end
 
+  def student_refund_request
+    yoga_session = YogaSession.where(id: params[:id], student_id: Student.where(user_id: current_user).first.id).first
+    bt = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
+    Time.zone = bt[:teacher_timezone]
+    time = Time.at(bt[:time_range].first).in_time_zone(bt[:teacher_timezone])
+    pd = Time.parse(bt[:session_date].to_s)
+    start_time = Time.zone.local(pd.strftime("%Y"), pd.strftime("%m"), pd.strftime("%d"), time.strftime("%k"), time.strftime("%M"), 00).in_time_zone(bt[:student_timezone])
+    now = Time.now.in_time_zone(bt[:student_timezone])
+    if now < (start_time - 86400)
+      transaction_id = Payment.find(yoga_session[:payment_id]).transaction_id
+      if Payment.refund_successful?(transaction_id)
+        yoga_session[:student_requested_refund] = true
+        yoga_session[:student_refund_given] = true
+        begin
+          yoga_session.save!
+        rescue e
+          puts e
+        end
+        flash[:notice] = "Your Yoga Session payment has been refunded successfully!"
+      else
+        flash[:notice] = "There was a problem processing your refund. Please try again or contact Yogalit directly."
+      end
+    else
+      flash[:notice] = "Yoga Session must be more than 24/hrs away. Please contact Yogalit directly if there is an error."
+    end
+    return redirect_to request.referrer
+  end
+
+  def refund_yoga_session
+    yoga_session = YogaSession.find(params[:id])
+    payment = Payment.find(yoga_session[:payment_id])
+    transaction_id = payment[:transaction_id]
+    if Payment.refund_successful?(transaction_id)
+      yoga_session[:video_under_review] = false
+      yoga_session[:video_reviewed] = true
+      yoga_session[:student_refund_given] = true
+      if yoga_session.save!
+        # TODO send email notifying Student and Teacher of refund. UserMailer.refund(amount)
+        flash[:notice] = "Refund processed successfully!"
+        return redirect_to request.referrer
+      end
+    end
+    flash[:notice] = "Refund DID NOT process successfully."
+    return redirect_to request.referrer
+  end
+
+  def general_refund_denial
+    yoga_session = YogaSession.find(params[:id])
+    yoga_session[:video_under_review] = false
+    yoga_session[:video_reviewed] = true
+    yoga_session[:student_refund_given] = false
+    if yoga_session.save!
+      # TODO send email to Student denying refund. UserMailer.general_denial_refund
+      flash[:notice] = "Student refund denial info saved!"
+    else
+      flash[:notice] = "Student refund denial info did not save."
+    end
+    return redirect_to request.referrer
+  end
+
+  def custom_refund_denial
+    yoga_session = YogaSession.find(params[:id])
+    yoga_session[:video_under_review] = false
+    yoga_session[:video_reviewed] = true
+    yoga_session[:student_refund_given] = false
+    if yoga_session.save!
+      # TODO send email to Student denying refund. UserMailer.custom_denial_refund(params[:denial_reason])
+      flash[:notice] = "Student refund denial info saved!"
+    else
+      flash[:notice] = "Student refund denial info did not save."
+    end
+    return redirect_to request.referrer
+  end
+
   private
 
   def get_payout_params
