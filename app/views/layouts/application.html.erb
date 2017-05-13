@@ -30,6 +30,7 @@
       <div class="col s6">
         <div class="header-links">
           <%= link_to "Home", '/' %>
+          <%= link_to "Contact", new_user_message_path %>
           <%= link_to('Logout', destroy_user_session_path, :method => :delete) if user_signed_in? %>
         </div>
       </div>

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :payments
   resources :yogalit_admins
   resources :teacher_price_ranges
+  resources :user_messages
   root to: 'users#index'
 
   # YogaTeacherSearches

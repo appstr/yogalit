@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Contact Yogalit Directly 24/7:</h1>
+      <%= form_for(@user_message) do |f| %>
+        <%= f.label :email %>
+        <% if user_signed_in? %>
+          <%= f.text_field :email, value: current_user[:email] %>
+        <% else %>
+          <%= f.text_field :email %>
+        <% end %>
+        <br />
+        <%= f.label :subject %>
+        <%= f.text_field :subject %>
+        <br />
+        <%= f.label :message %>
+        <%= f.text_area :message %>
+        <br />
+        <%= f.submit "Send", class:"btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
