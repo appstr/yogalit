@@ -16,6 +16,55 @@ class TeachersController < ApplicationController
     @teacher_price_range_form = TeacherPriceRange.new
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
     @upcoming_yoga_sessions = get_upcoming_yoga_sessions
+    @most_recent_yoga_sessions = get_most_recent_yoga_sessions
+  end
+
+  def get_most_recent_yoga_sessions
+    recent_booked_times = []
+    booked_times = TeacherBookedTime.where(teacher_id: @teacher).where("session_date >= ? AND session_date <= ?", Date.today - 2, Date.today + 2)
+    booked_times.each do |bt|
+      Time.zone = bt[:teacher_timezone]
+      split_date_and_time(bt)
+      teacher_start_time = Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00)
+      if teacher_start_time.in_time_zone(bt[:student_timezone]) > (Time.now.in_time_zone(bt[:student_timezone]) - 86400) && Time.now.in_time_zone(bt[:student_timezone]) < (teacher_start_time.in_time_zone(bt[:student_timezone]) + 86400)
+        recent_booked_times << bt
+      end
+    end
+    return get_most_recent_sessions_info(recent_booked_times) if !recent_booked_times.empty?
+    return nil
+  end
+
+  def get_most_recent_sessions_info(recent_booked_times)
+    most_recent = {}
+    counter = 1
+    recent_booked_times.each do |bt|
+      yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+      next if yoga_session.nil?
+      student = Student.find(yoga_session[:student_id])
+      date = sanitize_date_for_view(bt[:session_date].to_s)
+      day_of_week = bt[:session_date].strftime("%A")
+      time_range = sanitize_date_range_for_view(bt[:time_range], bt[:teacher_timezone])
+      split_date = bt[:session_date].to_s.split("-")
+      Time.zone = bt[:teacher_timezone]
+      split_time_range = time_range.split(" - ")
+      start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone]))
+      end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:teacher_timezone]))
+      timestamp_time = Time.parse(split_time_range[0]).in_time_zone(bt[:teacher_timezone])
+      timestamp = Time.zone.local(split_date[0], split_date[1], split_date[2], timestamp_time.strftime("%k"), timestamp_time.strftime("%M"))
+      most_recent["yoga_session_#{counter}"] = {}
+      most_recent["yoga_session_#{counter}"]["yoga_session_id"] = yoga_session[:id]
+      most_recent["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
+      most_recent["yoga_session_#{counter}"]["first_name"] = student[:first_name]
+      most_recent["yoga_session_#{counter}"]["last_name"] = student[:last_name]
+      most_recent["yoga_session_#{counter}"]["date"] = date
+      most_recent["yoga_session_#{counter}"]["day_of_week"] = day_of_week
+      most_recent["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
+      most_recent["yoga_session_#{counter}"]["duration"] = bt[:duration]
+      most_recent["yoga_session_#{counter}"]["timezone"] = bt[:teacher_timezone]
+      most_recent["yoga_session_#{counter}"]["timestamp"] = timestamp
+      counter += 1
+    end
+    return sorted = most_recent.sort_by{|k, v| v["timestamp"]}
   end
 
   def new
@@ -149,7 +198,6 @@ class TeachersController < ApplicationController
       return render json: {success: true, available_times: @available_times}
     end
   end
-
 
   def get_available_interview_times(session_date)
     if session_date.nil?
@@ -347,7 +395,7 @@ class TeachersController < ApplicationController
     sorted_formatted_times = formatted_times.sort_by do |a,b|
       b.first.strftime("%k%M").to_i
     end
-    return remove_times_before_now(sorted_formatted_times) if Date.parse(params["session_date"]) == Date.today
+    sorted_formatted_times = remove_times_before_now(sorted_formatted_times)
     return sorted_formatted_times
   end
 
@@ -355,11 +403,14 @@ class TeachersController < ApplicationController
     new_times = []
     new_times_true = false
     sorted_formatted_times.each do |obj|
-      if Time.now.in_time_zone(params[:student_timezone]) >= Date.parse(params[:session_date]).in_time_zone("Hawaii")
+      if Date.parse(params["session_date"]) == Date.today && Time.now.in_time_zone(params[:student_timezone]) >= Time.parse(params[:session_date]).in_time_zone(params[:student_timezone])
         new_times_true = true
-        if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i)
+        if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i + 120) && @start_time.day == obj[1].first.day
           new_times << [obj[0], obj[1]]
         end
+      elsif @start_time.day == obj[1].first.day
+        new_times_true = true
+        new_times << [obj[0], obj[1]]
       end
     end
     return new_times if new_times_true
@@ -368,8 +419,13 @@ class TeachersController < ApplicationController
 
   def build_teacher_time_frame(teacher_time_frames, added_time)
     available_times = {}
+    counter = 1
     Time.zone = params[:student_timezone]
     teacher_time_frames.each do |tf|
+      if counter == 1
+        @start_time = (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]))
+        counter += 1
+      end
       start_time = (Time.at(tf[:time_range].first).in_time_zone(params[:student_timezone]))
       end_time = Time.at(tf[:time_range].last).in_time_zone(params[:student_timezone])
       while (start_time + added_time <= end_time) do

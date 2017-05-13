@@ -45,7 +45,9 @@ class YogaSessionsController < ApplicationController
       return redirect_to request.referrer
     end
     @teacher = Teacher.find(yoga_session[:teacher_id])
+    @student = Student.find(yoga_session[:student_id])
     @booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
+    @yoga_type = YogaType::ENUMS.key(yoga_session[:yoga_type])
   end
 
   def submit_yoga_session_problem
@@ -53,7 +55,11 @@ class YogaSessionsController < ApplicationController
     yoga_session[:video_under_review] = true
     yoga_session[:student_requested_refund] = true if params[:requesting_refund]
     if yoga_session.save!
-      reported_yoga_session = ReportedYogaSession.new
+      if current_user[:teacher_or_student] == "student"
+        reported_yoga_session = StudentReportedYogaSession.new
+      else
+        reported_yoga_session = TeacherReportedYogaSession.new
+      end
       reported_yoga_session[:teacher_id] = yoga_session[:teacher_id]
       reported_yoga_session[:student_id] = yoga_session[:student_id]
       reported_yoga_session[:yoga_session_id] = yoga_session[:id]

@@ -45,6 +45,8 @@ Rails.application.routes.draw do
   get '/teacher_interviews', to: 'yogalit_admins#teacher_interviews', as: :admins_teacher_interviews
   post '/verify_teacher', to: 'yogalit_admins#verify_teacher', as: :admins_verify_teacher
   post '/deny_teacher', to: 'yogalit_admins#deny_teacher', as: :admins_deny_teacher
+  post '/block_student', to: 'yogalit_admins#block_student', as: :admins_block_student
+  post '/dismiss_report_without_action', to: 'yogalit_admins#dismiss_report_without_action', as: :admins_dismiss_report_without_action
 
   # Payments
   post '/student_refund_request', to: 'payments#student_refund_request', as: :student_refund_request

@@ -206,30 +206,8 @@ class PaymentsController < ApplicationController
   end
 
   def get_session_time_range
-    Time.zone = @search_params["student_timezone"]
-    if @search_params["day_of_week"] == "Monday"
-      month = 3
-      day = 27
-    elsif @search_params["day_of_week"] == "Tuesday"
-      month = 3
-      day = 28
-    elsif @search_params["day_of_week"] == "Wednesday"
-      month = 3
-      day = 29
-    elsif @search_params["day_of_week"] == "Thursday"
-      month = 3
-      day = 30
-    elsif @search_params["day_of_week"] == "Friday"
-      month = 3
-      day = 31
-    elsif @search_params["day_of_week"] == "Saturday"
-      month = 4
-      day = 1
-    else
-      month = 4
-      day = 2
-    end
-    @time_range = (Time.zone.local(2017, month, day, @start_hour, @start_minute, 00).in_time_zone(@search_params["teacher_timezone"]).to_i..Time.zone.local(2017, month, day, @end_hour, @end_minute, 00).in_time_zone(@search_params["teacher_timezone"]).to_i)
+    session_split = params[:session_time].split("..")
+    @time_range = Time.parse(session_split.first)..(Time.parse(session_split.last) + 60)
   end
 
   def create_open_tok_session

@@ -1,6 +1,6 @@
-class CreateReportedYogaSessions < ActiveRecord::Migration
+class CreateStudentReportedYogaSessions < ActiveRecord::Migration
   def change
-    create_table :reported_yoga_sessions do |t|
+    create_table :student_reported_yoga_sessions do |t|
       t.belongs_to :teacher, index: true
       t.belongs_to :student, index: true
       t.belongs_to :yoga_session, index: true

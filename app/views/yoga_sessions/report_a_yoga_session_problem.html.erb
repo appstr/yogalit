@@ -4,17 +4,27 @@
       <br />
       <h1>Report a YogaSession problem.</h1>
       <small>Video's will be reviewed to ensure integrity of claims.</small>
-      <p>Teacher Name: <%= "#{@teacher[:first_name]} #{@teacher[:last_name]}" %></p>
-      <p>Time Frame: <%= "#{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].first).in_time_zone(@booked_time[:student_timezone]))} - #{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].last).in_time_zone(@booked_time[:student_timezone]))}" %></p>
-      <p>Time Zone: <%= @booked_time[:student_timezone] %></p>
+      <% if current_user[:teacher_or_student] == "teacher" %>
+        <p>Student's Name: <%= "#{@student[:first_name]} #{@student[:last_name]}" %></p>
+        <p>Time Frame: <%= "#{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].first).in_time_zone(@booked_time[:teacher_timezone]))} - #{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].last).in_time_zone(@booked_time[:teacher_timezone]))}" %></p>
+        <p>Time Zone: <%= @booked_time[:teacher_timezone] %></p>
+        <p>Type of Yoga: <%= @yoga_type %></p>
+      <% else %>
+        <p>Teacher's Name: <%= "#{@teacher[:first_name]} #{@teacher[:last_name]}" %></p>
+        <p>Time Frame: <%= "#{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].first).in_time_zone(@booked_time[:student_timezone]))} - #{sanitize_date_for_time_only(Time.at(@booked_time[:time_range].last).in_time_zone(@booked_time[:student_timezone]))}" %></p>
+        <p>Time Zone: <%= @booked_time[:student_timezone] %></p>
+      <% end %>
       <%= form_tag({controller:"yoga_sessions", action:"submit_yoga_session_problem"}) do %>
         <%= hidden_field_tag :id, nil, value: params[:id] %>
         <%= label_tag :description, "Tell us the problem in your own words." %>
         <%= text_area_tag :description %><br>
         <!-- Add a checkbox to allow the Student to indicate if they are seeking a full refund -->
-        <%= check_box_tag :requesting_refund, true %>
-        <%= label_tag :requesting_refund, "Check the box if you are requesting a refund." %>
-        <br />
+        <% if current_user[:teacher_or_student] == "student" %>
+          <br />
+          <%= check_box_tag :requesting_refund, true %>
+          <%= label_tag :requesting_refund, "Check the box if you are requesting a refund." %>
+          <br />
+        <% end %>
         <br />
         <%= submit_tag "Submit For Review", class:"btn" %>
       <% end %>

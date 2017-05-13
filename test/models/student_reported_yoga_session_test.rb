@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ReportedYogaSessionTest < ActiveSupport::TestCase
+class StudentReportedYogaSessionTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

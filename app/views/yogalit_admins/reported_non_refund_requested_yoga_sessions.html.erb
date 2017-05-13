@@ -1,9 +1,28 @@
+<style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      text-align: center;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+</style>
+
 <div class="container">
   <div class="row">
     <div class="col s12">
       <br />
-      <h1>Reported Yoga-Sessions not requesting refunds</h1>
-      <% if @reported_sessions == "no_data" %>
+      <h1>Reported Student Yoga-Sessions not requesting refunds</h1>
+      <% if @reported_student_sessions == "no_data" %>
         <h5>No upcoming Yoga-Sessions</h5>
       <% else %>
         <table>
@@ -22,7 +41,7 @@
             <th>OpenTok-Session-ID</th>
             <th></th>
           </tr>
-          <% @reported_sessions.each do |k, v| %>
+          <% @reported_student_sessions.each do |k, v| %>
             <tr>
               <td><%= v["yoga_session_id"] %></td>
               <td><%= v["teacher_name"] %></td>
@@ -37,6 +56,50 @@
               <td><%= v["reported_session_description"] %></td>
               <td><%= v["opentok_session_id"] %></td>
               <td>TAKE ACTION BTN</td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+      <br />
+      <h1>Reported Teacher Yoga-Sessions not requesting refunds</h1>
+      <% if @reported_teacher_sessions == "no_data" %>
+        <h5>No upcoming Yoga-Sessions</h5>
+      <% else %>
+        <table>
+          <tr>
+            <th>Yoga-Session-ID</th>
+            <th>Teacher Name</th>
+            <th>Teacher Email</th>
+            <th>Student Name</th>
+            <th>Student Email</th>
+            <th>Teacher Time Frame</th>
+            <th>Teacher TimeZone</th>
+            <th>Student TimeZone</th>
+            <th>Type of Yoga</th>
+            <th>Duration</th>
+            <th>Reported Session Description</th>
+            <th>OpenTok-Session-ID</th>
+            <th></th>
+          </tr>
+          <% @reported_teacher_sessions.each do |k, v| %>
+            <tr>
+              <td><%= v["yoga_session_id"] %></td>
+              <td><%= v["teacher_name"] %></td>
+              <td><%= v["teacher_email"] %></td>
+              <td><%= v["student_name"] %></td>
+              <td><%= v["student_email"] %> min</td>
+              <td><%= v["teacher_time_range"] %></td>
+              <td><%= v["teacher_timezone"] %></td>
+              <td><%= v["student_timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
+              <td><%= v["duration"] %></td>
+              <td><%= v["reported_session_description"] %></td>
+              <td><%= v["opentok_session_id"] %></td>
+              <td>
+                <%= link_to "Block Student", admins_block_student_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to block Student?"}, method: :post %>
+                <br />
+                <%= link_to "Dismiss w/o action", admins_dismiss_report_without_action_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to dismiss Student?"}, method: :post %>
+              </td>
             </tr>
           <% end %>
         </table>

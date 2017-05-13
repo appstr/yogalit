@@ -75,21 +75,6 @@ class StudentsController < ApplicationController
     return sorted = most_recent.sort_by{|k, v| v["timestamp"]}
   end
 
-  def split_date_and_time(bt)
-    date_split = bt[:session_date].to_s.split("-")
-    @year = date_split[0]
-    @month = date_split[1]
-    @day = date_split[2]
-
-    start_time = Time.at(bt[:time_range].first).in_time_zone(bt[:teacher_timezone])
-    @start_hour = start_time.strftime("%k")
-    @start_minute = start_time.strftime("%M")
-
-    end_time = Time.at(bt[:time_range].last).in_time_zone(bt[:teacher_timezone])
-    @end_hour = end_time.strftime("%k")
-    @end_minute = end_time.strftime("%M")
-  end
-
   def add_favorite_teacher
     if FavoriteTeacher.where(teacher_id: params[:id], student_id: Student.where(user_id: current_user).first.id).blank?
       favorite_teacher = FavoriteTeacher.new

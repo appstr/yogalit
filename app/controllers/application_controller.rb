@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  after_action :user_not_blacklisted?
 
   def split_start_time
     hour = []
@@ -27,6 +28,33 @@ class ApplicationController < ActionController::Base
     minute << time_split[1][0]
     minute << time_split[1][1]
     @end_minute = minute.join("").to_i
+  end
+
+  def split_date_and_time(bt)
+    date_split = bt[:session_date].to_s.split("-")
+    @year = date_split[0]
+    @month = date_split[1]
+    @day = date_split[2]
+
+    start_time = Time.at(bt[:time_range].first).in_time_zone(bt[:teacher_timezone])
+    @start_hour = start_time.strftime("%k")
+    @start_minute = start_time.strftime("%M")
+
+    end_time = Time.at(bt[:time_range].last).in_time_zone(bt[:teacher_timezone])
+    @end_hour = end_time.strftime("%k")
+    @end_minute = end_time.strftime("%M")
+  end
+
+  def user_not_blacklisted?
+    if user_signed_in?
+      if current_user[:blacklisted]
+        user = User.find(current_user[:id])
+        sign_out user
+        return false
+      end
+    else
+      return true
+    end
   end
 
   def authenticate_admin

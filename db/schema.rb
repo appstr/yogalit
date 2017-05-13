@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170513132448) do
+ActiveRecord::Schema.define(version: 20170513162958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20170513132448) do
   create_table "interview_booked_times", force: :cascade do |t|
     t.integer   "teacher_id"
     t.date      "interview_date"
-    t.int8range "time_range"
+    t.tstzrange "time_range"
     t.string    "teacher_timezone"
     t.boolean   "teacher_cancelled"
     t.boolean   "completed"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20170513132448) do
   add_index "payments", ["student_id"], name: "index_payments_on_student_id", using: :btree
   add_index "payments", ["teacher_id"], name: "index_payments_on_teacher_id", using: :btree
 
-  create_table "reported_yoga_sessions", force: :cascade do |t|
+  create_table "student_reported_yoga_sessions", force: :cascade do |t|
     t.integer  "teacher_id"
     t.integer  "student_id"
     t.integer  "yoga_session_id"
@@ -65,9 +65,9 @@ ActiveRecord::Schema.define(version: 20170513132448) do
     t.datetime "updated_at",      null: false
   end
 
-  add_index "reported_yoga_sessions", ["student_id"], name: "index_reported_yoga_sessions_on_student_id", using: :btree
-  add_index "reported_yoga_sessions", ["teacher_id"], name: "index_reported_yoga_sessions_on_teacher_id", using: :btree
-  add_index "reported_yoga_sessions", ["yoga_session_id"], name: "index_reported_yoga_sessions_on_yoga_session_id", using: :btree
+  add_index "student_reported_yoga_sessions", ["student_id"], name: "index_student_reported_yoga_sessions_on_student_id", using: :btree
+  add_index "student_reported_yoga_sessions", ["teacher_id"], name: "index_student_reported_yoga_sessions_on_teacher_id", using: :btree
+  add_index "student_reported_yoga_sessions", ["yoga_session_id"], name: "index_student_reported_yoga_sessions_on_yoga_session_id", using: :btree
 
   create_table "students", force: :cascade do |t|
     t.integer  "user_id"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 20170513132448) do
     t.integer   "teacher_id"
     t.integer   "student_id"
     t.date      "session_date"
-    t.int8range "time_range"
+    t.tstzrange "time_range"
     t.integer   "duration"
     t.string    "student_timezone"
     t.string    "teacher_timezone"
@@ -158,6 +158,19 @@ ActiveRecord::Schema.define(version: 20170513132448) do
 
   add_index "teacher_ratings", ["student_id"], name: "index_teacher_ratings_on_student_id", using: :btree
   add_index "teacher_ratings", ["teacher_id"], name: "index_teacher_ratings_on_teacher_id", using: :btree
+
+  create_table "teacher_reported_yoga_sessions", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.integer  "student_id"
+    t.integer  "yoga_session_id"
+    t.string   "description"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "teacher_reported_yoga_sessions", ["student_id"], name: "index_teacher_reported_yoga_sessions_on_student_id", using: :btree
+  add_index "teacher_reported_yoga_sessions", ["teacher_id"], name: "index_teacher_reported_yoga_sessions_on_teacher_id", using: :btree
+  add_index "teacher_reported_yoga_sessions", ["yoga_session_id"], name: "index_teacher_reported_yoga_sessions_on_yoga_session_id", using: :btree
 
   create_table "teacher_saturday_time_frames", force: :cascade do |t|
     t.integer   "teacher_id"
@@ -251,6 +264,7 @@ ActiveRecord::Schema.define(version: 20170513132448) do
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "teacher_or_student"
+    t.boolean  "blacklisted"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"

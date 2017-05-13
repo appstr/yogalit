@@ -3,7 +3,7 @@ class CreateInterviewBookedTimes < ActiveRecord::Migration
     create_table :interview_booked_times do |t|
       t.belongs_to :teacher, index: true
       t.date :interview_date
-      t.int8range :time_range
+      t.tstzrange :time_range
       t.string :teacher_timezone
       t.boolean :teacher_cancelled
       t.boolean :completed
