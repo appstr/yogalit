@@ -77,6 +77,10 @@ class PaymentsController < ApplicationController
 
   def student_refund_request
     yoga_session = YogaSession.where(id: params[:id], student_id: Student.where(user_id: current_user).first.id).first
+    if yoga_session[:teacher_payout_made] == true || yoga_session[:student_refund_given] == true
+      flash[:notice] = "Unable to refund. Please contact Yogalit directly."
+      return redirect_to request.referrer
+    end
     bt = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
     Time.zone = bt[:teacher_timezone]
     time = Time.at(bt[:time_range].first).in_time_zone(bt[:teacher_timezone])

@@ -46,7 +46,7 @@ class StudentsController < ApplicationController
     most_recent = {}
     counter = 1
     recent_booked_times.each do |bt|
-      yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+      yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
       next if yoga_session.nil?
       teacher = Teacher.find(yoga_session[:teacher_id])
       date = sanitize_date_for_view(bt[:session_date].to_s)
@@ -70,6 +70,7 @@ class StudentsController < ApplicationController
       most_recent["yoga_session_#{counter}"]["duration"] = bt[:duration]
       most_recent["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
       most_recent["yoga_session_#{counter}"]["timestamp"] = timestamp
+      most_recent["yoga_session_#{counter}"]["refunded"] = yoga_session[:student_refund_given]
       counter += 1
     end
     return sorted = most_recent.sort_by{|k, v| v["timestamp"]}
@@ -119,7 +120,7 @@ class StudentsController < ApplicationController
     else
       counter = 1
       next_booked_times.each do |bt|
-        yoga_session = YogaSession.where(teacher_booked_time_id: bt, student_refund_given: false).first
+        yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
         next if yoga_session.nil?
         teacher = Teacher.find(yoga_session[:teacher_id])
         date = sanitize_date_for_view(bt[:session_date].to_s)
@@ -144,6 +145,7 @@ class StudentsController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["timestamp"] = timestamp
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["refunded"] = yoga_session[:student_refund_given]
         counter += 1
       end
       return sorted = upcoming_yoga_sessions.sort_by{|k, v| v["timestamp"]}
