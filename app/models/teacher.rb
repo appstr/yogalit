@@ -13,6 +13,7 @@ class Teacher < ActiveRecord::Base
   has_many :favorite_teachers
   has_many :teacher_images
   has_many :teacher_videos
+  has_many :teacher_emergency_cancels
   has_many :reported_yoga_sessions
   has_one :interview_booked_time
   has_one :teacher_price_range
@@ -81,6 +82,11 @@ class Teacher < ActiveRecord::Base
     else
       return false
     end
+  end
+
+  def self.unblacklist_teachers
+    teachers = Teacher.where("unblacklist_date = ?", Date.today)
+    teachers.update_all(blacklisted: false)
   end
 
 end

@@ -10,6 +10,7 @@ class CreateYogaSessions < ActiveRecord::Migration
       t.boolean :teacher_payout_made
       t.boolean :video_under_review
       t.boolean :video_reviewed
+      t.boolean :teacher_cancelled_session
       t.boolean :student_requested_refund
       t.boolean :student_refund_given
       t.integer :yoga_type

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   get '/new_teacher_interview', to: 'teachers#new_teacher_interview', as: :new_teacher_interview
   post '/confirm_teacher_interview', to: 'teachers#confirm_teacher_interview', as: :confirm_teacher_interview
   post '/toggle_vacation_mode', to: 'teachers#toggle_vacation_mode', as: :toggle_vacation_mode
+  post '/emergency_cancel', to: 'teachers#emergency_cancel', as: :emergency_cancel
 
   # Students
   delete '/destroy_favorite_teacher', to: 'students#destroy_favorite_teacher', as: :destroy_favorite_teacher
@@ -47,6 +48,7 @@ Rails.application.routes.draw do
   post '/deny_teacher', to: 'yogalit_admins#deny_teacher', as: :admins_deny_teacher
   post '/block_student', to: 'yogalit_admins#block_student', as: :admins_block_student
   post '/dismiss_report_without_action', to: 'yogalit_admins#dismiss_report_without_action', as: :admins_dismiss_report_without_action
+  post '/teacher_no_show', to: 'yogalit_admins#teacher_no_show', as: :teacher_no_show
 
   # Payments
   post '/student_refund_request', to: 'payments#student_refund_request', as: :student_refund_request

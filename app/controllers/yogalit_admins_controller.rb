@@ -17,6 +17,51 @@ class YogalitAdminsController < ApplicationController
     @reported_sessions = build_reported_sessions_hash(yoga_sessions, "student")
   end
 
+  def teacher_no_show
+    yoga_session = YogaSession.find(params[:id])
+    teacher = Teacher.find(yoga_session[:teacher_id])
+    teacher_cancel_count = TeacherEmergencyCancel.where(teacher_id: yoga_session[:teacher_id]).count
+    transaction_id = Payment.find(yoga_session[:payment_id]).transaction_id
+    yoga_session[:student_refund_given] = true
+    yoga_session[:video_under_review] = false
+    yoga_session[:video_reviewed] = true
+
+    if teacher[:has_been_blacklisted]########
+      # Block Teacher
+      teacher[:blocked] = true
+      if teacher.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
+        # TODO Notify Student of refund. Notify Teacher of "blocked" status.
+        flash[:notice] = "Teacher has been blocked due to a previous Blacklisting. Refund given."
+      else
+        flash[:notice] = "Something went wrong, please try again."
+      end
+    elsif teacher_cancel_count == 3
+      # Blacklist Teacher
+      teacher.blacklisted = true
+      teacher.has_been_blacklisted = true
+      date = Date.parse((Time.now.in_time_zone(teacher[:timezone]) + 2592000).to_s)
+      teacher.unblacklist_date = date
+      if teacher.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
+        # TODO Notify Student of refund. Notify Teacher of "blacklisted" status.
+        flash[:notice] = "Teacher has been Blacklisted. Refund given."
+      else
+        flash[:notice] = "Something went wrong please try again."
+      end
+    else
+      # Add emergency cancellation
+      # TODO Notify Student of refund. Notify Teacher of "emergency cancellation" used.
+      teacher_emergency_cancel = TeacherEmergencyCancel.new
+      teacher_emergency_cancel[:teacher_id] = teacher[:id]
+      if teacher_emergency_cancel.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
+        flash[:notice] = "Teacher Emergency Cancel initiated. Refund given."
+      else
+        flash[:notice] = "Something went wrong, please try again."
+      end
+    end########
+
+    return redirect_to request.referrer
+  end
+
   def build_reported_sessions_hash(yoga_sessions, teacher_or_student)
     reported_sessions = {}
     counter = 1

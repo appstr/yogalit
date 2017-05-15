@@ -83,9 +83,12 @@ class YogaTeacherSearchesController < ApplicationController
     yoga_types = YogaType.where(type_id: params[:type_of_yoga])
     yoga_types.each do |yt|
       if yoga_instructor_ids.empty? || !yoga_instructor_ids.include?(yt[:teacher_id])
-        is_searchable = Teacher.find(yt[:teacher_id]).is_searchable
-        is_verified = Teacher.find(yt[:teacher_id]).is_verified
-        yoga_instructor_ids << yt[:teacher_id] if is_searchable && is_verified
+        teacher = Teacher.find(yt[:teacher_id])
+        is_searchable = teacher.is_searchable
+        is_verified = teacher.is_verified
+        is_blacklisted = teacher.blacklisted
+        is_blocked = teacher.blocked
+        yoga_instructor_ids << yt[:teacher_id] if is_searchable && is_verified && !is_blacklisted && !is_blocked
       end
     end
     return yoga_instructor_ids

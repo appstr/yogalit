@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170513162958) do
+ActiveRecord::Schema.define(version: 20170513233342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,14 @@ ActiveRecord::Schema.define(version: 20170513162958) do
 
   add_index "teacher_booked_times", ["student_id"], name: "index_teacher_booked_times_on_student_id", using: :btree
   add_index "teacher_booked_times", ["teacher_id"], name: "index_teacher_booked_times_on_teacher_id", using: :btree
+
+  create_table "teacher_emergency_cancels", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "teacher_emergency_cancels", ["teacher_id"], name: "index_teacher_emergency_cancels_on_teacher_id", using: :btree
 
   create_table "teacher_friday_time_frames", force: :cascade do |t|
     t.integer   "teacher_id"
@@ -238,6 +246,10 @@ ActiveRecord::Schema.define(version: 20170513162958) do
     t.integer  "average_rating",           limit: 8
     t.boolean  "is_searchable"
     t.boolean  "is_verified"
+    t.boolean  "blacklisted"
+    t.date     "unblacklist_date"
+    t.boolean  "has_been_blacklisted"
+    t.boolean  "blocked"
     t.boolean  "vacation_mode"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
@@ -290,11 +302,12 @@ ActiveRecord::Schema.define(version: 20170513162958) do
     t.boolean  "teacher_payout_made"
     t.boolean  "video_under_review"
     t.boolean  "video_reviewed"
+    t.boolean  "teacher_cancelled_session"
     t.boolean  "student_requested_refund"
     t.boolean  "student_refund_given"
     t.integer  "yoga_type"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
   add_index "yoga_sessions", ["payment_id"], name: "index_yoga_sessions_on_payment_id", using: :btree

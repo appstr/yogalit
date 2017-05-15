@@ -138,6 +138,7 @@ class StudentsController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["cancelled"] = yoga_session[:teacher_cancelled_session]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = day_of_week
         upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]

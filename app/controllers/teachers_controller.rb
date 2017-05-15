@@ -283,7 +283,7 @@ class TeachersController < ApplicationController
     interview[:teacher_id] = teacher[:id]
     interview[:interview_date] = Date.parse(params[:date])
     split_time_range = params[:time_range_select].split("..")
-    interview[:time_range] = (Time.parse(split_time_range[0]).to_i..Time.parse(split_time_range[1]).to_i)
+    interview[:time_range] = (Time.parse(split_time_range[0])..Time.parse(split_time_range[1]))
     interview[:teacher_timezone] = teacher[:timezone]
     interview[:teacher_cancelled] = false
     interview[:completed] = false
@@ -329,6 +329,32 @@ class TeachersController < ApplicationController
       available_types << [YogaType::ENUMS.key(yt[:type_id]), yt[:type_id]]
     end
     return available_types
+  end
+
+  def emergency_cancel
+    yoga_session = YogaSession.find(params[:id])
+    if yoga_session[:teacher_cancelled_session]
+      flash[:notice] = "Session has already been cancelled."
+      return redirect_to request.referrer
+    end
+    teacher = Teacher.where(user_id: current_user).first
+    teacher_cancelled_count = TeacherEmergencyCancel.where(teacher_id: teacher).count
+    if teacher_cancelled_count == 3
+      flash[:notice] = "You have reached the maximum number of cancellations allowed."
+    else
+      yoga_session[:teacher_cancelled_session] = true
+      teacher_emergency_cancel = TeacherEmergencyCancel.new
+      teacher_emergency_cancel[:teacher_id] = teacher[:id]
+      transaction_id = Payment.find(yoga_session[:payment_id]).transaction_id
+      remaining = 3 - (teacher_cancelled_count + 1)
+      if teacher_emergency_cancel.save! && yoga_session.save! && Payment.refund_successful?(transaction_id)
+        # TODO send email to Student notifying them of the refund.
+        flash[:notice] = "Your cancellation has been submitted, you have #{remaining} cancellations remaining."
+      else
+        flash[:notice] = "Something went wrong, please try again or contact Yogalit directly."
+      end
+    end
+    return redirect_to request.referrer
   end
 
   def build_params_from_teacher_profile
@@ -580,6 +606,7 @@ class TeachersController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = student[:first_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = student[:last_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["cancelled"] = yoga_session[:teacher_cancelled_session]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = day_of_week
         upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
@@ -592,6 +619,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :vacation_mode)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode)
   end
 end

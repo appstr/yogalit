@@ -208,7 +208,14 @@
               <td><%= v["duration"] %> min</td>
               <td><%= v["timezone"] %></td>
               <td><%= v["yoga_type"] %></td>
-              <td><%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %></td>
+              <td>
+                <% if v["cancelled"] %>
+                Cancelled
+                <% else %>
+                  <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
+                  <%= link_to "Emergency Cancel", emergency_cancel_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to cancel this Yoga Session?"}, method: :post %>
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </table>

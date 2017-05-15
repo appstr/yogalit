@@ -59,6 +59,7 @@
                 <%= link_to "Refund Student", refund_yoga_session_path(id: v["yoga_session_id"]), method: :post %><br />
                 <%= link_to "General Denial", general_refund_denial_path %><br />
                 <%= link_to "Custom Denial", custom_refund_denial_path %><br />
+                <%= link_to "Teacher No-Show", teacher_no_show_path(id: v["yoga_session_id"]), method: :post %><br />
               </td>
             </tr>
           <% end %>

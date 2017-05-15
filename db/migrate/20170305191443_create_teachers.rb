@@ -9,6 +9,10 @@ class CreateTeachers < ActiveRecord::Migration
       t.bigint :average_rating
       t.boolean :is_searchable
       t.boolean :is_verified
+      t.boolean :blacklisted
+      t.date    :unblacklist_date
+      t.boolean :has_been_blacklisted
+      t.boolean :blocked
       t.boolean :vacation_mode
       t.timestamps null: false
     end
