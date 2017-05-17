@@ -339,6 +339,14 @@ class TeachersController < ApplicationController
       flash[:notice] = "Session has already been cancelled."
       return redirect_to request.referrer
     end
+    bt = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
+    date = Time.parse(bt[:session_date].to_s)
+    Time.zone = bt[:teacher_timezone]
+    if Time.zone.local(date.strftime("%Y"), date.strftime("%m"), date.strftime("%d"), bt[:time_range].first.in_time_zone(bt[:teacher_timezone]).strftime("%k"), bt[:time_range].first.in_time_zone(bt[:teacher_timezone]).strftime("%M")) <= Time.now.in_time_zone(bt[:teacher_timezone])
+      flash[:notice] = "Sessions cannot be cancelled once they have started."
+      return redirect_to request.referrer
+    end
+    # Check if session started, if so, return redirect_to request.referrer
     teacher = Teacher.where(user_id: current_user).first
     teacher_cancelled_count = TeacherEmergencyCancel.where(teacher_id: teacher).count
     if teacher_cancelled_count == 3

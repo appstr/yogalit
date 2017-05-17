@@ -49,11 +49,9 @@ class StudentsController < ApplicationController
       yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
       next if yoga_session.nil?
       teacher = Teacher.find(yoga_session[:teacher_id])
-      date = sanitize_date_for_view(bt[:session_date].to_s)
-      day_of_week = bt[:session_date].strftime("%A")
       time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
       split_date = bt[:session_date].to_s.split("-")
-      Time.zone = bt[:student_timezone]
+      Time.zone = bt[:teacher_timezone]
       split_time_range = time_range.split(" - ")
       start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:student_timezone]))
       end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:student_timezone]))
@@ -64,12 +62,12 @@ class StudentsController < ApplicationController
       most_recent["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
       most_recent["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
       most_recent["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
-      most_recent["yoga_session_#{counter}"]["date"] = date
-      most_recent["yoga_session_#{counter}"]["day_of_week"] = day_of_week
+      most_recent["yoga_session_#{counter}"]["date"] = sanitize_date_for_view(Date.parse(timestamp.in_time_zone(bt[:student_timezone]).to_s).to_s)
+      most_recent["yoga_session_#{counter}"]["day_of_week"] = timestamp.in_time_zone(bt[:student_timezone]).strftime("%A")
       most_recent["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
       most_recent["yoga_session_#{counter}"]["duration"] = bt[:duration]
       most_recent["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
-      most_recent["yoga_session_#{counter}"]["timestamp"] = timestamp
+      most_recent["yoga_session_#{counter}"]["timestamp"] = timestamp.in_time_zone(bt[:student_timezone])
       most_recent["yoga_session_#{counter}"]["refunded"] = yoga_session[:student_refund_given]
       counter += 1
     end
@@ -123,11 +121,9 @@ class StudentsController < ApplicationController
         yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
         next if yoga_session.nil?
         teacher = Teacher.find(yoga_session[:teacher_id])
-        date = sanitize_date_for_view(bt[:session_date].to_s)
-        day_of_week = bt[:session_date].strftime("%A")
         time_range = sanitize_date_range_for_view(bt[:time_range], bt[:student_timezone])
         split_date = bt[:session_date].to_s.split("-")
-        Time.zone = bt[:student_timezone]
+        Time.zone = bt[:teacher_timezone]
         split_time_range = time_range.split(" - ")
         start_time = sanitize_date_for_time_only(Time.parse(split_time_range[0]).in_time_zone(bt[:student_timezone]))
         end_time = sanitize_date_for_time_only((Time.parse(split_time_range[1]) - 1).in_time_zone(bt[:student_timezone]))
@@ -138,13 +134,13 @@ class StudentsController < ApplicationController
         upcoming_yoga_sessions["yoga_session_#{counter}"]["yoga_type"] = YogaType::ENUMS.key(yoga_session[:yoga_type])
         upcoming_yoga_sessions["yoga_session_#{counter}"]["first_name"] = teacher[:first_name]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["last_name"] = teacher[:last_name]
-        upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = date
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["date"] = sanitize_date_for_view(Date.parse(timestamp.in_time_zone(bt[:student_timezone]).to_s).to_s)
         upcoming_yoga_sessions["yoga_session_#{counter}"]["cancelled"] = yoga_session[:teacher_cancelled_session]
-        upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = day_of_week
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["day_of_week"] = timestamp.in_time_zone(bt[:student_timezone]).strftime("%A")
         upcoming_yoga_sessions["yoga_session_#{counter}"]["time_range"] = "#{start_time} - #{end_time}"
         upcoming_yoga_sessions["yoga_session_#{counter}"]["duration"] = bt[:duration]
         upcoming_yoga_sessions["yoga_session_#{counter}"]["timezone"] = bt[:student_timezone]
-        upcoming_yoga_sessions["yoga_session_#{counter}"]["timestamp"] = timestamp
+        upcoming_yoga_sessions["yoga_session_#{counter}"]["timestamp"] = timestamp.in_time_zone(bt[:student_timezone])
         upcoming_yoga_sessions["yoga_session_#{counter}"]["refunded"] = yoga_session[:student_refund_given]
         counter += 1
       end
