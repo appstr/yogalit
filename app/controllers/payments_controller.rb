@@ -17,7 +17,6 @@ class PaymentsController < ApplicationController
       @student = Student.where(user_id: current_user).first
       @teacher = Teacher.find(@search_params["id"])
       payment = Payment.new
-      get_session_date_in_teacher_tz
       payment[:teacher_id] = @teacher[:id]
       payment[:student_id] = @student[:id]
       payment[:sales_tax] = params[:sales_tax]
@@ -36,7 +35,6 @@ class PaymentsController < ApplicationController
             yoga_session[:teacher_id] = @teacher[:id]
             yoga_session[:student_id] = @student[:id]
             yoga_session[:teacher_booked_time_id] = @booked_time[:id]
-            yoga_session[:session_date_time] = @session_date
             yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
             yoga_session[:teacher_payout_made] = false
             yoga_session[:video_under_review] = false
@@ -172,6 +170,7 @@ class PaymentsController < ApplicationController
 
   def create_teacher_booked_time
     get_session_times
+    get_session_date_in_teacher_tz
     get_session_time_range
     booked_time = TeacherBookedTime.new
     booked_time[:teacher_id] = @teacher[:id]

@@ -299,7 +299,6 @@ ActiveRecord::Schema.define(version: 20170513233342) do
     t.integer  "student_id"
     t.integer  "teacher_booked_time_id"
     t.string   "opentok_session_id"
-    t.datetime "session_date_time"
     t.boolean  "teacher_payout_made"
     t.boolean  "video_under_review"
     t.boolean  "video_reviewed"
