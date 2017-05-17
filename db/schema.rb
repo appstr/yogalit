@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(version: 20170513233342) do
     t.string   "last_name"
     t.string   "phone"
     t.string   "timezone"
+    t.string   "paypal_email"
     t.integer  "average_rating",           limit: 8
     t.boolean  "is_searchable"
     t.boolean  "is_verified"

@@ -164,4 +164,10 @@ class YogalitAdminsController < ApplicationController
     return redirect_to request.referrer
   end
 
+  def teacher_payouts
+    if Payment.teacher_payouts
+      return redirect_to request.referrer
+    end
+  end
+
 end

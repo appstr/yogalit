@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   post '/block_student', to: 'yogalit_admins#block_student', as: :admins_block_student
   post '/dismiss_report_without_action', to: 'yogalit_admins#dismiss_report_without_action', as: :admins_dismiss_report_without_action
   post '/teacher_no_show', to: 'yogalit_admins#teacher_no_show', as: :teacher_no_show
+  post '/teacher_payouts', to: 'yogalit_admins#teacher_payouts', as: :admins_teacher_payouts
 
   # Payments
   post '/student_refund_request', to: 'payments#student_refund_request', as: :student_refund_request

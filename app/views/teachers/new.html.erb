@@ -19,6 +19,10 @@
   <br />
   <%= f.text_field :phone %>
   <br />
+  <%= f.label :paypal_email %>
+  <br />
+  <%= f.text_field :paypal_email %>
+  <br />
   <%= f.label :time_zone %>
   <br />
   <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: "Eastern Time (US & Canada)"}, class:"browser-default" %>

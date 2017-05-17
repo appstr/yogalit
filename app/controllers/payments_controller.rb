@@ -17,16 +17,17 @@ class PaymentsController < ApplicationController
       @student = Student.where(user_id: current_user).first
       @teacher = Teacher.find(@search_params["id"])
       payment = Payment.new
+      get_session_date_in_teacher_tz
       payment[:teacher_id] = @teacher[:id]
       payment[:student_id] = @student[:id]
       payment[:sales_tax] = params[:sales_tax]
       payment[:price_without_tax] = params[:price_without_tax]
       payment[:total_price] = params[:total_price]
       payment[:yogalit_tax] = ENV["yogalit_tax_amount"].to_f
+      get_payout_params
       payment[:yogalit_fee_amount] = @yogalit_fee_amount
       payment[:teacher_payout_amount] = @teacher_payout_amount
       payment[:transaction_id] = transaction_id
-      get_payout_params
       if payment.save!
         if create_open_tok_session
           if create_teacher_booked_time
@@ -156,8 +157,8 @@ class PaymentsController < ApplicationController
   private
 
   def get_payout_params
-    @yogalit_fee_amount = params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)
-    @teacher_payout_amount = params[:total_price].to_f - @yogalit_fee_amount
+    @yogalit_fee_amount = (params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)).round(2)
+    @teacher_payout_amount = (params[:total_price].to_f - @yogalit_fee_amount).round(2)
   end
 
   def create_favorite_teacher_for_student(teacher_id, student_id)
@@ -171,7 +172,6 @@ class PaymentsController < ApplicationController
 
   def create_teacher_booked_time
     get_session_times
-    get_session_date_in_teacher_tz
     get_session_time_range
     booked_time = TeacherBookedTime.new
     booked_time[:teacher_id] = @teacher[:id]

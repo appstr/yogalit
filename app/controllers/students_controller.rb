@@ -29,7 +29,7 @@ class StudentsController < ApplicationController
 
   def get_most_recent_yoga_sessions
     recent_booked_times = []
-    booked_times = TeacherBookedTime.where(student_id: @student).where("session_date >= ? AND session_date <= ?", Date.today - 2, Date.today + 2)
+    booked_times = TeacherBookedTime.where(student_id: @student).where("session_date >= ? AND session_date <= ?", Date.today - 1, Date.today + 1)
     booked_times.each do |bt|
       Time.zone = bt[:teacher_timezone]
       split_date_and_time(bt)

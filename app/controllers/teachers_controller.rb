@@ -115,6 +115,7 @@ class TeachersController < ApplicationController
     teacher[:last_name] = params[:teacher][:last_name].downcase
     teacher[:phone] = params[:teacher][:phone]
     teacher[:timezone] = params[:teacher][:timezone]
+    teacher[:paypal_email] = params[:teacher][:paypal_email]
     teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
     if teacher.save!
       flash[:notice] = "Your profile info was updated successfully!"
@@ -622,6 +623,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :paypal_email)
   end
 end
