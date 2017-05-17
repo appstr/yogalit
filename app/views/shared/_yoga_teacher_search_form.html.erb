@@ -6,7 +6,7 @@
   <%= label_tag :duration %>
   <%= select_tag :duration, options_for_select(yoga_session_duration_options) %><br />
   <%= label_tag :student_timezone, "Select Your Current Time-Zone" %>
-  <%= time_zone_select :student_timezone, "time_zone", ActiveSupport::TimeZone.us_zones, class:"browser-default" %>
+  <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default" %>
   <br />
   <br />
   <%= submit_tag "Search", class:"btn" %>

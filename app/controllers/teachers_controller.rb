@@ -437,7 +437,7 @@ class TeachersController < ApplicationController
         if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i + 120) && @start_time.day == obj[1].first.day
           new_times << [obj[0], obj[1]]
         end
-      elsif @start_time.day == obj[1].first.day
+      elsif Date.parse(params[:session_date]).wday == obj[1].first.wday
         new_times_true = true
         new_times << [obj[0], obj[1]]
       end

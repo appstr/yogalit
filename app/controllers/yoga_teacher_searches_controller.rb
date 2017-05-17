@@ -6,7 +6,7 @@ class YogaTeacherSearchesController < ApplicationController
     yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, int_search_date)
     @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
     @duration = params[:duration]
-    @student_timezone = params["student_timezone"]["time_zone"]
+    @student_timezone = params["student_timezone"].first
     @session_date = Time.new(@year, @month, @day)
     @day_of_week = @session_date.strftime("%A")
     yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)
@@ -26,38 +26,122 @@ class YogaTeacherSearchesController < ApplicationController
     new_ids = []
     if day_of_week == "Monday"
       yoga_teacher_ids.each do |yi|
+        before_times = TeacherSundayTimeFrame.where(teacher_id: yi)
+        before_times.each do |bt|
+          if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+            new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+          end
+        end
         time_frames = TeacherMondayTimeFrame.where(teacher_id: yi).first
         new_ids << yi if !time_frames.nil?
+        after_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
+        after_times.each do |at|
+          if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+            new_ids << yi if !after_times.nil?
+          end
+        end
       end
     elsif day_of_week == "Tuesday"
       yoga_teacher_ids.each do |yi|
+        before_times = TeacherMondayTimeFrame.where(teacher_id: yi)
+        before_times.each do |bt|
+          if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+            new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+          end
+        end
         time_frames = TeacherTuesdayTimeFrame.where(teacher_id: yi).first
         new_ids << yi if !time_frames.nil?
+        after_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
+        after_times.each do |at|
+          if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+            new_ids << yi if !after_times.nil?
+          end
+        end
       end
     elsif day_of_week == "Wednesday"
         yoga_teacher_ids.each do |yi|
+          before_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
+          before_times.each do |bt|
+            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            end
+          end
           time_frames = TeacherWednesdayTimeFrame.where(teacher_id: yi).first
           new_ids << yi if !time_frames.nil?
+          after_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
+          after_times.each do |at|
+            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !after_times.nil?
+            end
+          end
         end
     elsif day_of_week == "Thursday"
         yoga_teacher_ids.each do |yi|
+          before_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
+          before_times.each do |bt|
+            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            end
+          end
           time_frames = TeacherThursdayTimeFrame.where(teacher_id: yi).first
           new_ids << yi if !time_frames.nil?
+          after_times = TeacherFridayTimeFrame.where(teacher_id: yi)
+          after_times.each do |at|
+            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !after_times.nil?
+            end
+          end
         end
     elsif day_of_week == "Friday"
         yoga_teacher_ids.each do |yi|
+          before_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
+          before_times.each do |bt|
+            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            end
+          end
           time_frames = TeacherFridayTimeFrame.where(teacher_id: yi).first
           new_ids << yi if !time_frames.nil?
+          after_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
+          after_times.each do |at|
+            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !after_times.nil?
+            end
+          end
         end
     elsif day_of_week == "Saturday"
         yoga_teacher_ids.each do |yi|
+          before_times = TeacherFridayTimeFrame.where(teacher_id: yi)
+          before_times.each do |bt|
+            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            end
+          end
           time_frames = TeacherSaturdayTimeFrame.where(teacher_id: yi).first
           new_ids << yi if !time_frames.nil?
+          after_times = TeacherSundayTimeFrame.where(teacher_id: yi)
+          after_times.each do |at|
+            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !after_times.nil?
+            end
+          end
         end
     else day_of_week == "Sunday"
         yoga_teacher_ids.each do |yi|
+          before_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
+          before_times.each do |bt|
+            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            end
+          end
           time_frames = TeacherSundayTimeFrame.where(teacher_id: yi).first
           new_ids << yi if !time_frames.nil?
+          after_times = TeacherMondayTimeFrame.where(teacher_id: yi)
+          after_times.each do |at|
+            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
+              new_ids << yi if !after_times.nil?
+            end
+          end
         end
     end
     return new_ids
