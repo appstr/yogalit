@@ -117,6 +117,7 @@ class TeachersController < ApplicationController
     teacher[:timezone] = params[:teacher][:timezone]
     teacher[:paypal_email] = params[:teacher][:paypal_email]
     teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
+    teacher.certificate = params[:teacher][:certificate] if !params[:teacher][:certificate].nil?
     if teacher.save!
       flash[:notice] = "Your profile info was updated successfully!"
       path = teachers_path
@@ -346,7 +347,6 @@ class TeachersController < ApplicationController
       flash[:notice] = "Sessions cannot be cancelled once they have started."
       return redirect_to request.referrer
     end
-    # Check if session started, if so, return redirect_to request.referrer
     teacher = Teacher.where(user_id: current_user).first
     teacher_cancelled_count = TeacherEmergencyCancel.where(teacher_id: teacher).count
     if teacher_cancelled_count == 3
@@ -631,6 +631,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :paypal_email)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :paypal_email, :certificate)
   end
 end

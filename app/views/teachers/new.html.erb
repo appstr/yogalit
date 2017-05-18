@@ -1,35 +1,46 @@
-<h1>Teacher Continued Registration</h1>
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Teacher Continued Registration</h1>
 
-<%= form_for(@teacher) do |f| %>
-  <%= f.hidden_field :is_searchable, value: false %>
-  <%= f.hidden_field :is_verified, value: false %>
-  <%= f.hidden_field :blacklisted, value: false %>
-  <%= f.hidden_field :has_been_blacklisted, value: false %>
-  <%= f.hidden_field :blocked, value: false %>
-  <%= f.hidden_field :vacation_mode, value: false %>
-  <%= f.label :first_name %>
-  <br />
-  <%= f.text_field :first_name %>
-  <br />
-  <%= f.label :last_name %>
-  <br />
-  <%= f.text_field :last_name %>
-  <br />
-  <%= f.label :phone %>
-  <br />
-  <%= f.text_field :phone %>
-  <br />
-  <%= f.label :paypal_email %>
-  <br />
-  <%= f.text_field :paypal_email %>
-  <br />
-  <%= f.label :time_zone %>
-  <br />
-  <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: "Eastern Time (US & Canada)"}, class:"browser-default" %>
-  <br />
-  <%= f.label :profile_pic, "Main profile picture" %>
-  <br />
-  <%= f.file_field :profile_pic %>
-  <br />
-  <%= f.submit "Submit", class:'btn' %>
-<% end %>
+      <%= form_for(@teacher) do |f| %>
+        <%= f.hidden_field :is_searchable, value: false %>
+        <%= f.hidden_field :is_verified, value: false %>
+        <%= f.hidden_field :blacklisted, value: false %>
+        <%= f.hidden_field :has_been_blacklisted, value: false %>
+        <%= f.hidden_field :blocked, value: false %>
+        <%= f.hidden_field :vacation_mode, value: false %>
+        <%= f.label :first_name %>
+        <br />
+        <%= f.text_field :first_name %>
+        <br />
+        <%= f.label :last_name %>
+        <br />
+        <%= f.text_field :last_name %>
+        <br />
+        <%= f.label :phone %>
+        <br />
+        <%= f.text_field :phone %>
+        <br />
+        <%= f.label :paypal_email %>
+        <br />
+        <%= f.text_field :paypal_email %>
+        <br />
+        <%= f.label :time_zone %>
+        <br />
+        <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: "Eastern Time (US & Canada)"}, class:"browser-default" %>
+        <br />
+        <%= f.label :certificate, "National Yoga Alliance Certificate" %>
+        <br />
+        <%= f.file_field :certificate %>
+        <br />
+        <%= f.label :profile_pic, "Main profile picture" %>
+        <br />
+        <%= f.file_field :profile_pic %>
+        <br />
+        <%= f.submit "Submit", class:'btn' %>
+      <% end %>
+    </div>
+  </div>
+</div>

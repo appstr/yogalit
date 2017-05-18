@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170513233342) do
+ActiveRecord::Schema.define(version: 20170518131905) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -258,6 +258,10 @@ ActiveRecord::Schema.define(version: 20170513233342) do
     t.string   "profile_pic_content_type"
     t.integer  "profile_pic_file_size"
     t.datetime "profile_pic_updated_at"
+    t.string   "certificate_file_name"
+    t.string   "certificate_content_type"
+    t.integer  "certificate_file_size"
+    t.datetime "certificate_updated_at"
   end
 
   add_index "teachers", ["user_id"], name: "index_teachers_on_user_id", using: :btree

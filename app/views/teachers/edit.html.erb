@@ -18,6 +18,15 @@
   <small>If TimeZone is changed, your hours of operations will change as well. ex: 9am MT will be 8am PST.</small>
   <br />
   <br />
+  <%= f.label :certificate, "National Yoga Alliance Certificate" %>
+  <div class="row">
+    <div class="col s12 m2">
+      <%= image_tag @teacher.certificate.url %>
+    </div>
+  </div>
+  <%= f.file_field :certificate %>
+  <br />
+  <br />
   <%= f.label :profile_pic, "Main profile picture" %>
   <div class="row">
     <div class="col s12 m2">
