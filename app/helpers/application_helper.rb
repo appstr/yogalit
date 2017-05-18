@@ -116,4 +116,20 @@ module ApplicationHelper
       ['Wyoming', 'WY']
     ]
   end
+
+  def time_frame_options
+    time_frames = []
+    initial_time = Time.zone.local(2017, 01, 01, 00, 00, 00)
+    start_time = Time.zone.local(2017, 01, 01, 00, 00, 00)
+    while start_time.wday == initial_time.wday
+      time_frames << [sanitize_date_for_time_only(start_time), sanitize_date_for_time_only(start_time)]
+      if sanitize_date_for_time_only(start_time) == "11:30pm"
+        start_time += 1799
+      else
+        start_time += 1800
+      end
+    end
+    return time_frames
+  end
+
 end
