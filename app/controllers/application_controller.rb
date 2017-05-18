@@ -85,4 +85,17 @@ class ApplicationController < ActionController::Base
       return false
     end
   end
+
+  def google_authorize_teacher
+    session[:google_calendar_access_token] = nil
+    client = Signet::OAuth2::Client.new({
+      client_id: ENV["google_calendar_client_id"],
+      client_secret: ENV["google_calendar_client_secret"],
+      authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+      scope: "https://www.googleapis.com/auth/calendar",
+      redirect_uri: "http://localhost:3000/new_teacher_interview"
+    })
+    return redirect_to client.authorization_uri.to_s
+  end
+
 end

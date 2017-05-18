@@ -7,7 +7,12 @@ class UsersController < ApplicationController
       if teacher.nil?
         path = new_teacher_path
       else
-        path = teachers_path
+        interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
+        if interview.nil?
+          return google_authorize_teacher
+        else
+          path = teachers_path
+        end
       end
     elsif current_user[:teacher_or_student] == "student"
       student = Student.where(user_id: current_user).first
@@ -19,6 +24,7 @@ class UsersController < ApplicationController
     elsif current_user[:teacher_or_student] == "admin"
       path = yogalit_admins_path
     end
+
     return redirect_to path
   end
 
