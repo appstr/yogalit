@@ -17,6 +17,9 @@ class TeacherMondayTimeFramesController < ApplicationController
     if end_less_than_start?(teacher)
       flash[:notice] = "End time cannot be less than start time."
       return redirect_to request.referrer
+    elsif start_equal_end?(teacher)
+      flash[:notice] = "Start time and end time cannot be equal."
+      return redirect_to request.referrer
     end
     if time_frame_taken?(teacher)
       flash[:notice] = "Time frame given interferes with a previous time frame."
@@ -52,6 +55,14 @@ class TeacherMondayTimeFramesController < ApplicationController
 
   def end_less_than_start?(teacher)
     if Time.zone.local(2017, 03, 27, @start_hour, @start_minute, 00).in_time_zone(teacher[:timezone]) > Time.zone.local(2017, 03, 27, @end_hour, @end_minute, 00).in_time_zone(teacher[:timezone])
+      return true
+    else
+      return false
+    end
+  end
+
+  def start_equal_end?(teacher)
+    if Time.zone.local(2017, 03, 27, @start_hour, @start_minute, 00).in_time_zone(teacher[:timezone]) == Time.zone.local(2017, 03, 27, @end_hour, @end_minute, 00).in_time_zone(teacher[:timezone])
       return true
     else
       return false

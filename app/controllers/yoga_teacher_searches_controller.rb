@@ -46,15 +46,15 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherMondayTimeFrame.where(teacher_id: yi)
         before_times.each do |bt|
           if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-            new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
           end
         end
         time_frames = TeacherTuesdayTimeFrame.where(teacher_id: yi).first
-        new_ids << yi if !time_frames.nil?
+        new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
         after_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
         after_times.each do |at|
           if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-            new_ids << yi if !after_times.nil?
+            new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
           end
         end
       end
@@ -63,15 +63,15 @@ class YogaTeacherSearchesController < ApplicationController
           before_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
           before_times.each do |bt|
             if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
             end
           end
           time_frames = TeacherWednesdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil?
+          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
           after_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
           after_times.each do |at|
             if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !after_times.nil?
+              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
             end
           end
         end
@@ -80,15 +80,15 @@ class YogaTeacherSearchesController < ApplicationController
           before_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
           before_times.each do |bt|
             if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
             end
           end
           time_frames = TeacherThursdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil?
+          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
           after_times = TeacherFridayTimeFrame.where(teacher_id: yi)
           after_times.each do |at|
             if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !after_times.nil?
+              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
             end
           end
         end
@@ -97,15 +97,15 @@ class YogaTeacherSearchesController < ApplicationController
           before_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
           before_times.each do |bt|
             if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
             end
           end
           time_frames = TeacherFridayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil?
+          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
           after_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
           after_times.each do |at|
             if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !after_times.nil?
+              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
             end
           end
         end
@@ -114,15 +114,15 @@ class YogaTeacherSearchesController < ApplicationController
           before_times = TeacherFridayTimeFrame.where(teacher_id: yi)
           before_times.each do |bt|
             if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
             end
           end
           time_frames = TeacherSaturdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil?
+          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
           after_times = TeacherSundayTimeFrame.where(teacher_id: yi)
           after_times.each do |at|
             if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !after_times.nil?
+              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
             end
           end
         end
@@ -131,15 +131,15 @@ class YogaTeacherSearchesController < ApplicationController
           before_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
           before_times.each do |bt|
             if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
             end
           end
           time_frames = TeacherSundayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil?
+          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
           after_times = TeacherMondayTimeFrame.where(teacher_id: yi)
           after_times.each do |at|
             if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-              new_ids << yi if !after_times.nil?
+              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
             end
           end
         end
