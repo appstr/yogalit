@@ -132,4 +132,14 @@ module ApplicationHelper
     return time_frames
   end
 
+  def teacher_score_options
+    [
+      ["1", 1],
+      ["2", 2],
+      ["3", 3],
+      ["4", 4],
+      ["5", 5]
+    ]
+  end
+
 end

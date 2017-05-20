@@ -1,0 +1,2 @@
+module TeacherRatingsHelper
+end

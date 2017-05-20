@@ -190,6 +190,7 @@ class PaymentsController < ApplicationController
     booked_time[:duration] = @search_params["duration"].to_i
     booked_time[:student_timezone] = @search_params["student_timezone"]
     booked_time[:teacher_timezone] = @search_params["teacher_timezone"]
+    booked_time[:teacher_rating_given] = false
     if booked_time.save!
       @booked_time = booked_time
       return true

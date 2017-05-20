@@ -1,0 +1,62 @@
+<style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+      text-align: center;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col s12">
+      <br />
+      <h1>Rate a Teacher</h1>
+      <% if @unrated_sessions.nil? %>
+        <h5>Nothing to rate</h5>
+      <% else %>
+        <table>
+          <tr>
+            <th>Teacher's Name</th>
+            <th>Date</th>
+            <th>Day Of Week</th>
+            <th>Time Frame</th>
+            <th>Duration</th>
+            <th>Time Zone</th>
+            <th>Type of Yoga</th>
+            <th></th>
+          </tr>
+          <% @unrated_sessions.each do |k, v| %>
+            <tr>
+              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+              <td><%= v["date"] %></td>
+              <td><%= v["day_of_week"] %></td>
+              <td><%= v["time_range"] %></td>
+              <td><%= v["duration"] %> min</td>
+              <td><%= v["timezone"] %></td>
+              <td><%= v["yoga_type"] %></td>
+              <td>
+                <%= form_tag({controller:"teacher_ratings", action:"create"}) do %>
+                  <%= hidden_field_tag :id, nil, value: v["yoga_session_id"] %>
+                  <%= select_tag :score, options_for_select(teacher_score_options) %><br />
+                  <%= text_area_tag :comment, nil, placeholder: "Leave a comment..." %><br />
+                  <%= submit_tag "Rate", class:"btn", data: {confirm: "Click to confirm rating!"} %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

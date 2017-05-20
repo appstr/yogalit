@@ -41,22 +41,27 @@ class YogaSessionsController < ApplicationController
   end
 
   def submit_yoga_session_problem
-    yoga_session = YogaSession.find(params[:id])
+    if current_user[:teacher_or_student] == "student"
+      reported_yoga_session = StudentReportedYogaSession.new
+      student = Student.where(user_id: current_user[:id]).first
+      yoga_session = YogaSession.where(id: params[:id], student_id: student).first
+    else
+      reported_yoga_session = TeacherReportedYogaSession.new
+      teacher = Teacher.where(user_id: current_user[:id]).first
+      yoga_session = YogaSession.where(id: params[:id], teacher_id: teacher).first
+    end
     yoga_session[:video_under_review] = true
     yoga_session[:student_requested_refund] = true if params[:requesting_refund]
     if yoga_session.save!
-      if current_user[:teacher_or_student] == "student"
-        reported_yoga_session = StudentReportedYogaSession.new
-      else
-        reported_yoga_session = TeacherReportedYogaSession.new
-      end
       reported_yoga_session[:teacher_id] = yoga_session[:teacher_id]
       reported_yoga_session[:student_id] = yoga_session[:student_id]
       reported_yoga_session[:yoga_session_id] = yoga_session[:id]
       reported_yoga_session[:description] = params[:description]
-      reported_yoga_session.save!
-      # Send email to YogalitAdmin notifying them of the report.
-      # Send email to Student and Teacher notifying them of the report.
+      begin
+        reported_yoga_session.save!
+      rescue e
+        puts e
+      end
       flash[:notice] = "Your report was made and a Yogalit administrator will contact your email with any further questions or information."
     else
       flash[:notice] = "Your report was not made. Please try again or contact Yogalit through the Contact link in the header."

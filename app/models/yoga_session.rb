@@ -3,4 +3,5 @@ class YogaSession < ActiveRecord::Base
   belongs_to :student
   belongs_to :teacher
   has_many :reported_yoga_sessions
+  has_many :teacher_ratings
 end

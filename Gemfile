@@ -18,6 +18,7 @@ gem 'paypal-sdk-rest'
 gem 'typhoeus'
 gem 'signet'
 gem 'sass-rails', '~> 5.0'
+gem 'whenever', :require => false
 
 group :development, :test do
   gem 'pry'

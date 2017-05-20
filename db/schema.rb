@@ -88,8 +88,9 @@ ActiveRecord::Schema.define(version: 20170518131905) do
     t.integer   "duration"
     t.string    "student_timezone"
     t.string    "teacher_timezone"
-    t.datetime  "created_at",       null: false
-    t.datetime  "updated_at",       null: false
+    t.boolean   "teacher_rating_given"
+    t.datetime  "created_at",           null: false
+    t.datetime  "updated_at",           null: false
   end
 
   add_index "teacher_booked_times", ["student_id"], name: "index_teacher_booked_times_on_student_id", using: :btree
@@ -156,16 +157,14 @@ ActiveRecord::Schema.define(version: 20170518131905) do
   add_index "teacher_price_ranges", ["teacher_id"], name: "index_teacher_price_ranges_on_teacher_id", using: :btree
 
   create_table "teacher_ratings", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.integer  "student_id"
+    t.integer  "yoga_session_id"
     t.integer  "score"
     t.string   "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
-  add_index "teacher_ratings", ["student_id"], name: "index_teacher_ratings_on_student_id", using: :btree
-  add_index "teacher_ratings", ["teacher_id"], name: "index_teacher_ratings_on_teacher_id", using: :btree
+  add_index "teacher_ratings", ["yoga_session_id"], name: "index_teacher_ratings_on_yoga_session_id", using: :btree
 
   create_table "teacher_reported_yoga_sessions", force: :cascade do |t|
     t.integer  "teacher_id"

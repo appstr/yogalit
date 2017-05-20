@@ -8,6 +8,7 @@ class CreateTeacherBookedTimes < ActiveRecord::Migration
       t.integer :duration
       t.string :student_timezone
       t.string :teacher_timezone
+      t.boolean :teacher_rating_given
       t.timestamps null: false
     end
   end
