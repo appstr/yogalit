@@ -34,16 +34,6 @@ class YogaSessionsController < ApplicationController
       flash[:notice] = "This video has already had a report filed."
       return redirect_to request.referrer
     end
-    booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
-    get_date_and_time_separated(booked_time)
-    Time.zone = booked_time[:teacher_timezone]
-    if Time.now.in_time_zone(booked_time[:teacher_timezone]) < Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00)
-      flash[:notice] = "This session has not started yet."
-      return redirect_to request.referrer
-    elsif Time.now.in_time_zone(booked_time[:teacher_timezone]) > (Time.zone.local(@year, @month, @day, @start_hour, @start_minute, 00) + 86400)
-      flash[:notice] = "The ability to report this session has expired."
-      return redirect_to request.referrer
-    end
     @teacher = Teacher.find(yoga_session[:teacher_id])
     @student = Student.find(yoga_session[:student_id])
     @booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])

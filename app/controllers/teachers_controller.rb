@@ -301,6 +301,8 @@ class TeachersController < ApplicationController
       )
       response = request.run
       if response.success?
+        teacher_email = User.find(teacher[:user_id]).email
+        UserMailer.new_teacher_interview_email(teacher_email).deliver_now
         flash[:notice] = "A Calendar Event was created successfully!"
         return redirect_to teachers_path
       else
@@ -381,7 +383,7 @@ class TeachersController < ApplicationController
 
   def get_res_filtered_booking_times(available_booking_times, duration)
     booking_date = Date.parse(params[:session_date]).to_s.split("-")
-    teacher_booked_times = TeacherBookedTime.where(teacher_id: @teacher).where('session_date = ?', Time.new(booking_date[0], booking_date[1], booking_date[2]))
+    teacher_booked_times = TeacherBookedTime.where(teacher_id: @teacher).where('session_date = ?', Date.parse(Time.new(booking_date[0], booking_date[1], booking_date[2]).to_s))
     return remove_booked_times_from(available_booking_times, teacher_booked_times)
   end
 
@@ -392,7 +394,7 @@ class TeachersController < ApplicationController
       available_end = av_bt[1].last
       teacher_booked_times.each do |t_bt|
         booked_start = Time.at(t_bt[:time_range].first).in_time_zone(params[:student_timezone])
-        booked_end = Time.at(t_bt[:time_range].last - 1).in_time_zone(params[:student_timezone])
+        booked_end = Time.at(t_bt[:time_range].last - 1).in_time_zone(params[:student_timezone]) - 59
         if ((booked_start).between?(available_start, available_end)) || ((booked_end).between?(available_start, available_end))
           if booked_start != available_end && available_start != booked_end
             if !filtered_times[("#{sanitize_date_for_time_only(available_start)} - #{sanitize_date_for_time_only(available_end)}")].nil?
@@ -431,7 +433,7 @@ class TeachersController < ApplicationController
     sorted_formatted_times.each do |obj|
       if Date.parse(params["session_date"]) == Date.today && Time.now.in_time_zone(params[:student_timezone]) >= Time.parse(params[:session_date]).in_time_zone(params[:student_timezone])
         new_times_true = true
-        if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i + 120) && @start_time.day == obj[1].first.day
+        if !(obj[1].first.strftime("%k%M").to_i <= Time.now.in_time_zone(params[:student_timezone]).strftime("%k%M").to_i + 60) && @start_time.day == obj[1].first.day
           new_times << [obj[0], obj[1]]
         end
       elsif Date.parse(params[:session_date]).wday == obj[1].first.wday

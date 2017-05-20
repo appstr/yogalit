@@ -43,6 +43,10 @@ class UserMailer < ApplicationMailer
     mail(to: student_email, subject: 'Refund Denial', from:"Yogalit <no_reply@yogalit.com>")
   end
 
+  def new_teacher_interview_email(teacher_email)
+    mail(to: teacher_email, subject: 'Interview Details', from:"Yogalit <no_reply@yogalit.com>")
+  end
+
   def message_to_yogalit(new_message)
     @new_message = new_message
     mail(to: "yogalityoga@gmail.com", subject: 'New Yogalit Message', from:"Yogalit <no_reply@yogalit.com>")
