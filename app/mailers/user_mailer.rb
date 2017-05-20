@@ -27,8 +27,8 @@ class UserMailer < ApplicationMailer
     mail(to: teacher_email, subject: 'Emergency Cancellation', from:"Yogalit <no_reply@yogalit.com>")
   end
 
-  def new_yoga_session_booked(student_email, teacher_email)
-    mail(to: [student_email, teacher_email], subject: 'Emergency Cancellation', from:"Yogalit <no_reply@yogalit.com>")
+  def new_yoga_session_booked_email(student_email, teacher_email)
+    mail(to: [student_email, teacher_email], subject: 'New Yoga Session!', from:"Yogalit <no_reply@yogalit.com>")
   end
 
   def student_refund_email(student_email)

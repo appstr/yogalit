@@ -3,11 +3,11 @@
   <%= form_tag(@teacher_sunday_time_frame) do %>
     <%= label_tag :start_time %>
     <br />
-    <%= text_field_tag :start_time %>
+    <%= select_tag :start_time, options_for_select(time_frame_options) %>
     <br />
     <%= label_tag :end_time %>
     <br />
-    <%= text_field_tag :end_time %>
+    <%= select_tag :end_time, options_for_select(time_frame_options) %>
     <br />
     <%= submit_tag "Submit", class:'btn' %>
   <% end %>

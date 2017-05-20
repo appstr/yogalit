@@ -16,8 +16,8 @@ class PaymentsController < ApplicationController
       transaction_id = credit_card_processed[1]
       @student = Student.where(user_id: current_user).first
       student_email = User.find(@student[:user_id]).email
-      teacher_email = User.find(@teacher[:user_id]).email
       @teacher = Teacher.find(@search_params["id"])
+      teacher_email = User.find(@teacher[:user_id]).email
       payment = Payment.new
       payment[:teacher_id] = @teacher[:id]
       payment[:student_id] = @student[:id]
