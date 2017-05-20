@@ -302,7 +302,6 @@ class TeachersController < ApplicationController
       response = request.run
       if response.success?
         flash[:notice] = "A Calendar Event was created successfully!"
-        # TODO Send email to Student explaining that they will be invited via Google Hangouts to the interview.
         return redirect_to teachers_path
       else
         flash[:notice] = "An error occurred while trying to book the Calendar Event. Please try again."
@@ -347,7 +346,9 @@ class TeachersController < ApplicationController
       transaction_id = Payment.find(yoga_session[:payment_id]).transaction_id
       remaining = 3 - (teacher_cancelled_count + 1)
       if teacher_emergency_cancel.save! && yoga_session.save! && Payment.refund_successful?(transaction_id)
-        # TODO send email to Student notifying them of the refund.
+        student = Student.find(yoga_session[:student_id])
+        student_email = User.find(student[:user_id]).email
+        UserMailer.student_refund_email(student_email).deliver_now
         flash[:notice] = "Your cancellation has been submitted, you have #{remaining} cancellations remaining."
       else
         flash[:notice] = "Something went wrong, please try again or contact Yogalit directly."

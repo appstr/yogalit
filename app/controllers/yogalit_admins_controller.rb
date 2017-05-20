@@ -19,7 +19,10 @@ class YogalitAdminsController < ApplicationController
 
   def teacher_no_show
     yoga_session = YogaSession.find(params[:id])
+    student = Student.find(yoga_session[:student_id])
+    student_email = User.find(student[:user_id]).email
     teacher = Teacher.find(yoga_session[:teacher_id])
+    teacher_email = User.find(teacher[:user_id]).email
     teacher_cancel_count = TeacherEmergencyCancel.where(teacher_id: yoga_session[:teacher_id]).count
     transaction_id = Payment.find(yoga_session[:payment_id]).transaction_id
     yoga_session[:student_refund_given] = true
@@ -30,7 +33,8 @@ class YogalitAdminsController < ApplicationController
       # Block Teacher
       teacher[:blocked] = true
       if teacher.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
-        # TODO Notify Student of refund. Notify Teacher of "blocked" status.
+        UserMailer.teacher_blocked_email(teacher_email).deliver_now
+        UserMailer.student_refund_email(student_email).deliver_now
         flash[:notice] = "Teacher has been blocked due to a previous Blacklisting. Refund given."
       else
         flash[:notice] = "Something went wrong, please try again."
@@ -42,17 +46,19 @@ class YogalitAdminsController < ApplicationController
       date = Date.parse((Time.now.in_time_zone(teacher[:timezone]) + 2592000).to_s)
       teacher.unblacklist_date = date
       if teacher.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
-        # TODO Notify Student of refund. Notify Teacher of "blacklisted" status.
+        UserMailer.teacher_blacklisted_email(teacher_email).deliver_now
+        UserMailer.student_refund_email(student_email).deliver_now
         flash[:notice] = "Teacher has been Blacklisted. Refund given."
       else
         flash[:notice] = "Something went wrong please try again."
       end
     else
       # Add emergency cancellation
-      # TODO Notify Student of refund. Notify Teacher of "emergency cancellation" used.
       teacher_emergency_cancel = TeacherEmergencyCancel.new
       teacher_emergency_cancel[:teacher_id] = teacher[:id]
       if teacher_emergency_cancel.save! && Payment.refund_successful?(transaction_id) && yoga_session.save!
+        UserMailer.teacher_emergency_cancel_email(teacher_email).deliver_now
+        UserMailer.student_refund_email(student_email).deliver_now
         flash[:notice] = "Teacher Emergency Cancel initiated. Refund given."
       else
         flash[:notice] = "Something went wrong, please try again."
@@ -106,12 +112,13 @@ class YogalitAdminsController < ApplicationController
 
   def verify_teacher
     teacher = Teacher.where(user_id: params[:id]).first
+    teacher_email = User.find(teacher[:user_id]).email
     interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
     teacher[:is_verified] = true
     interview[:completed] = true
     if teacher.save! && interview.save!
       flash[:notice] = "Teacher has been approved!"
-      # TODO Send email to Teacher notifying them of their verification.
+      UserMailer.teacher_verification_email(teacher_email).deliver_now
       return redirect_to yogalit_admins_path
     else
       flash[:notice] = "Something went wrong, please try again."
@@ -130,7 +137,8 @@ class YogalitAdminsController < ApplicationController
     interview[:completed] = true
     if teacher.delete && user.delete && interview.save!
       flash[:notice] = "Teacher has been denied!"
-      # TODO Send email to Teacher notifying them of their denial.
+      teacher_email = User.find(teacher[:user_id]).email
+      UserMailer.teacher_denial_email(teacher_email).deliver_now
       return redirect_to yogalit_admins_path
     else
       flash[:notice] = "Something went wrong, please try again."
@@ -140,11 +148,13 @@ class YogalitAdminsController < ApplicationController
 
   def block_student
     ys = YogaSession.find(params[:id])
+    teacher_email = User.find(teacher[:user_id]).email
     student = Student.find(ys[:student_id])
     user = User.find(student[:user_id])
     user[:blacklisted] = true
     if user.save!
-      # TODO send resolution email to Teacher. Notify Student of being blacklisted.
+      UserMailer.student_blocked_email(user.email).deliver_now
+      UserMailer.teacher_blocked_student_resolution_email(teacher_email).deliver_now
       flash[:notice] = "The Student has been Blacklisted!"
     else
       flash[:notice] = "Something went wrong, please try again."

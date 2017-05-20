@@ -15,6 +15,8 @@ class PaymentsController < ApplicationController
     if credit_card_processed[0]
       transaction_id = credit_card_processed[1]
       @student = Student.where(user_id: current_user).first
+      student_email = User.find(@student[:user_id]).email
+      teacher_email = User.find(@teacher[:user_id]).email
       @teacher = Teacher.find(@search_params["id"])
       payment = Payment.new
       payment[:teacher_id] = @teacher[:id]
@@ -45,6 +47,7 @@ class PaymentsController < ApplicationController
             yoga_session[:opentok_session_id] = @opentok_session_id
             if yoga_session.save!
               flash[:notice] = "Your Yoga Session was booked successfully!"
+              UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
               create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
               return redirect_to payment_path(id: yoga_session)
             else
@@ -115,7 +118,9 @@ class PaymentsController < ApplicationController
       yoga_session[:video_reviewed] = true
       yoga_session[:student_refund_given] = true
       if yoga_session.save!
-        # TODO send email notifying Student and Teacher of refund. UserMailer.refund(amount)
+        student = Student.find(yoga_session[:student_id])
+        student_email = User.find(student[:user_id]).email
+        UserMailer.student_refund_email(student_email).deliver_now
         flash[:notice] = "Refund processed successfully!"
         return redirect_to request.referrer
       end
@@ -130,7 +135,9 @@ class PaymentsController < ApplicationController
     yoga_session[:video_reviewed] = true
     yoga_session[:student_refund_given] = false
     if yoga_session.save!
-      # TODO send email to Student denying refund. UserMailer.general_denial_refund
+      student = Student.find(yoga_session[:student_id])
+      student_email = User.find(student[:user_id]).email
+      UserMailer.general_refund_denial(student_email).deliver_now
       flash[:notice] = "Student refund denial info saved!"
     else
       flash[:notice] = "Student refund denial info did not save."
@@ -144,7 +151,10 @@ class PaymentsController < ApplicationController
     yoga_session[:video_reviewed] = true
     yoga_session[:student_refund_given] = false
     if yoga_session.save!
-      # TODO send email to Student denying refund. UserMailer.custom_denial_refund(params[:denial_reason])
+      message = "My Custom Refund Denial Message"
+      student = Student.find(yoga_session[:student_id])
+      student_email = User.find(student[:user_id]).email
+      UserMailer.general_refund_denial(student_email, message).deliver_now
       flash[:notice] = "Student refund denial info saved!"
     else
       flash[:notice] = "Student refund denial info did not save."
