@@ -1,5 +1,43 @@
 @import "mixins";
-// 
-// #landing_page_hero_container {
-//   @include backgroundShorthand("/assets/buddha_n_candle.jpg");
-// }
+
+#main_hero {
+  @include backgroundShorthand("/assets/welcome_hero_background.png");
+  min-height: 20em;
+
+  .we_love_div {
+    width: 50%;
+    position: absolute;
+    top: 12.5%;
+    left: 25%;
+
+    .yogalit_white_logo_div {
+      img {
+        width: 50%;
+      }
+      position: absolute;
+      top: 50%;
+      text-align: center;
+
+      p {
+        width: 100%;
+        font-family: 'Source Sans Pro', sans-serif;
+        color: white;
+        position: absolute;
+        font-size: 0.5em;
+        letter-spacing: 0.5em;
+      } // p
+      button {
+        position: relative;
+        border: 1px solid #ffffff;
+        padding: 1em;
+        margin-top: 4em;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        background-color: rgba(0,0,0,0.0);
+        color: white;
+      }
+    } // .yogalit_white_logo_div
+  } // .we_love_div
+
+
+} // #main_hero

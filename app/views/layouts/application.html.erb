@@ -7,6 +7,13 @@
 <!-- Compiled and minified JavaScript -->
   <title>Yogalit</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:600" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <script src="https://use.fontawesome.com/68b3592f31.js"></script>
+
   <%= stylesheet_link_tag    'application', media: 'all' %>
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
   <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
@@ -24,14 +31,29 @@
 <body>
   <div id="nav_bar" class="container-fluid">
     <div class="row">
-      <div class="col s6">
-        <h6>Yogalit</h6>
+      <div class="col s3 m1">
+        <img src="/assets/yogalit_logo.png" />
       </div>
+      <div class="col s3 m5"></div>
       <div class="col s6">
-        <div class="header-links">
+        <div class="header-links hide-on-med-and-down">
           <%= link_to "Home", '/' %>
           <%= link_to "Contact", new_user_message_path %>
           <%= link_to('Logout', destroy_user_session_path, :method => :delete) if user_signed_in? %>
+        </div>
+        <div class="header-bars hide-on-large-only">
+
+          <ul id="slide-out" class="side-nav center">
+            <li><%= link_to "Home", '/' %></li>
+            <li><%= link_to "Contact", new_user_message_path %></li>
+            <% if user_signed_in? %>
+              <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+            <% else %>
+              <!-- <li><%#= link_to 'Login', '#' %></li> -->
+              <li><a href="#login_modal">Login</a></li>
+            <% end %>
+          </ul>
+          <i class="fa fa-bars button-collapse" data-activates="slide-out" aria-hidden="true"></i>
         </div>
       </div>
     </div>
@@ -41,9 +63,28 @@
     <script type="text/javascript">
       Materialize.toast("<%= flash[:notice] %>", 4000)
     </script>
+  <% elsif flash[:alert] %>
+    <script type="text/javascript">
+      Materialize.toast("<%= flash[:alert] %>", 4000)
+    </script>
   <% end %>
 
 <%= yield %>
+
+<script type="text/javascript">
+  $('.button-collapse').sideNav(
+    {
+      menuWidth: 300, // Default is 300
+      edge: 'right', // Choose the horizontal origin
+      closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
+      draggable: true // Choose whether you can drag to open on touch screens
+    }
+  );
+
+  $(document).ready(function(){
+    $('.modal').modal();
+  });
+</script>
 
 
 

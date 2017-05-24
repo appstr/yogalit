@@ -25,28 +25,28 @@
         <%= hidden_field_tag :sales_tax, nil, value: @sales_tax %>
         <%= hidden_field_tag :total_price, nil, value: @total_price %>
         <%= label_tag :cc_first_name, "First name on CC" %>
-        <%= text_field_tag :cc_first_name %>
+        <%= text_field_tag :cc_first_name, nil, required: true %>
         <%= label_tag :cc_last_name, "Last name on CC" %>
-        <%= text_field_tag :cc_last_name %>
+        <%= text_field_tag :cc_last_name, nil, required: true %>
         <%= label_tag :card_type %>
         <%= select_tag :card_type, options_for_select(credit_card_type_options) %><br />
         <%= label_tag :cc_number, "CC number" %>
-        <%= text_field_tag :cc_number %>
+        <%= text_field_tag :cc_number, nil, required: true %>
         <%= label_tag :month, "CC month expiration" %>
-        <%= text_field_tag :month %>
+        <%= text_field_tag :month, nil, required: true %>
         <%= label_tag :year, "CC year expiration" %>
-        <%= text_field_tag :year %>
+        <%= text_field_tag :year, nil, required: true %>
         <%= label_tag :verification_value, "CC verification_value" %>
-        <%= text_field_tag :verification_value %>
+        <%= text_field_tag :verification_value, nil, required: true %>
         <h4>Billing Info</h4>
         <%= label_tag :billing_street_address, "Street Adress" %>
-        <%= text_field_tag :billing_street_address %>
+        <%= text_field_tag :billing_street_address, nil, required: true %>
         <%= label_tag :billing_city, "City" %>
-        <%= text_field_tag :billing_city %>
+        <%= text_field_tag :billing_city, nil, required: true %>
         <%= label_tag :billing_state, "State/Province" %>
         <%= select_tag :billing_state, options_for_select(state_options) %><br />
         <%= label_tag :billing_postal, "Postal Code" %>
-        <%= text_field_tag :billing_postal %>
+        <%= text_field_tag :billing_postal, nil, required: true %>
         <br />
         <%= submit_tag "Pay Now", class:"btn" %>
       <% end %>

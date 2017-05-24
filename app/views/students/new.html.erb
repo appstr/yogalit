@@ -6,7 +6,7 @@
       <%= form_for(@student) do |f| %>
       <%= f.label :first_name %>
       <br />
-      <%= f.text_field :first_name %>
+      <%= f.text_field :first_name, required: true %>
       <br />
       <%= f.label :last_name %>
       <br />
