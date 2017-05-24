@@ -38,6 +38,87 @@
       }
     } // .yogalit_white_logo_div
   } // .we_love_div
-
-
 } // #main_hero
+
+#signup {
+  margin-top: 3em;
+  h4 {
+    color: #56cbf9;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+
+  ul {
+    color: #8e8e8e;
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    letter-spacing: 0.1em;
+  }
+  // desktop- img{
+  //   width: 50%;
+  // }
+
+  button {
+    letter-spacing: 0.2em;
+    background-color: #16e0bd;
+    color: white;
+    padding: 1em;
+    border: 1px solid #16e0bd;
+    width: 100%;
+  }
+
+  .join_now_div {
+    text-align: center;
+  }
+}
+
+#find_yoga_teachers {
+  @include backgroundShorthand("/assets/yoga_teachers_hero_background.png");
+  min-height: 15em;
+
+  h4 {
+    color: #56cbf9;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+  }
+
+  p {
+    color: #dbdde1;
+    letter-spacing: 0.1em;
+  }
+
+  button {
+    letter-spacing: 0.2em;
+    border: 1px solid #16e0bd;
+    color: #16e0bd;
+    background-color: rgba(0,0,0,0.0);
+    padding: 1em;
+    width: 100%;
+  }
+
+  .find_teachers_button {
+    text-align: center;
+  }
+}
+
+#do_yoga {
+  margin-top: 3em;
+  h4 {
+    text-align: center;
+    color: #56cbf9;
+  }
+
+  p {
+    color: #bcbcbc;
+  }
+
+  button {
+    letter-spacing: 0.2em;
+    border: 1px solid #16e0bd;
+    color: #ffffff;
+    background-color: #16e0bd;
+    padding: 1em;
+    width: 100%;
+  }
+}
