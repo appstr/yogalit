@@ -2,6 +2,7 @@
 
 #main_hero {
   @include backgroundShorthand("/assets/welcome_hero_background.png");
+
   min-height: 20em;
 
   .we_love_div {
@@ -35,9 +36,21 @@
         letter-spacing: 0.2em;
         background-color: rgba(0,0,0,0.0);
         color: white;
+        &:hover {
+          background-color: #16e0bd;
+        }
       }
     } // .yogalit_white_logo_div
   } // .we_love_div
+  @media(min-width: 575px){
+    min-height: 30em;
+  }
+  @media(min-width: 950px){
+    min-height: 35em;
+  }
+  @media(min-width: 1200px){
+    min-height: 45em;
+  }
 } // #main_hero
 
 #signup {
@@ -67,9 +80,37 @@
     border: 1px solid #16e0bd;
     width: 100%;
   }
+  @media(min-width: 768px){
+    button {
+      margin-top: 2em;
+      width: 50%;
+      &:hover {
+        background-color: #ffffff;
+        color: #16e0bd;
+      }
+    }
+    .yoga_silhouette_div {
+      text-align: center;
+    }
+    img {
+      width: 50%;
+    }
+  }
 
   .join_now_div {
     text-align: center;
+  }
+
+  .tutorial_div {
+    margin-top: 2em;
+    h5 {
+      text-align: center;
+      color: #555555;
+    }
+    p {
+      text-align: center;
+      color: #555555;
+    }
   }
 }
 
@@ -95,11 +136,31 @@
     background-color: rgba(0,0,0,0.0);
     padding: 1em;
     width: 100%;
+    &:hover {
+      background-color: #16e0bd;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+    }
   }
-
   .find_teachers_button {
     text-align: center;
   }
+  @media(min-width: 768px){
+    min-height: 28em;
+    h4 {
+      margin-bottom: 1em;
+    }
+    button {
+      width: 50%;
+    }
+    .find_teachers_button {
+      text-align: left;
+    }
+    p {
+      margin-bottom: 3em;
+    }
+  }
+
 }
 
 #do_yoga {
@@ -107,6 +168,7 @@
   h4 {
     text-align: center;
     color: #56cbf9;
+    font-weight: 800;
   }
 
   p {
@@ -120,5 +182,30 @@
     background-color: #16e0bd;
     padding: 1em;
     width: 100%;
+  }
+
+  @media(min-width: 768px){
+    img {
+      width: 50%;
+    }
+    .do_yoga_image_div {
+      text-align: center
+    }
+    .do_yoga_read_more_div {
+      text-align: center;
+    }
+    button {
+      width: 50%;
+      margin-top: 2em;
+      &:hover {
+        border: 1px solid #16e0bd;
+        background-color: #ffffff;
+        color: #16e0bd;
+      }
+    }
+    p {
+      margin-top: 2em;
+      text-align: center;
+    }
   }
 }

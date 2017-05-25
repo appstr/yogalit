@@ -39,7 +39,13 @@
         <div class="header-links hide-on-med-and-down">
           <%= link_to "Home", '/' %>
           <%= link_to "Contact", new_user_message_path %>
-          <%= link_to('Logout', destroy_user_session_path, :method => :delete) if user_signed_in? %>
+          <%= link_to "Find-Teachers", '#find_yoga_teachers' %>
+          <%= link_to "Do-Yoga", '#do_yoga' %>
+          <% if user_signed_in? %>
+            <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
+            <% else %>
+            <a href="#login_modal"><button>Login</button></a>
+          <% end %>
         </div>
         <div class="header-bars hide-on-large-only">
 

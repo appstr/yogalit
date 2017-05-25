@@ -10,3 +10,14 @@
 video, img {
   width: 100%;
 }
+
+.hide_greater_than_oet_768 {
+  @media(min-width: 768px){
+    display: none;
+  }
+}
+.hide_less_than_oet_767 {
+  @media(max-width: 767px){
+    display: none;
+  }
+}
