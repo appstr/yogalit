@@ -231,34 +231,3 @@
     }
   }
 }
-
-#login_modal {
-  background-color: rgba(0,0,0,0.0);
-  max-height: 56%;
-  h4 {
-    font-family: 'Raleway', sans-serif;
-    color: #56cbf9;
-    text-align: center;
-  }
-  .modal-content {
-    margin-bottom: 3em;
-    .login_btn_div {
-      text-align: center;
-    }
-    button {
-      margin-top: 1em;
-      letter-spacing: 0.2em;
-      border: 1px solid #16e0bd;
-      color: #16e0bd;
-      background-color: rgba(0,0,0,0.0);
-      padding: 1em;
-      width: 50%;
-      font-family: 'Source Sans Pro', sans-serif;
-      &:hover {
-        background-color: #16e0bd;
-        border: 1px solid #ffffff;
-        color: #ffffff;
-      }
-    }
-  }
-}

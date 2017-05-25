@@ -1,4 +1,16 @@
 module ApplicationHelper
+  def resource_name
+    :user
+  end
+
+  def resource
+    @resource ||= User.new
+  end
+
+  def devise_mapping
+    @devise_mapping ||= Devise.mappings[:user]
+  end
+
   def sanitize_date_for_time_only(date)
     # returns time from date (zero-padded). --> 09:00pm
     return date.strftime("%I:%M%P")

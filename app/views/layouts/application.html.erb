@@ -44,6 +44,7 @@
           <% if user_signed_in? %>
             <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
             <% else %>
+            <a href="#signup_modal"><button>Sign-Up</button></a>
             <a href="#login_modal"><button>Login</button></a>
           <% end %>
         </div>
@@ -56,10 +57,103 @@
             <% if user_signed_in? %>
               <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
             <% else %>
+              <li><a href="#signup_modal">Sign-Up</a></li>
               <li><a href="#login_modal">Login</a></li>
             <% end %>
           </ul>
           <i class="fa fa-bars button-collapse" data-activates="slide-out" aria-hidden="true"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="login_modal" class="modal">
+    <div class="modal-content">
+      <div class="container">
+        <div class="row">
+          <div class="col s4"></div>
+          <div class="col s4">
+            <img src="/assets/yogalit_logo.png" />
+          </div>
+        </div>
+        <div class="col s12">
+          <h4>Login</h4>
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <div class="field">
+              <%= f.label :email %><br />
+              <%= f.email_field :email, autofocus: true, required: true %>
+            </div>
+
+            <div class="field">
+              <%= f.label :password %><br />
+              <%= f.password_field :password, autocomplete: "off", required: true %>
+            </div>
+
+            <% if devise_mapping.rememberable? -%>
+              <div class="field">
+                <%= f.check_box :remember_me %>
+                <%= f.label :remember_me %>
+              </div>
+            <% end -%>
+
+            <div class="actions login_btn_div">
+              <button>Login</button>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="signup_modal" class="modal">
+    <div class="modal-content">
+      <div class="container">
+        <div class="row">
+          <div class="col s4"></div>
+          <div class="col s4">
+            <img src="/assets/yogalit_logo.png" />
+          </div>
+        </div>
+        <div class="col s12">
+          <h4>Sign Up</h4>
+          <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            <%= devise_error_messages! %>
+            <%= f.hidden_field :blacklisted, value: false %>
+
+            <div class="field">
+              <%= f.label :email, "*Email" %>
+              <%= f.email_field :email, autofocus: true %>
+              <small>A Gmail account is required for Teacher sign-up</small>
+            </div>
+
+            <div class="field teacher_or_student_radio_div">
+                <%= f.label :teacher_or_student, "*Sign up as a Student or Teacher" %><br />
+                <input name="user[teacher_or_student]" type="radio" id="user_student_radio_btn" value="student" />
+                <label for="user_student_radio_btn">Student</label><br />
+                <input name="user[teacher_or_student]" type="radio" id="user_teacher_radio_btn" value="teacher" />
+                <label for="user_teacher_radio_btn">Teacher</label>
+            </div>
+
+            <div class="field">
+              <%= f.label :password, "*Password" %>
+              <% if @minimum_password_length %>
+              <em>(<%= @minimum_password_length %> characters minimum)</em>
+              <% end %><br />
+              <%= f.password_field :password, autocomplete: "off" %>
+            </div>
+            <br />
+            <br />
+
+            <div class="field">
+              <%= f.label :password_confirmation, "*Password confirmation" %><br />
+              <%= f.password_field :password_confirmation, autocomplete: "off" %>
+            </div>
+            <br />
+            <br />
+            <div class="actions signup_btn_div">
+              <button>Sign Up</button>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>

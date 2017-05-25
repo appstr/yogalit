@@ -1,6 +1,7 @@
 // Import all .scss files
 @import "devise_sessions";
 @import "devise_registrations";
+@import "user_messages";
 @import "header";
 @import "mixins";
 
@@ -19,5 +20,88 @@ video, img {
 .hide_less_than_oet_767 {
   @media(max-width: 767px){
     display: none;
+  }
+}
+
+#login_modal {
+  background-color: rgba(0,0,0,0.0);
+  max-height: 56%;
+  h4 {
+    font-family: 'Raleway', sans-serif;
+    color: #56cbf9;
+    text-align: center;
+  }
+  .modal-content {
+    margin-bottom: 3em;
+    background-color: #595959;
+    .login_btn_div {
+      text-align: center;
+    }
+    button {
+      margin-top: 1em;
+      letter-spacing: 0.2em;
+      border: 1px solid #16e0bd;
+      color: #16e0bd;
+      background-color: rgba(0,0,0,0.0);
+      padding: 1em;
+      width: 50%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+#signup_modal {
+  background-color: rgba(0,0,0,0.0);
+  max-height: 56%;
+  h4 {
+    font-family: 'Raleway', sans-serif;
+    color: #56cbf9;
+    text-align: center;
+    margin-bottom: 1em;
+  }
+  .modal-content {
+    margin-bottom: 3em;
+    background-color: #595959;
+    text-align: left;
+    input {
+      color: #ffffff;
+      margin-top: -1em;
+    }
+    input:first-of-type {
+      margin-bottom: -0.3em;
+    }
+    [type="radio"]:not(:checked)+label:before, [type="radio"]:not(:checked)+label:after {
+        border: 2px solid #ffffff;
+    }
+    .teacher_or_student_radio_div {
+      margin-top: 2em;
+      margin-bottom: 2em;
+    }
+    small {
+      color: white;
+    }
+    .signup_btn_div {
+      text-align: center;
+    }
+    button {
+      margin-top: 1em;
+      letter-spacing: 0.2em;
+      border: 1px solid #16e0bd;
+      color: #16e0bd;
+      background-color: rgba(0,0,0,0.0);
+      padding: 1em;
+      width: 50%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
+    }
   }
 }
