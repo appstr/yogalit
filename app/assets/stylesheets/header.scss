@@ -10,6 +10,7 @@
     text-align: right;
     word-spacing: 1em;
     margin-top: 1em;
+    font-family: 'Source Sans Pro', sans-serif;
     a {
       color: #ffffff;
       &:hover {
@@ -30,6 +31,26 @@
   .header-bars {
     text-align: right;
     margin-top: 0.5em;
+    font-family: 'Source Sans Pro', sans-serif;
+    a {
+      color: #ffffff;
+      &:hover {
+        color: #16e0bd;
+      }
+    }
+    button {
+      border: 1px solid #16e0bd;
+      color: #ffffff;
+      background-color: rgba(0,0,0,0.0);
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+      }
+    }
+  }
+
+  #slide-out {
+    background-color: #00b7ff;
   }
 
   .fa-bars {

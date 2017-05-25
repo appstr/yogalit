@@ -49,34 +49,6 @@
                   <% end %>
                 </div>
               </div>
-
-              <div id="login_modal" class="modal">
-                <div class="modal-content">
-                  <h4>Login</h4>
-                  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-                    <div class="field">
-                      <%= f.label :email %><br />
-                      <%= f.email_field :email, autofocus: true %>
-                    </div>
-
-                    <div class="field">
-                      <%= f.label :password %><br />
-                      <%= f.password_field :password, autocomplete: "off" %>
-                    </div>
-
-                    <% if devise_mapping.rememberable? -%>
-                      <div class="field">
-                        <%= f.check_box :remember_me %>
-                        <%= f.label :remember_me %>
-                      </div>
-                    <% end -%>
-
-                    <div class="actions">
-                      <%= f.submit "Log in", class:"btn" %>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -108,19 +80,22 @@
     <div class="row hide_less_than_oet_767">
       <div class="tutorial_div">
         <div class="col s3">
-          <h5>Step One</h5>
-          <p>Create an account.</p>
+          <h6>Step One</h6>
+          <p>Create an account</p>
+          <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
         </div>
         <div class="col s3">
-          <h5>Step Two</h5>
-          <p>Search for a Teacher.</p>
+          <h6>Step Two</h6>
+          <p>Search for a Teacher</p>
+          <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
         </div>
         <div class="col s3">
-          <h5>Step Three</h5>
-          <p>Choose an available time.</p>
+          <h6>Step Three</h6>
+          <p>Choose an available time</p>
+          <i class="fa fa-arrow-circle-o-right" aria-hidden="true"></i>
         </div>
         <div class="col s3">
-          <h5>Step Four</h5>
+          <h6>Step Four</h6>
           <p>Make a one time payment and your Personalized Yoga Session is booked!</p>
         </div>
       </div>
@@ -143,14 +118,14 @@
         <h4>Find Teachers from around the world</h4>
         <p>All Teachers are certified through the National Yoga Alliance and have been interviewed by our Yogalit Yoga Experts</p>
         <div class="find_teachers_button hide_less_than_oet_767">
-          <a href='#'><button>Find Now</button></a>
+          <a href='#'><button>Find a Teacher</button></a>
         </div>
       </div>
     </div>
     <div class="row hide_greater_than_oet_768">
       <div class="col s12">
         <div class="find_teachers_button">
-          <a href='#'><button>Find Now</button></a>
+          <a href='#'><button>Find a Teacher</button></a>
         </div>
       </div>
     </div>
@@ -167,10 +142,10 @@
       </div>
       <div class="col s6">
         <h4>Do Yoga</h4>
-        <p>Do Yoga in the privacy of your own home, or while traveling.</p>
-        <p>No classroom, no judgement.</p>
-        <p>With Teachers all around the world, Yoga sessions can be made at virtually all times of the day.</p>
-        <div class="do_yoga_read_more_div">
+        <p>• No classroom, no judgement.</p>
+        <p>• Do Yoga in the privacy of your own home, or while traveling.</p>
+        <p>• With Teachers online from all around the world, sessions can be made at virtually any time of the day.</p>
+        <div class="do_yoga_read_more_div hide_less_than_oet_767">
           <a href="#"><button>Read More</button></a>
         </div>
       </div>
@@ -182,3 +157,41 @@
     </div>
   </div>
 </section>
+
+<div id="login_modal" class="modal">
+  <div class="modal-content">
+    <div class="container">
+      <div class="row">
+        <div class="col s4"></div>
+        <div class="col s4">
+          <img src="/assets/yogalit_logo.png" />
+        </div>
+      </div>
+      <div class="col s12">
+        <h4>Login</h4>
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="field">
+            <%= f.label :email %><br />
+            <%= f.email_field :email, autofocus: true, required: true %>
+          </div>
+
+          <div class="field">
+            <%= f.label :password %><br />
+            <%= f.password_field :password, autocomplete: "off", required: true %>
+          </div>
+
+          <% if devise_mapping.rememberable? -%>
+            <div class="field">
+              <%= f.check_box :remember_me %>
+              <%= f.label :remember_me %>
+            </div>
+          <% end -%>
+
+          <div class="actions login_btn_div">
+            <button>Login</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

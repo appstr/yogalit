@@ -36,6 +36,7 @@
         letter-spacing: 0.2em;
         background-color: rgba(0,0,0,0.0);
         color: white;
+        font-family: 'Source Sans Pro', sans-serif;
         &:hover {
           background-color: #16e0bd;
         }
@@ -47,6 +48,13 @@
   }
   @media(min-width: 950px){
     min-height: 35em;
+    .we_love_div {
+      .yogalit_white_logo_div {
+        p {
+          font-size: 0.7em;
+        }
+      }
+    }
   }
   @media(min-width: 1200px){
     min-height: 45em;
@@ -60,11 +68,13 @@
     text-align: center;
     font-weight: 800;
     letter-spacing: 0.05em;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   ul {
     color: #8e8e8e;
-    font-family: 'Raleway', sans-serif;
+    // font-family: 'Raleway', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     text-align: center;
     letter-spacing: 0.1em;
   }
@@ -79,6 +89,7 @@
     padding: 1em;
     border: 1px solid #16e0bd;
     width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
   }
   @media(min-width: 768px){
     button {
@@ -103,13 +114,18 @@
 
   .tutorial_div {
     margin-top: 2em;
-    h5 {
-      text-align: center;
+    text-align: center;
+    h6 {
       color: #555555;
+      font-family: 'Raleway', sans-serif;
     }
     p {
-      text-align: center;
       color: #555555;
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+    i {
+      font-size: 1.5em;
+      color: #16e0bd;
     }
   }
 }
@@ -122,11 +138,13 @@
     color: #56cbf9;
     font-weight: 800;
     letter-spacing: 0.05em;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   p {
     color: #dbdde1;
     letter-spacing: 0.1em;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   button {
@@ -136,6 +154,7 @@
     background-color: rgba(0,0,0,0.0);
     padding: 1em;
     width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
     &:hover {
       background-color: #16e0bd;
       border: 1px solid #ffffff;
@@ -169,10 +188,12 @@
     text-align: center;
     color: #56cbf9;
     font-weight: 800;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   p {
-    color: #bcbcbc;
+    color: #8e8e8e;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   button {
@@ -182,6 +203,7 @@
     background-color: #16e0bd;
     padding: 1em;
     width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 
   @media(min-width: 768px){
@@ -206,6 +228,37 @@
     p {
       margin-top: 2em;
       text-align: center;
+    }
+  }
+}
+
+#login_modal {
+  background-color: rgba(0,0,0,0.0);
+  max-height: 56%;
+  h4 {
+    font-family: 'Raleway', sans-serif;
+    color: #56cbf9;
+    text-align: center;
+  }
+  .modal-content {
+    margin-bottom: 3em;
+    .login_btn_div {
+      text-align: center;
+    }
+    button {
+      margin-top: 1em;
+      letter-spacing: 0.2em;
+      border: 1px solid #16e0bd;
+      color: #16e0bd;
+      background-color: rgba(0,0,0,0.0);
+      padding: 1em;
+      width: 50%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
     }
   }
 }
