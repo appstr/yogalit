@@ -1,22 +1,27 @@
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br />
-      <h1>New Teacher Interview</h1>
-      <%= form_tag({controller: "teachers", action: "confirm_teacher_interview"}) do %>
-        <%= label_tag :date, "Interview Date" %>
-        <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
+<section id="new_teacher_interview">
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
         <br />
-        <div id="interview_time_range_select">
-          <%= label_tag :time_range_select, "Interview Times" %><br />
-          <%= select_tag :time_range_select, options_for_select(@available_times) %>
-        </div>
-        <br />
-        <%= submit_tag "Submit", class:"btn" %>
-      <% end %>
+        <h4>Choose an interview time</h4>
+        <%= form_tag({controller: "teachers", action: "confirm_teacher_interview"}) do %>
+          <%= label_tag :date, "Interview Date" %>
+          <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
+          <br />
+          <div id="interview_time_range_select">
+            <%= label_tag :time_range_select, "Interview Times" %><br />
+            <%= select_tag :time_range_select, options_for_select(@available_times) %>
+          </div>
+          <br />
+          <div class="book_interview_btn_div">
+            <button>Book Interview</button>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+</section>
+<div class="container-fluid bottom_tree_hero"></div>
 
 <script type="text/javascript">
   $(document).ready(function(){

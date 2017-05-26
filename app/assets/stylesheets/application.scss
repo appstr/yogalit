@@ -2,6 +2,8 @@
 @import "devise_sessions";
 @import "devise_registrations";
 @import "user_messages";
+@import "teachers";
+@import "students";
 @import "header";
 @import "mixins";
 
@@ -104,4 +106,9 @@ video, img {
       }
     }
   }
+}
+
+.bottom_tree_hero {
+  @include backgroundShorthand("/assets/tree_woman_yoga_pose.jpg");
+  min-height: 40em;
 }

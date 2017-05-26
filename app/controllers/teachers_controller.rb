@@ -1,5 +1,5 @@
 class TeachersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:teacher_profile]
   include ApplicationHelper
   require 'signet/oauth_2/client'
 
@@ -73,7 +73,7 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
-      elsif session[:google_calendar_access_token].nil?
+      elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
         return redirect_to new_teacher_interview_path
@@ -87,7 +87,7 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
-      elsif session[:google_calendar_access_token].nil?
+      elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
         return redirect_to new_teacher_interview_path
@@ -172,6 +172,10 @@ class TeachersController < ApplicationController
   end
 
   def new_teacher_interview
+    if Teacher.teacher_exists?(current_user)
+      teacher = Teacher.where(user_id: current_user).first
+      return redirect_to teachers_path if teacher[:is_verified]
+    end
     @teacher = Teacher.where(user_id: current_user).first
     if session[:google_calendar_access_token].nil?
       client = Signet::OAuth2::Client.new({
@@ -268,8 +272,8 @@ class TeachersController < ApplicationController
     if interview.nil?
       interview = InterviewBookedTime.new
     else
-      interview.delete
-      interview = InterviewBookedTime.new
+      flash[:notice] = "An interview was already created."
+      return redirect_to teachers_path
     end
     interview[:teacher_id] = teacher[:id]
     interview[:interview_date] = Date.parse(params[:date])

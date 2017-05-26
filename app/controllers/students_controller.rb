@@ -8,6 +8,7 @@ class StudentsController < ApplicationController
   end
 
   def create
+    return redirect_to students_path if Student.student_exists?(current_user)
     student = Student.new(student_params)
     student[:user_id] = current_user[:id]
     if student.save!

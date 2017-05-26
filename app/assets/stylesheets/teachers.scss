@@ -1,0 +1,79 @@
+#teachers_continued_registration {
+  background-color: #333333;
+  input, textarea, small {
+    color: white;
+  }
+  h4 {
+    margin-top: 3em;
+    margin-bottom: 2em;
+    color: #56cbf9;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  button {
+    letter-spacing: 0.2em;
+    border: 1px solid #16e0bd;
+    color: #16e0bd;
+    background-color: rgba(0,0,0,0.0);
+    padding: 1em;
+    width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+    &:hover {
+      background-color: #16e0bd;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+    }
+  }
+  @media(min-width: 768px){
+    button {
+      width: 50%;
+    }
+  }
+  .continued_registration_btn_div {
+    margin-top: 1em;
+    margin-bottom: 2em;
+    text-align: center;
+  }
+}
+
+#new_teacher_interview {
+  background-color: #333333;
+  input, textarea, small {
+    color: white;
+  }
+  h4 {
+    margin-top: 3em;
+    margin-bottom: 2em;
+    color: #56cbf9;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+  button {
+    letter-spacing: 0.2em;
+    border: 1px solid #16e0bd;
+    color: #16e0bd;
+    background-color: rgba(0,0,0,0.0);
+    padding: 1em;
+    width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+    &:hover {
+      background-color: #16e0bd;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+    }
+  }
+  @media(min-width: 768px){
+    button {
+      width: 50%;
+    }
+  }
+  .book_interview_btn_div {
+    margin-top: 1em;
+    margin-bottom: 2em;
+    text-align: center;
+  }
+}

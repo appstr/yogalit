@@ -1,25 +1,31 @@
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br />
-      <h1>New Student</h1>
-      <%= form_for(@student) do |f| %>
-      <%= f.label :first_name %>
-      <br />
-      <%= f.text_field :first_name, required: true %>
-      <br />
-      <%= f.label :last_name %>
-      <br />
-      <%= f.text_field :last_name %>
-      <br />
-      <%= f.label :phone %>
-      <br />
-      <%= f.text_field :phone %>
-      <br />
-      <br />
-      <%= f.submit "Submit", class:'btn' %>
+<section id="students_continued_registration">
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
         <br />
-      <% end %>
+        <h4>Finish Registration</h4>
+        <%= form_for(@student) do |f| %>
+        <%= f.label :first_name %>
+        <br />
+        <%= f.text_field :first_name, required: true %>
+        <br />
+        <%= f.label :last_name %>
+        <br />
+        <%= f.text_field :last_name %>
+        <br />
+        <%= f.label :phone %>
+        <br />
+        <%= f.text_field :phone %>
+        <br />
+        <br />
+        <div class="continued_registration_btn_div">
+          <button>Complete</button>
+        </div>
+          <br />
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+</section>
+
+<div class="container-fluid bottom_tree_hero"></div>
