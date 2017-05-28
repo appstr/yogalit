@@ -20,6 +20,7 @@ gem 'signet'
 gem 'sass-rails', '~> 5.0'
 gem 'font-awesome-sass'
 gem 'whenever', :require => false
+gem 'ahoy_matey'
 
 group :development, :test do
   gem 'pry'

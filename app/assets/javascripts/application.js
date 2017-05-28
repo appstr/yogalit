@@ -12,8 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require ahoy
 //  require turbolinks
 //= require_tree .
+
+ahoy.trackAll();
 
 $(document).ready(function(){
   $('select').material_select();
