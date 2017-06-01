@@ -6,11 +6,11 @@
         <h4>Choose an interview time</h4>
         <%= form_tag({controller: "teachers", action: "confirm_teacher_interview"}) do %>
           <%= label_tag :date, "Interview Date" %>
-          <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();" %><br />
+          <%= text_field_tag :date, nil, class:"datepicker", type:"date", onchange:"changeTimeRanges();", required: true %><br />
           <br />
           <div id="interview_time_range_select">
             <%= label_tag :time_range_select, "Interview Times" %><br />
-            <%= select_tag :time_range_select, options_for_select(@available_times) %>
+            <%= select_tag :time_range_select, options_for_select(@available_times), required: true %>
           </div>
           <br />
           <div class="book_interview_btn_div">

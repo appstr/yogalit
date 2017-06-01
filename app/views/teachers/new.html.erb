@@ -13,19 +13,19 @@
           <%= f.hidden_field :vacation_mode, value: false %>
           <%= f.label :first_name %>
           <br />
-          <%= f.text_field :first_name %>
+          <%= f.text_field :first_name, required: true, onkeypress: "return isChar(event);", maxlength: "25" %>
           <br />
           <%= f.label :last_name %>
           <br />
-          <%= f.text_field :last_name %>
+          <%= f.text_field :last_name, required: true, onkeypress: "return isChar(event);", maxlength: "25" %>
           <br />
           <%= f.label :phone %>
           <br />
-          <%= f.text_field :phone %>
+          <%= f.text_field :phone, required: true, onkeypress: "return isNumber(event);" %>
           <br />
           <%= f.label :paypal_email %>
           <br />
-          <%= f.text_field :paypal_email %>
+          <%= f.text_field :paypal_email, required: true %>
           <br />
           <%= f.label :time_zone %>
           <br />
@@ -33,11 +33,11 @@
           <br />
           <%= f.label :certificate, "National Yoga Alliance Certificate" %>
           <br />
-          <%= f.file_field :certificate %>
+          <%= f.file_field :certificate, required: true %>
           <br />
           <%= f.label :profile_pic, "Main profile picture" %>
           <br />
-          <%= f.file_field :profile_pic %>
+          <%= f.file_field :profile_pic, required: true %>
           <br />
           <div class="continued_registration_btn_div">
             <button>Complete</button>
@@ -46,7 +46,7 @@
             <small>
               After continuing, you will be asked to authenticate through the Google
               Calendar API which will allow an interview time to be created for
-              both yourself and the Instructor interviewing you.
+              both yourself and the Yogalit admin who will be interviewing you.
             </small>
           </div>
         <% end %>

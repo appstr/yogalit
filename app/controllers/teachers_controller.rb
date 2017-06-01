@@ -17,6 +17,7 @@ class TeachersController < ApplicationController
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
     @upcoming_yoga_sessions = get_upcoming_yoga_sessions
     @most_recent_yoga_sessions = get_most_recent_yoga_sessions
+    @favorited_count = FavoriteTeacher.where(teacher_id: @teacher[:id]).count
   end
 
   def get_most_recent_yoga_sessions
@@ -98,10 +99,13 @@ class TeachersController < ApplicationController
     teacher = Teacher.new(teacher_params)
     teacher[:user_id] = current_user[:id]
     teacher[:average_rating] = 0
-    if teacher.save!
+    if teacher.valid? && teacher.save!
       return google_authorize_teacher
     else
-      return redirect_to path
+      error_message = ""
+      teacher.errors.full_messages.each {|err| error_message << "#{err} "}
+      flash[:notice] = error_message
+      return redirect_to request.referrer
     end
   end
 
@@ -267,6 +271,10 @@ class TeachersController < ApplicationController
   end
 
   def confirm_teacher_interview
+    if params[:date].nil?
+      flash[:notice] = "Date cannot be blank."
+      return redirect_to request.referrer
+    end
     teacher = Teacher.where(user_id: current_user).first
     interview = InterviewBookedTime.where(teacher_id: teacher[:id]).first
     if interview.nil?

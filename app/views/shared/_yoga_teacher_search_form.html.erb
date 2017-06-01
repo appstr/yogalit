@@ -1,12 +1,12 @@
 <%= form_tag({controller:"yoga_teacher_searches", action:"search_for_teachers"}, method: :get) do %>
   <%= label_tag :date %>
-  <%= text_field_tag :date, nil, class:"datepicker", type:"date" %><br />
+  <%= text_field_tag :date, nil, class:"datepicker", type:"date", required: true %><br />
   <%= label_tag :type_of_yoga %>
-  <%= select_tag :type_of_yoga, options_for_select(yoga_type_options.sort)%><br />
+  <%= select_tag :type_of_yoga, options_for_select(yoga_type_options.sort), required: true%><br />
   <%= label_tag :duration %>
-  <%= select_tag :duration, options_for_select(yoga_session_duration_options) %><br />
+  <%= select_tag :duration, options_for_select(yoga_session_duration_options), required: true %><br />
   <%= label_tag :student_timezone, "Select Your Current Time-Zone" %>
-  <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default" %>
+  <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default", required: true %>
   <br />
   <br />
   <%= submit_tag "Search", class:"btn" %>

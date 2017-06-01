@@ -13,9 +13,18 @@ class Teacher < ActiveRecord::Base
   has_many :teacher_images
   has_many :teacher_videos
   has_many :teacher_emergency_cancels
+  has_many :teacher_ratings
   has_many :reported_yoga_sessions
   has_one :interview_booked_time
   has_one :teacher_price_range
+
+  validates :first_name, format: {with: /\A[a-zA-Z]+\z/, message: "can only contain letters."}
+  validates :last_name, format: {with: /\A[a-zA-Z]+\z/, message: "can only contain letters."}
+  validates :phone, format: {with: /\A[0-9]+\z/, message: "can only contain numbers."}
+  validates :paypal_email, presence: true
+  validates :timezone, presence: true
+  validates :certificate, presence: true
+  validates :profile_pic, presence: true
 
   has_attached_file :profile_pic,
                 :storage => :s3,

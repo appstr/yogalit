@@ -170,12 +170,14 @@ ActiveRecord::Schema.define(version: 20170526031552) do
 
   create_table "teacher_ratings", force: :cascade do |t|
     t.integer  "yoga_session_id"
-    t.integer  "score"
+    t.integer  "teacher_id"
+    t.float    "score"
     t.string   "comment"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
   end
 
+  add_index "teacher_ratings", ["teacher_id"], name: "index_teacher_ratings_on_teacher_id", using: :btree
   add_index "teacher_ratings", ["yoga_session_id"], name: "index_teacher_ratings_on_yoga_session_id", using: :btree
 
   create_table "teacher_reported_yoga_sessions", force: :cascade do |t|
@@ -255,7 +257,7 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.string   "phone"
     t.string   "timezone"
     t.string   "paypal_email"
-    t.integer  "average_rating",           limit: 8
+    t.float    "average_rating"
     t.boolean  "is_searchable"
     t.boolean  "is_verified"
     t.boolean  "blacklisted"
@@ -263,8 +265,8 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.boolean  "has_been_blacklisted"
     t.boolean  "blocked"
     t.boolean  "vacation_mode"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.string   "profile_pic_file_name"
     t.string   "profile_pic_content_type"
     t.integer  "profile_pic_file_size"

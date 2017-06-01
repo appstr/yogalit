@@ -1,5 +1,9 @@
 class DeviseRegistrationsController < Devise::RegistrationsController
   def create
+    if params[:user][:teacher_or_student].nil?
+      flash[:notice] = "Teacher or Student selection cannot be blank."
+      return redirect_to request.referrer
+    end
     params[:user][:email].downcase!
     build_resource(sign_up_params)
     resource.save

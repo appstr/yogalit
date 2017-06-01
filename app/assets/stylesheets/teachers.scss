@@ -77,3 +77,72 @@
     text-align: center;
   }
 }
+
+#teachers_show {
+  background-color: #117ba4;
+  min-height: 1200px;
+  .teacher_top_info {
+    background-color: #ffffff;
+    padding: 1em;
+    border-radius: 1em;
+    padding-top: 10em;
+  }
+  .top_row {
+    margin-top: 7.5em;
+    input {
+      color: white;
+    }
+    label {
+      color: #17d9b8;
+    }
+    .teacher_info_div {
+      background-color: rgb(50, 116, 141);
+      padding: 2em;
+      border-radius: 1em;
+      text-align: left;
+      letter-spacing: 0.1em;
+      margin-bottom: 1em;
+    }
+    .image_div {
+      border: 20px solid rgb(50, 116, 141);
+      border-radius: 1em;
+    }
+    h5, h6 {
+      color: #17d9b8;
+      text-align: left;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      font-family: 'Arvo', serif;
+    }
+    a.button {
+      letter-spacing: 0.2em;
+      margin-bottom: 1em;
+      border: 1px solid #ffffff;
+      background-color: #16e0bd;
+      color: #ffffff;
+      padding: 1em;
+      width: 100%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: rgba(0,0,0,0.0);
+        border: 1px solid #16e0bd;
+        color: #16e0bd;
+      }
+    }
+    button {
+      letter-spacing: 0.2em;
+      margin-bottom: 1em;
+      border: 1px solid #16e0bd;
+      color: #16e0bd;
+      background-color: rgba(0,0,0,0.0);
+      padding: 1em;
+      width: 100%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
+    }
+  }
+}

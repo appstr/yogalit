@@ -39,6 +39,18 @@
       <% else %>
         <h3 style="color:red">Your account is not yet searchable, please follow the directions below.</h3>
       <% end %>
+      <h3>Teacher Rating</h3>
+      <% if @teacher[:average_rating] > 0.0 %>
+        <h5><%= @teacher[:average_rating] %> / 5.0</h5>
+        <% else %>
+        <h5>No Rating Yet.</h5>
+      <% end %>
+      <h3>Teacher Favorited Count</h3>
+      <% if @favorited_count > 0 %>
+        <h5>Favorited by <%= @favorited_count %> student(s).</h5>
+        <% else %>
+        <h5>You have not been favorited yet by any Student.</h5>
+      <% end %>
       <h3>Teacher Profile</h3>
       <div class="row">
         <div class="col s12 m2">

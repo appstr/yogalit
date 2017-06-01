@@ -154,4 +154,32 @@ module ApplicationHelper
     ]
   end
 
+  def month_exp_options
+    [
+      ["01", "01"],
+      ["02", "02"],
+      ["03", "03"],
+      ["04", "04"],
+      ["05", "05"],
+      ["06", "06"],
+      ["07", "07"],
+      ["08", "08"],
+      ["09", "09"],
+      ["10", "10"],
+      ["11", "11"],
+      ["12", "12"]
+    ]
+  end
+
+  def year_exp_options
+    this_year = Time.now.strftime("%Y").to_i
+    end_year = this_year + 15
+    opts = []
+    while this_year <= end_year
+      opts << [this_year.to_s, this_year.to_s]
+      this_year += 1
+    end
+    return opts
+  end
+
 end

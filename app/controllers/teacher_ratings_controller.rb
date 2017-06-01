@@ -11,10 +11,11 @@ class TeacherRatingsController < ApplicationController
   def create
     teacher_rating = TeacherRating.new
     teacher_rating[:yoga_session_id] = params[:id]
+    ys = YogaSession.find(params[:id])
+    teacher_rating[:teacher_id] = ys[:teacher_id]
     teacher_rating[:score] = params[:score]
     teacher_rating[:comment] = params[:comment]
     if teacher_rating.save!
-      ys = YogaSession.find(params[:id])
       bt = TeacherBookedTime.find(ys[:teacher_booked_time_id])
       bt[:teacher_rating_given] = true
       begin
@@ -34,8 +35,12 @@ class TeacherRatingsController < ApplicationController
 
   def update_teacher_average_rating(teacher_id)
     teacher = Teacher.find(teacher_id)
-    current_teacher_rating = teacher[:average_rating]
-    teacher[:average_rating] = current_teacher_rating + params[:score].to_i
+    teacher_ratings = TeacherRating.where(teacher_id: teacher_id)
+    scores = []
+    teacher_ratings.each {|tr| scores << tr[:score]}
+    scores.sort!
+    average = (scores.inject {|sum, el| sum + el}.to_f / scores.size).round(2)
+    teacher[:average_rating] = average
     begin
       teacher.save!
     rescue e

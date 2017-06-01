@@ -1,0 +1,88 @@
+#new_payments {
+  @include backgroundShorthand("/assets/yoga_mat.jpeg");
+  // background-color: #117ba4;
+  input {
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    padding-left: 0.5em;
+    border-radius: 1em;
+  }
+  label {
+    color: #ffffff;
+    letter-spacing: 0.1em;
+  }
+  h6 {
+    color: #ffffff;
+    font-family: 'Raleway', sans-serif;
+    margin-bottom: 3em;
+  }
+  h5 {
+    color: #17d9b8;
+    margin-bottom: 0.5em;
+    text-align: center;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    font-family: 'Arvo', serif;
+  }
+  .credit_card_info_div {
+    background-color: rgba(0, 0, 0, 0.48);
+    border-radius: 1em;
+    margin-top: 3.5em;
+  }
+  .confirm_booking_div {
+    border-bottom: 1px solid #56cbf9;
+    margin-bottom: 1em;
+  }
+  .payment_disclosure_div {
+    line-height: 1.3em;
+    i {
+      color: #ffffff;
+    }
+    a {
+      color: #16e0bd;
+    }
+  }
+  strong {
+    font-weight: 900;
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #ffffff;
+  }
+  .complete_booking_row {
+    h4 {
+      margin-bottom: 1em;
+      color: #ffffff;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      font-family: 'Arvo', serif;
+    }
+  }
+  .billing_info {
+    text-align: center;
+  }
+  .payment_summary_div {
+    background-color: rgb(50, 116, 141);
+    padding: 1em;
+    border-radius: 1em;
+    text-align: left;
+    letter-spacing: 0.1em;
+  }
+  button {
+    letter-spacing: 0.2em;
+    margin-bottom: 1em;
+    border: 1px solid #16e0bd;
+    color: #16e0bd;
+    background-color: rgba(0,0,0,0.0);
+    padding: 1em;
+    width: 100%;
+    font-family: 'Source Sans Pro', sans-serif;
+    &:hover {
+      background-color: #16e0bd;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+    }
+  }
+  span {
+    color: #16e0bd;
+  }
+}

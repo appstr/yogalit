@@ -1,55 +1,72 @@
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br />
-      <h1>New Payment</h1>
-
-      <h5>Teacher Name: <%= "#{@teacher[:first_name].capitalize} #{@teacher[:last_name].capitalize}" %></h5>
-      <h5>Session Date: <%= "#{@search_params["day_of_week"]}, #{sanitize_date_for_view(@search_params["session_date"])}" %></h5>
-      <h5>Session Time: <%= "#{sanitize_date_for_time_only(@session_time.first)}-#{sanitize_date_for_time_only(@session_time.last)}, #{@search_params["student_timezone"]}" %></h5>
-      <h5>Session Duration: <%= @search_params["duration"] %> minutes</h5>
-      <h5>Type of Yoga: <%= @search_params["yoga_type"] %></h5>
-      <h5>Sales Price: $<%= @price_without_tax %></h5>
-      <h5>Sales Tax: <%= @sales_tax %>%</h5>
-      <h5>Total Price: $<%= @total_price %></h5>
-      <br />
-      <br />
-      <br />
-
-      <h3>Payment</h3>
-      <%= form_tag({controller:"payments", action:"create"}) do %>
-        <h4>Credit Card Info</h4>
-        <%= hidden_field_tag :search_params, nil, value: @search_params.to_json %>
-        <%= hidden_field_tag :session_time, nil, value: ((@session_time.first)..(@session_time.last)) %>
-        <%= hidden_field_tag :price_without_tax, nil, value: @price_without_tax %>
-        <%= hidden_field_tag :sales_tax, nil, value: @sales_tax %>
-        <%= hidden_field_tag :total_price, nil, value: @total_price %>
-        <%= label_tag :cc_first_name, "First name on CC" %>
-        <%= text_field_tag :cc_first_name, nil, required: true %>
-        <%= label_tag :cc_last_name, "Last name on CC" %>
-        <%= text_field_tag :cc_last_name, nil, required: true %>
-        <%= label_tag :card_type %>
-        <%= select_tag :card_type, options_for_select(credit_card_type_options) %><br />
-        <%= label_tag :cc_number, "CC number" %>
-        <%= text_field_tag :cc_number, nil, required: true %>
-        <%= label_tag :month, "CC month expiration" %>
-        <%= text_field_tag :month, nil, required: true %>
-        <%= label_tag :year, "CC year expiration" %>
-        <%= text_field_tag :year, nil, required: true %>
-        <%= label_tag :verification_value, "CC verification_value" %>
-        <%= text_field_tag :verification_value, nil, required: true %>
-        <h4>Billing Info</h4>
-        <%= label_tag :billing_street_address, "Street Adress" %>
-        <%= text_field_tag :billing_street_address, nil, required: true %>
-        <%= label_tag :billing_city, "City" %>
-        <%= text_field_tag :billing_city, nil, required: true %>
-        <%= label_tag :billing_state, "State/Province" %>
-        <%= select_tag :billing_state, options_for_select(state_options) %><br />
-        <%= label_tag :billing_postal, "Postal Code" %>
-        <%= text_field_tag :billing_postal, nil, required: true %>
-        <br />
-        <%= submit_tag "Pay Now", class:"btn" %>
-      <% end %>
+<section id="new_payments">
+  <div class="container-fluid">
+    <div class="row complete_booking_row">
+      <div class="col s12">
+      </div>
     </div>
   </div>
-</div>
+
+  <div class="container-fluid">
+    <div class="row complete_booking_row">
+      <div class="col s12 credit_card_info_div">
+        <h4>Complete Booking!</h4>
+        <h6 class="text-center">Credit Card Information:</h6>
+        <%= form_tag({controller:"payments", action:"create"}) do %>
+          <div class="col s12 m3 billing_info">
+            <%= hidden_field_tag :search_params, nil, value: @search_params.to_json %>
+            <%= hidden_field_tag :session_time, nil, value: ((@session_time.first)..(@session_time.last)) %>
+            <%= hidden_field_tag :price_without_tax, nil, value: @price_without_tax %>
+            <%= hidden_field_tag :sales_tax, nil, value: @sales_tax %>
+            <%= hidden_field_tag :total_price, nil, value: @total_price %>
+            <%= label_tag :cc_first_name, "First Name" %>
+            <%= text_field_tag :cc_first_name, nil, required: true, onkeypress: "return isChar(event);" %><br />
+            <%= label_tag :cc_last_name, "Last Name" %>
+            <%= text_field_tag :cc_last_name, nil, required: true, onkeypress: "return isChar(event);" %><br />
+            <%= label_tag :card_type, "Card Type" %>
+            <%= select_tag :card_type, options_for_select(credit_card_type_options) %><br />
+          </div>
+          <div class="col s12 m3 billing_info">
+            <%= label_tag :cc_number, "Card Number" %>
+            <%= text_field_tag :cc_number, nil, required: true, onkeypress: "return isNumber(event);", maxlength: "19" %><br />
+            <%= label_tag :verification_value, "CVV" %>
+            <%= text_field_tag :verification_value, nil, required: true, onkeypress: "return isNumber(event)", maxlength: "3" %><br />
+            <%= label_tag :month, "Expiration Month" %>
+            <%= select_tag :month, options_for_select(month_exp_options), required: true %><br />
+            <%= label_tag :year, "Expiration Year" %>
+            <%= select_tag :year, options_for_select(year_exp_options), required: true %><br />
+          </div>
+          <div class="col s12 m3 billing_info">
+            <%= label_tag :billing_street_address, "Street Adress" %>
+            <%= text_field_tag :billing_street_address, nil, required: true %><br />
+            <%= label_tag :billing_city, "City" %>
+            <%= text_field_tag :billing_city, nil, required: true %><br />
+            <%= label_tag :billing_state, "State/Province" %>
+            <%= select_tag :billing_state, options_for_select(state_options) %><br />
+            <%= label_tag :billing_postal, "Postal Code" %>
+            <%= text_field_tag :billing_postal, nil, required: true, onkeypress: "return isNumber(event);" %>
+            <br />
+          </div>
+          <div class="col s12 m3 left-align">
+            <div class="col s12 confirm_booking_div container">
+              <h5>Confirm Booking</h5>
+            </div>
+            <div class="payment_summary_div">
+              <strong>Teacher Name:</strong><br /> <span><%= "#{@teacher[:first_name].capitalize} #{@teacher[:last_name].capitalize}" %></span><br /><br />
+              <strong>Session Date:</strong><br /> <span><%= "#{@search_params["day_of_week"]}, #{sanitize_date_for_view(@search_params["session_date"])}" %></span><br /><br />
+              <strong>Session Time:</strong><br /> <span><%= "#{sanitize_date_for_time_only(@session_time.first)}-#{sanitize_date_for_time_only(@session_time.last)}, #{@search_params["student_timezone"]}" %></span><br /><br />
+              <strong>Session Duration:</strong><br /> <span><%= @search_params["duration"] %> minutes</span><br /><br />
+              <strong>Type of Yoga:</strong><br /> <span><%= @search_params["yoga_type"] %></span><br /><br />
+              <strong>Sales Price:</strong><br /> <span>$<%= @price_without_tax %></span><br /><br />
+              <strong>Sales Tax:</strong><br /> <span><%= @sales_tax %>%</span><br /><br />
+              <strong>Total Price:</strong><br /> <span>$<%= @total_price %></span><br /><br />
+              <button>Book Now!</button>
+              <div class="payment_disclosure_div text-center">
+                <small><i>By clicking "Book Now!" you are agreeing to the Yogalit <%= link_to "Terms of Use", "#" %> and <%= link_to "Privacy Policy" %>.</i></small>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

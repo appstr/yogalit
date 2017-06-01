@@ -7,7 +7,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.string :phone
       t.string :timezone
       t.string :paypal_email
-      t.bigint :average_rating
+      t.float  :average_rating
       t.boolean :is_searchable
       t.boolean :is_verified
       t.boolean :blacklisted

@@ -5,6 +5,7 @@
 @import "teachers";
 @import "students";
 @import "header";
+@import "payments";
 @import "mixins";
 
 // Google Fonts
@@ -38,6 +39,12 @@ video, img {
     background-color: #595959;
     .login_btn_div {
       text-align: center;
+    }
+    input {
+      color: #ffffff;
+    }
+    [type="checkbox"]+label:before, [type="checkbox"]:not(.filled-in)+label:after {
+      border: 2px solid #16e0bd;
     }
     button {
       margin-top: 1em;

@@ -10,6 +10,7 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:600" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Arvo" rel="stylesheet">
 
   <!-- Font Awesome -->
   <script src="https://use.fontawesome.com/68b3592f31.js"></script>
@@ -139,14 +140,14 @@
               <% if @minimum_password_length %>
               <em>(<%= @minimum_password_length %> characters minimum)</em>
               <% end %><br />
-              <%= f.password_field :password, autocomplete: "off" %>
+              <%= f.password_field :password, autocomplete: "off", required: true %>
             </div>
             <br />
             <br />
 
             <div class="field">
               <%= f.label :password_confirmation, "*Password confirmation" %><br />
-              <%= f.password_field :password_confirmation, autocomplete: "off" %>
+              <%= f.password_field :password_confirmation, autocomplete: "off", required: true %>
             </div>
             <br />
             <br />
