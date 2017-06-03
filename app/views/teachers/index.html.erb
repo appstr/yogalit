@@ -17,257 +17,375 @@
   }
 </style>
 
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br />
-      <h1>Teacher Dashboard</h1>
-      <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
-        <h3 style="color:green">Your account is searchable</h3>
-        <% if @teacher[:vacation_mode] %>
-          <%= link_to "Turn OFF Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
-          <br />
-          <small>Vacation Mode: ON</small>
-        <% else %>
-          <%= link_to "Turn ON Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
-          <br />
-          <small>Vacation Mode: OFF</small>
-        <% end %>
-      <% elsif @teacher[:is_searchable] && !@teacher[:is_verified] %>
-        <h3 style="color:green">You have completed all of the required fields. After you have been verified through your interview, your account will become searchable.</h3>
-        <small>If you feel you are receiving this message in error, please contact Yogalit immediately!</small>
-      <% else %>
-        <h3 style="color:red">Your account is not yet searchable, please follow the directions below.</h3>
-      <% end %>
-      <h3>Teacher Rating</h3>
-      <% if @teacher[:average_rating] > 0.0 %>
-        <h5><%= @teacher[:average_rating] %> / 5.0</h5>
-        <% else %>
-        <h5>No Rating Yet.</h5>
-      <% end %>
-      <h3>Teacher Favorited Count</h3>
-      <% if @favorited_count > 0 %>
-        <h5>Favorited by <%= @favorited_count %> student(s).</h5>
-        <% else %>
-        <h5>You have not been favorited yet by any Student.</h5>
-      <% end %>
-      <h3>Teacher Profile</h3>
-      <div class="row">
-        <div class="col s12 m2">
-          <%= image_tag @teacher.profile_pic.url %>
+<div class="row teacher_dashboard_row">
+  <div class="col m3 teacher_sidebar">
+    <div class="row image_and_name" onclick="teacherDashboardWelcome();">
+      <div class="col s6">
+        <%= image_tag @teacher.profile_pic.url %>
+      </div>
+      <div class="col s6">
+        <p><%= "#{@teacher[:first_name].capitalize} #{@teacher[:last_name].capitalize}" %></p>
+      </div>
+    </div>
+    <div class="sidebar_options">
+      <div id="hours_of_operations" class="row sidebar_option_div active" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-clock-o" aria-hidden="true"> Hours Of Operations</i>
         </div>
       </div>
-      <p>First: <%= @teacher[:first_name] %></p>
-      <p>Last: <%= @teacher[:last_name] %></p>
-      <p>Phone: <%= @teacher[:phone] %></p>
-      <p>Timezone: <%= @teacher[:timezone] %></p>
-      <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
-      <%= link_to "Edit Sign-In", edit_user_registration_path %>
-
-      <h3>Hours of Operation</h3>
-      <% if !@teacher[:is_searchable] %>
-        <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
-        <br />
-      <% end %>
-      <%= link_to "Monday", new_teacher_monday_time_frame_path %><br />
-      <%= link_to "Tuesday", new_teacher_tuesday_time_frame_path %><br />
-      <%= link_to "Wednesday", new_teacher_wednesday_time_frame_path %><br />
-      <%= link_to "Thursday", new_teacher_thursday_time_frame_path %><br />
-      <%= link_to "Friday", new_teacher_friday_time_frame_path %><br />
-      <%= link_to "Saturday", new_teacher_saturday_time_frame_path %><br />
-      <%= link_to "Sunday", new_teacher_sunday_time_frame_path %>
-
-      <h3>Teacher Holidays</h3>
-      <%= link_to "Create/Edit Holiday", new_teacher_holiday_path %>
-
-      <h3>Yoga Types</h3>
-      <% if !@teacher[:is_searchable] %>
-        <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
-      <% end %>
-      <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
-        <%= check_box_tag :ashtanga, "2", (:checked if @type_ids.include?(2)), name:"yoga_types[ashtanga]" %>
-        <%= label_tag :ashtanga %><br />
-        <%= check_box_tag :beginner_yoga, "3", (:checked if @type_ids.include?(3)), name:"yoga_types[beginner_yoga]" %>
-        <%= label_tag :beginner_yoga %><br />
-        <%= check_box_tag :bikram, "1", (:checked if @type_ids.include?(1)), name:"yoga_types[bikram]" %>
-        <%= label_tag :bikram %><br />
-        <%= check_box_tag :fusion, "4", (:checked if @type_ids.include?(4)), name:"yoga_types[fusion]" %>
-        <%= label_tag :fusion %><br />
-        <%= check_box_tag :hatha, "5", (:checked if @type_ids.include?(5)), name:"yoga_types[hatha]" %>
-        <%= label_tag :hatha %><br />
-        <%= check_box_tag :iyengar, "17", (:checked if @type_ids.include?(17)), name:"yoga_types[iyengar]" %>
-        <%= label_tag :iyengar %><br />
-        <%= check_box_tag :kids, "6", (:checked if @type_ids.include?(6)), name:"yoga_types[kids]" %>
-        <%= label_tag :kids %><br />
-        <%= check_box_tag :kundalini, "7", (:checked if @type_ids.include?(7)), name:"yoga_types[kundalini]" %>
-        <%= label_tag :kundalini %><br />
-        <%= check_box_tag :meditation, "8", (:checked if @type_ids.include?(8)), name:"yoga_types[meditation]" %>
-        <%= label_tag :meditation %><br />
-        <%= check_box_tag :pilates, "16", (:checked if @type_ids.include?(16)), name:"yoga_types[:pilates]" %>
-        <%= label_tag :pilates %><br />
-        <%= check_box_tag :power, "9", (:checked if @type_ids.include?(9)), name:"yoga_types[:power]" %>
-        <%= label_tag :power %><br />
-        <%= check_box_tag :pre_postnatal, "10", (:checked if @type_ids.include?(10)), name:"yoga_types[:pre_postnatal]" %>
-        <%= label_tag :pre_postnatal %><br />
-        <%= check_box_tag :restorative, "11", (:checked if @type_ids.include?(11)), name:"yoga_types[:restorative]" %>
-        <%= label_tag :restorative %><br />
-        <%= check_box_tag :vinyasa, "12", (:checked if @type_ids.include?(12)), name:"yoga_types[:vinyasa]" %>
-        <%= label_tag :vinyasa %><br />
-        <%= check_box_tag :yin_yoga, "13", (:checked if @type_ids.include?(13)), name:"yoga_types[:yin_yoga]" %>
-        <%= label_tag :yin_yoga %><br />
-        <%= check_box_tag :yoga_at_work, "14", (:checked if @type_ids.include?(14)), name:"yoga_types[:yoga_at_work]" %>
-        <%= label_tag :yoga_at_work %><br />
-        <%= check_box_tag :yoga_for_seniors, "15", (:checked if @type_ids.include?(15)), name:"yoga_types[:yoga_for_seniors]" %>
-        <%= label_tag :yoga_for_seniors %><br />
-        <%= submit_tag "Update", class:'btn' %>
-      <% end %>
-
-      <h3>Add Photo</h3>
-      <%= form_for @teacher_image, url: teacher_images_path, html: { multipart: true } do |f| %>
-        <%= f.file_field :image %><br />
-        <%= f.submit "Submit", class:"btn" %>
-      <% end %>
-
-      <h3>Added Photos</h3>
-      <div class="container">
-        <div class="row">
-          <% @teacher_images.each do |ti| %>
-            <div class="col s6 m3">
-              <%= image_tag ti.image.url %><br />
-              <%= link_to "Delete", teacher_image_path(id: ti), data:{confirm: "Are you sure you want to delete this image?"}, method: :delete %>
-            </div>
-          <% end %>
+      <div id="yoga_types" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plus" aria-hidden="true"> Yoga Types</i>
         </div>
       </div>
-
-      <h3>Add Video</h3>
-      <%= form_for @teacher_video, url: teacher_videos_path, html: { multipart: true } do |f| %>
-        <%= f.file_field :video %><br />
-        <%= f.submit "Submit", class:"btn" %>
-      <% end %>
-
-      <h3>Added Videos</h3>
-      <div class="container">
-        <div class="row">
-          <% @teacher_videos.each do |tv| %>
-            <div class="col s6 m6">
-              <%= video_tag(tv.video.url, :size => "320x240", :controls => true, :autobuffer => true) %>
-              <%= link_to "Delete", teacher_video_path(id: tv), data:{confirm: "Are you sure you want to delete this video?"}, method: :delete %>
-            </div>
-          <% end %>
+      <div id="photos_and_videos" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-play-circle-o" aria-hidden="true"> Photo's and Video's</i>
         </div>
       </div>
-
-      <h3>Add Session Prices and Tax amount</h3>
-      <% if !@teacher[:is_searchable] %>
-        <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
-      <% end %>
-      <%= form_for(@teacher_price_range_form) do |f| %>
-        <%= f.label :thirty_minute_session, "30 Minute Price:" %>
-        <% if !@teacher_price_ranges.nil? %>
-          <%= f.text_field :thirty_minute_session, value: @teacher_price_ranges[:thirty_minute_session] %>
-        <% else %>
-          <%= f.text_field :thirty_minute_session %>
-        <% end %>
-        <br />
-        <%= f.label :sixty_minute_session, "60 Minute Price:" %>
-        <% if !@teacher_price_ranges.nil? %>
-          <%= f.text_field :sixty_minute_session, value: @teacher_price_ranges[:sixty_minute_session] %>
-        <% else %>
-          <%= f.text_field :sixty_minute_session %>
-        <% end %>
-        <br />
-        <%= f.label :ninety_minute_session, "90 Minute Price:" %>
-        <% if !@teacher_price_ranges.nil? %>
-          <%= f.text_field :ninety_minute_session, value: @teacher_price_ranges[:ninety_minute_session] %>
-        <% else %>
-          <%= f.text_field :ninety_minute_session %>
-        <% end %>
-        <br />
-        <%= f.label :sales_tax, "Sales Tax:" %>
-        <% if !@teacher_price_ranges.nil? %>
-          <%= f.text_field :sales_tax, value: @teacher_price_ranges[:sales_tax] %>
-        <% else %>
-          <%= f.text_field :sales_tax %>
-        <% end %>
-        <br />
-        <%= f.submit "Update", class:"btn" %>
-      <% end %>
-
-      <br />
-      <h3>Upcoming YogaSessions</h3>
-      <small>Yoga Sessions can be joined 5 minutes before the posted "start time"</small>
-      <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
-        <h5>No upcoming Yoga-Sessions</h5>
-      <% else %>
-        <table>
-          <tr>
-            <th>Student Name</th>
-            <th>Date</th>
-            <th>Day Of Week</th>
-            <th>Time Frame</th>
-            <th>Duration</th>
-            <th>Time Zone</th>
-            <th>Type of Yoga</th>
-            <th></th>
-          </tr>
-          <% @upcoming_yoga_sessions.each do |k, v| %>
-            <tr>
-              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
-              <td><%= v["date"] %></td>
-              <td><%= v["day_of_week"] %></td>
-              <td><%= v["time_range"] %></td>
-              <td><%= v["duration"] %> min</td>
-              <td><%= v["timezone"] %></td>
-              <td><%= v["yoga_type"] %></td>
-              <td>
-                <% if v["cancelled"] || v["refunded"] %>
-                Cancelled/Refunded
-                <% else %>
-                  <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
-                  <%= link_to "Emergency Cancel", emergency_cancel_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to cancel this Yoga Session?"}, method: :post %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      <% end %>
-
-      <h3>Most Recent Yoga-Sessions</h3>
-      <% if @most_recent_yoga_sessions.nil? %>
-        <h5>No Recent Yoga Sessions</h5>
-      <% else %>
-        <table>
-          <tr>
-            <th>Student's Name</th>
-            <th>Date</th>
-            <th>Day Of Week</th>
-            <th>Time Frame</th>
-            <th>Duration</th>
-            <th>Time Zone</th>
-            <th>Type of Yoga</th>
-            <th></th>
-          </tr>
-          <% @most_recent_yoga_sessions.each do |k, v| %>
-            <tr>
-              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
-              <td><%= v["date"] %></td>
-              <td><%= v["day_of_week"] %></td>
-              <td><%= v["time_range"] %></td>
-              <td><%= v["duration"] %> min</td>
-              <td><%= v["timezone"] %></td>
-              <td><%= v["yoga_type"] %></td>
-              <td>
-                <% if v["refunded"] %>
-                  Cancelled/Refunded
-                <% else %>
-                  <%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      <% end %>
+      <div id="session_and_tax_prices" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-money" aria-hidden="true"> Session and Tax Prices</i>
+        </div>
+      </div>
+      <div id="holidays" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plane" aria-hidden="true"> Holidays</i>
+        </div>
+      </div>
+      <div id="yoga_sessions" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-calendar" aria-hidden="true"> Yoga Sessions</i>
+        </div>
+      </div>
+      <div id="general" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-cog" aria-hidden="true"> General Settings</i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col m9 teacher_main_dash">
+    <div class="dashboard_welcome dashboard_content">
+      <h1>Dashboard Welcome!</h1>
+    </div>
+    <div class="hours_of_operations dashboard_content">
+      <%= render partial: "shared/hours_of_operations" %>
+    </div>
+    <div class="yoga_types dashboard_content">
+      <h1>Yoga Types</h1>
+    </div>
+    <div class="photos_and_videos dashboard_content">
+      <h1>Photos and Videos</h1>
+    </div>
+    <div class="session_and_tax_prices dashboard_content">
+      <h1>Session and tax prices</h1>
+    </div>
+    <div class="holidays dashboard_content">
+      <h1>Holidays</h1>
+    </div>
+    <div class="yoga_sessions dashboard_content">
+      <h1>Yoga Sessions</h1>
+    </div>
+    <div class="general dashboard_content">
+      <h1>General Settings</h1>
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  function clickedSidebar(l){
+    $(".sidebar_option_div").css("background-color", "#1c1b1b");
+    $("#"+l.id).css("background-color", "#16e0bd");
+    $(".dashboard_content").hide();
+    $("."+l.id).show();
+  }
+
+  function teacherDashboardWelcome(){
+    $(".sidebar_option_div").css("background-color", "#1c1b1b");
+    $(".dashboard_content").hide();
+    $(".dashboard_welcome").show();
+  }
+
+  $(document).ready(function(){
+    if("<%= params[:section] %>"){
+      $("#<%= params[:section] %>").css("background-color", "#16e0bd");
+      $(".dashboard_content").hide();
+      $(".<%= params[:section] %>").show();
+    }
+  });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col s12">
+        <br />
+        <h1>Teacher Dashboard</h1>
+        <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
+          <h3 style="color:green">Your account is searchable</h3>
+          <% if @teacher[:vacation_mode] %>
+            <%= link_to "Turn OFF Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
+            <br />
+            <small>Vacation Mode: ON</small>
+          <% else %>
+            <%= link_to "Turn ON Vacation Mode", toggle_vacation_mode_path(id: @teacher[:id]), class:"btn", method: :post %>
+            <br />
+            <small>Vacation Mode: OFF</small>
+          <% end %>
+        <% elsif @teacher[:is_searchable] && !@teacher[:is_verified] %>
+          <h3 style="color:green">You have completed all of the required fields. After you have been verified through your interview, your account will become searchable.</h3>
+          <small>If you feel you are receiving this message in error, please contact Yogalit immediately!</small>
+        <% else %>
+          <h3 style="color:red">Your account is not yet searchable, please follow the directions below.</h3>
+        <% end %>
+        <h3>Teacher Rating</h3>
+        <% if @teacher[:average_rating] > 0.0 %>
+          <h5><%= @teacher[:average_rating] %> / 5.0</h5>
+          <% else %>
+          <h5>No Rating Yet.</h5>
+        <% end %>
+        <h3>Teacher Favorited Count</h3>
+        <% if @favorited_count > 0 %>
+          <h5>Favorited by <%= @favorited_count %> student(s).</h5>
+          <% else %>
+          <h5>You have not been favorited yet by any Student.</h5>
+        <% end %>
+        <h3>Teacher Profile</h3>
+        <div class="row">
+          <div class="col s12 m2">
+            <%= image_tag @teacher.profile_pic.url %>
+          </div>
+        </div>
+        <p>First: <%= @teacher[:first_name] %></p>
+        <p>Last: <%= @teacher[:last_name] %></p>
+        <p>Phone: <%= @teacher[:phone] %></p>
+        <p>Timezone: <%= @teacher[:timezone] %></p>
+        <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
+        <%= link_to "Edit Sign-In", edit_user_registration_path %>
+
+        <h3>Hours of Operation</h3>
+        <% if !@teacher[:is_searchable] %>
+          <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+          <br />
+        <% end %>
+        <%= link_to "Monday", new_teacher_monday_time_frame_path %><br />
+        <%= link_to "Tuesday", new_teacher_tuesday_time_frame_path %><br />
+        <%= link_to "Wednesday", new_teacher_wednesday_time_frame_path %><br />
+        <%= link_to "Thursday", new_teacher_thursday_time_frame_path %><br />
+        <%= link_to "Friday", new_teacher_friday_time_frame_path %><br />
+        <%= link_to "Saturday", new_teacher_saturday_time_frame_path %><br />
+        <%= link_to "Sunday", new_teacher_sunday_time_frame_path %>
+
+        <h3>Teacher Holidays</h3>
+        <%= link_to "Create/Edit Holiday", new_teacher_holiday_path %>
+
+        <h3>Yoga Types</h3>
+        <% if !@teacher[:is_searchable] %>
+          <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+        <% end %>
+        <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
+          <%= check_box_tag :ashtanga, "2", (:checked if @type_ids.include?(2)), name:"yoga_types[ashtanga]" %>
+          <%= label_tag :ashtanga %><br />
+          <%= check_box_tag :beginner_yoga, "3", (:checked if @type_ids.include?(3)), name:"yoga_types[beginner_yoga]" %>
+          <%= label_tag :beginner_yoga %><br />
+          <%= check_box_tag :bikram, "1", (:checked if @type_ids.include?(1)), name:"yoga_types[bikram]" %>
+          <%= label_tag :bikram %><br />
+          <%= check_box_tag :fusion, "4", (:checked if @type_ids.include?(4)), name:"yoga_types[fusion]" %>
+          <%= label_tag :fusion %><br />
+          <%= check_box_tag :hatha, "5", (:checked if @type_ids.include?(5)), name:"yoga_types[hatha]" %>
+          <%= label_tag :hatha %><br />
+          <%= check_box_tag :iyengar, "17", (:checked if @type_ids.include?(17)), name:"yoga_types[iyengar]" %>
+          <%= label_tag :iyengar %><br />
+          <%= check_box_tag :kids, "6", (:checked if @type_ids.include?(6)), name:"yoga_types[kids]" %>
+          <%= label_tag :kids %><br />
+          <%= check_box_tag :kundalini, "7", (:checked if @type_ids.include?(7)), name:"yoga_types[kundalini]" %>
+          <%= label_tag :kundalini %><br />
+          <%= check_box_tag :meditation, "8", (:checked if @type_ids.include?(8)), name:"yoga_types[meditation]" %>
+          <%= label_tag :meditation %><br />
+          <%= check_box_tag :pilates, "16", (:checked if @type_ids.include?(16)), name:"yoga_types[:pilates]" %>
+          <%= label_tag :pilates %><br />
+          <%= check_box_tag :power, "9", (:checked if @type_ids.include?(9)), name:"yoga_types[:power]" %>
+          <%= label_tag :power %><br />
+          <%= check_box_tag :pre_postnatal, "10", (:checked if @type_ids.include?(10)), name:"yoga_types[:pre_postnatal]" %>
+          <%= label_tag :pre_postnatal %><br />
+          <%= check_box_tag :restorative, "11", (:checked if @type_ids.include?(11)), name:"yoga_types[:restorative]" %>
+          <%= label_tag :restorative %><br />
+          <%= check_box_tag :vinyasa, "12", (:checked if @type_ids.include?(12)), name:"yoga_types[:vinyasa]" %>
+          <%= label_tag :vinyasa %><br />
+          <%= check_box_tag :yin_yoga, "13", (:checked if @type_ids.include?(13)), name:"yoga_types[:yin_yoga]" %>
+          <%= label_tag :yin_yoga %><br />
+          <%= check_box_tag :yoga_at_work, "14", (:checked if @type_ids.include?(14)), name:"yoga_types[:yoga_at_work]" %>
+          <%= label_tag :yoga_at_work %><br />
+          <%= check_box_tag :yoga_for_seniors, "15", (:checked if @type_ids.include?(15)), name:"yoga_types[:yoga_for_seniors]" %>
+          <%= label_tag :yoga_for_seniors %><br />
+          <%= submit_tag "Update", class:'btn' %>
+        <% end %>
+
+        <h3>Add Photo</h3>
+        <%= form_for @teacher_image, url: teacher_images_path, html: { multipart: true } do |f| %>
+          <%= f.file_field :image %><br />
+          <%= f.submit "Submit", class:"btn" %>
+        <% end %>
+
+        <h3>Added Photos</h3>
+        <div class="container">
+          <div class="row">
+            <% @teacher_images.each do |ti| %>
+              <div class="col s6 m3">
+                <%= image_tag ti.image.url %><br />
+                <%= link_to "Delete", teacher_image_path(id: ti), data:{confirm: "Are you sure you want to delete this image?"}, method: :delete %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <h3>Add Video</h3>
+        <%= form_for @teacher_video, url: teacher_videos_path, html: { multipart: true } do |f| %>
+          <%= f.file_field :video %><br />
+          <%= f.submit "Submit", class:"btn" %>
+        <% end %>
+
+        <h3>Added Videos</h3>
+        <div class="container">
+          <div class="row">
+            <% @teacher_videos.each do |tv| %>
+              <div class="col s6 m6">
+                <%= video_tag(tv.video.url, :size => "320x240", :controls => true, :autobuffer => true) %>
+                <%= link_to "Delete", teacher_video_path(id: tv), data:{confirm: "Are you sure you want to delete this video?"}, method: :delete %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <h3>Add Session Prices and Tax amount</h3>
+        <% if !@teacher[:is_searchable] %>
+          <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+        <% end %>
+        <%= form_for(@teacher_price_range_form) do |f| %>
+          <%= f.label :thirty_minute_session, "30 Minute Price:" %>
+          <% if !@teacher_price_ranges.nil? %>
+            <%= f.text_field :thirty_minute_session, value: @teacher_price_ranges[:thirty_minute_session] %>
+          <% else %>
+            <%= f.text_field :thirty_minute_session %>
+          <% end %>
+          <br />
+          <%= f.label :sixty_minute_session, "60 Minute Price:" %>
+          <% if !@teacher_price_ranges.nil? %>
+            <%= f.text_field :sixty_minute_session, value: @teacher_price_ranges[:sixty_minute_session] %>
+          <% else %>
+            <%= f.text_field :sixty_minute_session %>
+          <% end %>
+          <br />
+          <%= f.label :ninety_minute_session, "90 Minute Price:" %>
+          <% if !@teacher_price_ranges.nil? %>
+            <%= f.text_field :ninety_minute_session, value: @teacher_price_ranges[:ninety_minute_session] %>
+          <% else %>
+            <%= f.text_field :ninety_minute_session %>
+          <% end %>
+          <br />
+          <%= f.label :sales_tax, "Sales Tax:" %>
+          <% if !@teacher_price_ranges.nil? %>
+            <%= f.text_field :sales_tax, value: @teacher_price_ranges[:sales_tax] %>
+          <% else %>
+            <%= f.text_field :sales_tax %>
+          <% end %>
+          <br />
+          <%= f.submit "Update", class:"btn" %>
+        <% end %>
+
+        <br />
+        <h3>Upcoming YogaSessions</h3>
+        <small>Yoga Sessions can be joined 5 minutes before the posted "start time"</small>
+        <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+          <h5>No upcoming Yoga-Sessions</h5>
+        <% else %>
+          <table>
+            <tr>
+              <th>Student Name</th>
+              <th>Date</th>
+              <th>Day Of Week</th>
+              <th>Time Frame</th>
+              <th>Duration</th>
+              <th>Time Zone</th>
+              <th>Type of Yoga</th>
+              <th></th>
+            </tr>
+            <% @upcoming_yoga_sessions.each do |k, v| %>
+              <tr>
+                <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+                <td><%= v["date"] %></td>
+                <td><%= v["day_of_week"] %></td>
+                <td><%= v["time_range"] %></td>
+                <td><%= v["duration"] %> min</td>
+                <td><%= v["timezone"] %></td>
+                <td><%= v["yoga_type"] %></td>
+                <td>
+                  <% if v["cancelled"] || v["refunded"] %>
+                  Cancelled/Refunded
+                  <% else %>
+                    <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
+                    <%= link_to "Emergency Cancel", emergency_cancel_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to cancel this Yoga Session?"}, method: :post %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% end %>
+
+        <h3>Most Recent Yoga-Sessions</h3>
+        <% if @most_recent_yoga_sessions.nil? %>
+          <h5>No Recent Yoga Sessions</h5>
+        <% else %>
+          <table>
+            <tr>
+              <th>Student's Name</th>
+              <th>Date</th>
+              <th>Day Of Week</th>
+              <th>Time Frame</th>
+              <th>Duration</th>
+              <th>Time Zone</th>
+              <th>Type of Yoga</th>
+              <th></th>
+            </tr>
+            <% @most_recent_yoga_sessions.each do |k, v| %>
+              <tr>
+                <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+                <td><%= v["date"] %></td>
+                <td><%= v["day_of_week"] %></td>
+                <td><%= v["time_range"] %></td>
+                <td><%= v["duration"] %> min</td>
+                <td><%= v["timezone"] %></td>
+                <td><%= v["yoga_type"] %></td>
+                <td>
+                  <% if v["refunded"] %>
+                    Cancelled/Refunded
+                  <% else %>
+                    <%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>

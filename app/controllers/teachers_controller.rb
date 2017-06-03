@@ -18,6 +18,21 @@ class TeachersController < ApplicationController
     @upcoming_yoga_sessions = get_upcoming_yoga_sessions
     @most_recent_yoga_sessions = get_most_recent_yoga_sessions
     @favorited_count = FavoriteTeacher.where(teacher_id: @teacher[:id]).count
+    # Teacher H.O.O
+    @teacher_monday_time_frame = TeacherMondayTimeFrame.new
+    @teacher_monday_time_frames = TeacherMondayTimeFrame.where(teacher_id: @teacher)
+    @teacher_tuesday_time_frame = TeacherTuesdayTimeFrame.new
+    @teacher_tuesday_time_frames = TeacherTuesdayTimeFrame.where(teacher_id: @teacher)
+    @teacher_wednesday_time_frame = TeacherWednesdayTimeFrame.new
+    @teacher_wednesday_time_frames = TeacherWednesdayTimeFrame.where(teacher_id: @teacher)
+    @teacher_thursday_time_frame = TeacherThursdayTimeFrame.new
+    @teacher_thursday_time_frames = TeacherThursdayTimeFrame.where(teacher_id: @teacher)
+    @teacher_friday_time_frame = TeacherFridayTimeFrame.new
+    @teacher_friday_time_frames = TeacherFridayTimeFrame.where(teacher_id: @teacher)
+    @teacher_saturday_time_frame = TeacherSaturdayTimeFrame.new
+    @teacher_saturday_time_frames = TeacherSaturdayTimeFrame.where(teacher_id: @teacher)
+    @teacher_sunday_time_frame = TeacherSundayTimeFrame.new
+    @teacher_sunday_time_frames = TeacherSundayTimeFrame.where(teacher_id: @teacher)
   end
 
   def get_most_recent_yoga_sessions

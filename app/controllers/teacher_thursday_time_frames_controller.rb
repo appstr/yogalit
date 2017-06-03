@@ -1,29 +1,20 @@
 class TeacherThursdayTimeFramesController < ApplicationController
   before_action :authenticate_user!
 
-  def new
-    @teacher = Teacher.where(user_id: current_user).first
-
-    @teacher_thursday_time_frame = TeacherThursdayTimeFrame.new
-
-    teacher = Teacher.where(user_id: current_user).first
-    @teacher_thursday_time_frames = TeacherThursdayTimeFrame.where(teacher_id: teacher)
-  end
-
   def create
     teacher = Teacher.where(user_id: current_user).first
     split_start_time
     split_end_time
     if end_less_than_start?(teacher)
       flash[:notice] = "End time cannot be less than start time."
-      return redirect_to request.referrer
+      return redirect_to teachers_path(section: "hours_of_operations")
     elsif start_equal_end?(teacher)
       flash[:notice] = "Start time and end time cannot be equal."
-      return redirect_to request.referrer
+      return redirect_to teachers_path(section: "hours_of_operations")
     end
     if time_frame_taken?(teacher)
       flash[:notice] = "Time frame given interferes with a previous time frame."
-      return redirect_to request.referrer
+      return redirect_to teachers_path(section: "hours_of_operations")
     end
     Time.zone = teacher.timezone
     teacher_thursday_time_frame = TeacherThursdayTimeFrame.new
@@ -31,16 +22,11 @@ class TeacherThursdayTimeFramesController < ApplicationController
     teacher_thursday_time_frame[:teacher_id] = teacher[:id]
     if teacher_thursday_time_frame.save!
       Teacher.qualifies_for_search?(current_user)
-      if params[:commit] == "Save and Add Another TimeFrame"
-        flash[:notice] = "TimeFrame saved successfully!"
-        path = request.referrer
-      else
-        flash[:notice] = "TimeFrame saved successfully!"
-        path = teachers_path
-      end
+      flash[:notice] = "TimeFrame saved successfully!"
+      path = teachers_path(section: "hours_of_operations")
     else
       flash[:notice] = "TimeFrame did not save successfully."
-      path = request.referrer
+      path = teachers_path(section: "hours_of_operations")
     end
     return redirect_to path
   end
@@ -48,7 +34,7 @@ class TeacherThursdayTimeFramesController < ApplicationController
   def destroy
     TeacherThursdayTimeFrame.find(params[:id]).delete
     Teacher.qualifies_for_search?(current_user)
-    return redirect_to request.referrer
+    return redirect_to teachers_path(section: "hours_of_operations")
   end
 
   private

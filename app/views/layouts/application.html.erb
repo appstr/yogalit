@@ -30,44 +30,15 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div id="nav_bar" class="container-fluid">
-    <div class="row">
-      <div class="col s3 m1">
-        <a href="/"><img src="/assets/yogalit_logo.png" /></a>
-      </div>
-      <div class="col s3 m5"></div>
-      <div class="col s6">
-        <div class="header-links hide-on-med-and-down">
-          <%= link_to "Home", '/' %>
-          <%= link_to "Contact", new_user_message_path %>
-          <%= link_to "Find-Teachers", search_for_teachers_path %>
-          <%= link_to "About", '#' %>
-          <% if user_signed_in? %>
-            <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
-            <% else %>
-            <a href="#signup_modal"><button>Sign-Up</button></a>
-            <a href="#login_modal"><button>Login</button></a>
-          <% end %>
-        </div>
-        <div class="header-bars hide-on-large-only">
-
-          <ul id="slide-out" class="side-nav center">
-            <br />
-            <li><%= link_to "Home", '/' %></li>
-            <li><%= link_to "Contact", new_user_message_path %></li>
-            <% if user_signed_in? %>
-              <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
-            <% else %>
-              <li><a href="#signup_modal">Sign-Up</a></li>
-              <li><a href="#login_modal">Login</a></li>
-            <% end %>
-          </ul>
-          <i class="fa fa-bars button-collapse" data-activates="slide-out" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <% if user_signed_in? %>
+    <% if current_user[:teacher_or_student] == "teacher" %>
+        <%= render partial: "shared/teachers_nav" %>
+      <% elsif current_user[:teacher_or_student] == "student" %>
+        <%= render partial: "shared/students_nav" %>
+      <% end %>
+  <% else %>
+    <%= render partial: "shared/welcome_nav" %>
+  <% end %>
   <div id="login_modal" class="modal">
     <div class="modal-content">
       <div class="container">
