@@ -1,4 +1,4 @@
-<div class="row top_row">
+<div class="row top_row hide-on-med-and-down">
   <div class="col m3"></div>
   <div class="col m3">
     <p>Upload a Photo</p>
@@ -13,6 +13,26 @@
       <%= f.file_field :video %><br />
       <%= f.submit "Submit", class:"btn" %>
     <% end %>
+  </div>
+</div>
+<div class="row top_row hide-on-large-only">
+  <div class="row">
+    <div class="mobile_photo_and_vid_upload">
+      <div class="col s6">
+        <p>Upload a Photo</p>
+        <%= form_for @teacher_image, url: teacher_images_path, html: { multipart: true } do |f| %>
+          <%= f.file_field :image %><br />
+          <%= f.submit "Submit", class:"btn" %>
+        <% end %>
+      </div>
+      <div class="col s6">
+        <p>Upload a Video</p>
+        <%= form_for @teacher_video, url: teacher_videos_path, html: { multipart: true } do |f| %>
+          <%= f.file_field :video %><br />
+          <%= f.submit "Submit", class:"btn" %>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>
 <br />

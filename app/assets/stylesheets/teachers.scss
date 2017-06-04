@@ -219,7 +219,10 @@
     .hours_of_operations {
       input {
         width: 50%;
-        text-align: center;
+        @media(max-width: 600px){
+          text-align: center;
+        }
+        text-align: left;
         display: initial;
       }
       .hoo_row {

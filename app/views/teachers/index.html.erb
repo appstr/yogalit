@@ -19,7 +19,7 @@
   }
 </style>
 
-<div class="row teacher_dashboard_row">
+<div class="row teacher_dashboard_row hide-on-med-and-down">
   <div class="col m3 teacher_sidebar">
     <div class="row image_and_name" onclick="teacherDashboardWelcome();">
       <div class="col s6">
@@ -95,8 +95,91 @@
   </div>
 </div>
 
+<div class="row hide-on-large-only teacher_dashboard_row">
+  <div class="col s12 teacher_sidebar">
+    <div class="row image_and_name" onclick="teacherDashboardWelcome();">
+      <div class="col s6">
+        <%= image_tag @teacher.profile_pic.url %>
+      </div>
+      <div class="col s6">
+        <p><%= "#{@teacher[:first_name].capitalize} #{@teacher[:last_name].capitalize}" %></p>
+      </div>
+    </div>
+    <div class="sidebar_options">
+      <div id="hours_of_operations_mobile" class="row sidebar_option_div active" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-clock-o" aria-hidden="true"> Hours Of Operations</i>
+        </div>
+      </div>
+      <div id="yoga_types_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plus" aria-hidden="true"> Yoga Types</i>
+        </div>
+      </div>
+      <div id="photos_and_videos_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-play-circle-o" aria-hidden="true"> Photo's and Video's</i>
+        </div>
+      </div>
+      <div id="session_and_tax_prices_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-money" aria-hidden="true"> Session and Tax Prices</i>
+        </div>
+      </div>
+      <div id="holidays_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plane" aria-hidden="true"> Holidays</i>
+        </div>
+      </div>
+      <div id="yoga_sessions_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-calendar" aria-hidden="true"> Yoga Sessions</i>
+        </div>
+      </div>
+      <div id="general_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-cog" aria-hidden="true"> General</i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row teacher_main_dash">
+    <div class="col s12 dashboard_welcome dashboard_content">
+      <h4>Welcome Dashboard Mobile</h4>
+    </div>
+    <div class="col s12 hours_of_operations_mobile dashboard_content">
+      <%= render partial: "shared/hours_of_operations" %>
+    </div>
+    <div class="col s12 yoga_types_mobile dashboard_content">
+      <%= render partial: "shared/yoga_types" %>
+    </div>
+    <div class="col s12 photos_and_videos_mobile dashboard_content">
+      <%= render partial: "shared/photos_and_videos" %>
+    </div>
+    <div class="col s12 session_and_tax_prices_mobile dashboard_content">
+      <%= render partial: "shared/session_and_tax_prices" %>
+    </div>
+    <div class="col s12 holidays_mobile dashboard_content">
+      <%= render partial: "shared/holidays" %>
+    </div>
+    <div class="col s12 yoga_sessions_mobile dashboard_content">
+      <%= render partial: "shared/yoga_sessions" %>
+    </div>
+    <div class="col s12 general_mobile dashboard_content">
+      <%= render partial: "shared/general" %>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
   function clickedSidebar(l){
+    $(".sidebar_option_div").css("background-color", "#1c1b1b");
+    $("#"+l.id).css("background-color", "#16e0bd");
+    $(".dashboard_content").hide();
+    $("."+l.id).show();
+  }
+
+  function clickedMobileSidebar(l){
     $(".sidebar_option_div").css("background-color", "#1c1b1b");
     $("#"+l.id).css("background-color", "#16e0bd");
     $(".dashboard_content").hide();
@@ -112,8 +195,10 @@
   $(document).ready(function(){
     if("<%= params[:section] %>"){
       $("#<%= params[:section] %>").css("background-color", "#16e0bd");
+      $("#<%= params[:section] %>_mobile").css("background-color", "#16e0bd");
       $(".dashboard_content").hide();
       $(".<%= params[:section] %>").show();
+      $(".<%= params[:section] %>_mobile").show();
     }
     var today = new Date();
     $("#teacher_holiday_datepicker").daterangepicker({
