@@ -14,7 +14,11 @@ class YogaSessionsController < ApplicationController
     end
     if !allow_yoga_session?(booked_time)
       flash[:notice] = "The Yoga Session is not ready to be joined yet or has already ended."
-      return redirect_to request.referrer
+      if current_user[:teacher_or_student] == "teacher"
+        return redirect_to teachers_path(section: "yoga_sessions")
+      else
+        return redirect_to root_path
+      end
     end
     data = {"yoga_session_id" => yoga_session[:id]}.to_json
     @opentok_session_id = yoga_session[:opentok_session_id]

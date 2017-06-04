@@ -1,0 +1,21 @@
+<div class="row top_row">
+  <div class="col m4">
+    <%= form_for(@teacher_holiday) do |f| %>
+      <%= f.label :holiday_date_range %>
+      <%= f.text_field :holiday_date_range, id: "teacher_holiday_datepicker" %><br />
+      <%= f.label :description %>
+      <%= f.text_field :description %><br />
+      <%= f.submit "Add", class:"btn" %>
+    <% end %>
+  </div>
+  <div class="col m4"></div>
+  <div class="col m4">
+    <% @teacher_holidays.each do |holiday| %>
+      <%= "#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%Y')} to #{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%Y')}" %><br />
+      <%= holiday[:description] %><br />
+      <%= link_to "Delete", teacher_holiday_path(id: holiday[:id]), data:{confirm: "Are you sure you want to delete this Holiday listed?"}, method: :delete %>
+      <br />
+      <br />
+    <% end %>
+  </div>
+</div>

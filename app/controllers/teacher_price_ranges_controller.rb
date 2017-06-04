@@ -7,19 +7,19 @@ class TeacherPriceRangesController < ApplicationController
       return redirect_to request.referrer
     end
     teacher = Teacher.where(user_id: current_user).first
-    teacher_price_ranges = TeacherPriceRange.where(teacher_id: teacher).first
-    teacher_price_ranges.delete if !teacher_price_ranges.nil?
-    teacher_price_ranges = TeacherPriceRange.new(teacher_price_range_params)
-    teacher_price_ranges[:teacher_id] = Teacher.where(user_id: current_user).first.id
-    if teacher_price_ranges.valid? && teacher_price_ranges.save!
+    teacher_price_range = TeacherPriceRange.where(teacher_id: teacher).first
+    teacher_price_range.delete if !teacher_price_range.nil?
+    teacher_price_range = TeacherPriceRange.new(teacher_price_range_params)
+    teacher_price_range[:teacher_id] = Teacher.where(user_id: current_user).first.id
+    if teacher_price_range.valid? && teacher_price_range.save!
       flash[:notice] = "Your submission was saved!"
       Teacher.qualifies_for_search?(current_user)
     else
       error_message = ""
-      teacher_price_ranges.errors.full_messages.each {|err| error_message << "#{err} "}
+      teacher_price_range.errors.full_messages.each {|err| error_message << "#{err} "}
       flash[:notice] = error_message
     end
-      return redirect_to request.referrer
+      return redirect_to teachers_path(section: "session_and_tax_prices")
   end
 
   private

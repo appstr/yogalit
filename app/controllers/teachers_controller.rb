@@ -33,6 +33,9 @@ class TeachersController < ApplicationController
     @teacher_saturday_time_frames = TeacherSaturdayTimeFrame.where(teacher_id: @teacher)
     @teacher_sunday_time_frame = TeacherSundayTimeFrame.new
     @teacher_sunday_time_frames = TeacherSundayTimeFrame.where(teacher_id: @teacher)
+    # Teacher Holidays
+    @teacher_holiday = TeacherHoliday.new
+    @teacher_holidays = TeacherHoliday.where(teacher_id: @teacher[:id])
   end
 
   def get_most_recent_yoga_sessions

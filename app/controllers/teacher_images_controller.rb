@@ -8,7 +8,7 @@ class TeacherImagesController < ApplicationController
     else
       flash[:notice] = "Ahh, something went wrong and your image didn't save. Please try again."
     end
-    return redirect_to teachers_path
+    return redirect_to teachers_path(section: "photos_and_videos")
   end
 
   def destroy
@@ -17,7 +17,7 @@ class TeacherImagesController < ApplicationController
     teacher_image.image = nil
     teacher_image.save!
     teacher_image.delete
-    return redirect_to teachers_path
+    return redirect_to teachers_path(section: "photos_and_videos")
   end
 
   private

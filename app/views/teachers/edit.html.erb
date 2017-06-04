@@ -1,39 +1,47 @@
-<h1>Teacher Edit Profile</h1>
+<section id="teacher_edit">
+  <div class="container-fluid">
+    <div class="row top_row">
+      <div class="col s12">
+        <h4>Edit Profile</h4>
 
-<%= form_for(@teacher) do |f| %>
-  <%= f.label :first_name %>
-  <%= f.text_field :first_name %>
-  <br />
-  <%= f.label :last_name %>
-  <%= f.text_field :last_name %>
-  <br />
-  <%= f.label :phone %>
-  <%= f.text_field :phone %>
-  <br />
-  <%= f.label :paypal_email %>
-  <%= f.text_field :paypal_email %>
-  <br />
-  <%= f.label :timezone %>
-  <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: @teacher[:timezone]}, class:"browser-default" %>
-  <small>If TimeZone is changed, your hours of operations will change as well. ex: 9am MT will be 8am PST.</small>
-  <br />
-  <br />
-  <%= f.label :certificate, "National Yoga Alliance Certificate" %>
-  <div class="row">
-    <div class="col s12 m2">
-      <%= image_tag @teacher.certificate.url %>
+        <%= form_for(@teacher) do |f| %>
+          <%= f.label :first_name %>
+          <%= f.text_field :first_name %>
+          <br />
+          <%= f.label :last_name %>
+          <%= f.text_field :last_name %>
+          <br />
+          <%= f.label :phone %>
+          <%= f.text_field :phone %>
+          <br />
+          <%= f.label :paypal_email %>
+          <%= f.text_field :paypal_email %>
+          <br />
+          <%= f.label :timezone %>
+          <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: @teacher[:timezone]}, class:"browser-default" %>
+          <small>If TimeZone is changed, your hours of operations will change as well. ex: 9am MT will be 8am PST.</small>
+          <br />
+          <br />
+          <%= f.label :certificate, "National Yoga Alliance Certificate" %>
+          <div class="row">
+            <div class="col s12 m2">
+              <%= image_tag @teacher.certificate.url %>
+            </div>
+          </div>
+          <%= f.file_field :certificate %>
+          <br />
+          <br />
+          <%= f.label :profile_pic, "Main profile picture" %>
+          <div class="row">
+            <div class="col s12 m2">
+              <%= image_tag @teacher.profile_pic.url %>
+            </div>
+          </div>
+          <%= f.file_field :profile_pic %>
+          <br />
+          <%= f.submit "Submit", class:"btn" %>
+        <% end %>
+      </div>
     </div>
   </div>
-  <%= f.file_field :certificate %>
-  <br />
-  <br />
-  <%= f.label :profile_pic, "Main profile picture" %>
-  <div class="row">
-    <div class="col s12 m2">
-      <%= image_tag @teacher.profile_pic.url %>
-    </div>
-  </div>
-  <%= f.file_field :profile_pic %>
-  <br />
-  <%= f.submit "Submit", class:"btn" %>
-<% end %>
+</section>

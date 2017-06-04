@@ -24,7 +24,6 @@ class TeacherSaturdayTimeFramesController < ApplicationController
       Teacher.qualifies_for_search?(current_user)
       flash[:notice] = "TimeFrame saved successfully!"
       path = teachers_path(section: "hours_of_operations")
-      end
     else
       flash[:notice] = "TimeFrame did not save successfully."
       path = teachers_path(section: "hours_of_operations")

@@ -1,0 +1,47 @@
+<div class="row top_row">
+  <div class="col m4"></div>
+  <div class="col m4">
+    <% if !@teacher[:is_searchable] %>
+      <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
+    <% end %>
+    <div class="row">
+      <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
+        <%= check_box_tag :ashtanga, "2", (:checked if @type_ids.include?(2)), name:"yoga_types[ashtanga]" %>
+        <%= label_tag :ashtanga %><br />
+        <%= check_box_tag :beginner_yoga, "3", (:checked if @type_ids.include?(3)), name:"yoga_types[beginner_yoga]" %>
+        <%= label_tag :beginner_yoga %><br />
+        <%= check_box_tag :bikram, "1", (:checked if @type_ids.include?(1)), name:"yoga_types[bikram]" %>
+        <%= label_tag :bikram %><br />
+        <%= check_box_tag :fusion, "4", (:checked if @type_ids.include?(4)), name:"yoga_types[fusion]" %>
+        <%= label_tag :fusion %><br />
+        <%= check_box_tag :hatha, "5", (:checked if @type_ids.include?(5)), name:"yoga_types[hatha]" %>
+        <%= label_tag :hatha %><br />
+        <%= check_box_tag :iyengar, "17", (:checked if @type_ids.include?(17)), name:"yoga_types[iyengar]" %>
+        <%= label_tag :iyengar %><br />
+        <%= check_box_tag :kids, "6", (:checked if @type_ids.include?(6)), name:"yoga_types[kids]" %>
+        <%= label_tag :kids %><br />
+        <%= check_box_tag :kundalini, "7", (:checked if @type_ids.include?(7)), name:"yoga_types[kundalini]" %>
+        <%= label_tag :kundalini %><br />
+        <%= check_box_tag :meditation, "8", (:checked if @type_ids.include?(8)), name:"yoga_types[meditation]" %>
+        <%= label_tag :meditation %><br />
+        <%= check_box_tag :pilates, "16", (:checked if @type_ids.include?(16)), name:"yoga_types[:pilates]" %>
+        <%= label_tag :pilates %><br />
+        <%= check_box_tag :power, "9", (:checked if @type_ids.include?(9)), name:"yoga_types[:power]" %>
+        <%= label_tag :power %><br />
+        <%= check_box_tag :pre_postnatal, "10", (:checked if @type_ids.include?(10)), name:"yoga_types[:pre_postnatal]" %>
+        <%= label_tag :pre_postnatal %><br />
+        <%= check_box_tag :restorative, "11", (:checked if @type_ids.include?(11)), name:"yoga_types[:restorative]" %>
+        <%= label_tag :restorative %><br />
+        <%= check_box_tag :vinyasa, "12", (:checked if @type_ids.include?(12)), name:"yoga_types[:vinyasa]" %>
+        <%= label_tag :vinyasa %><br />
+        <%= check_box_tag :yin_yoga, "13", (:checked if @type_ids.include?(13)), name:"yoga_types[:yin_yoga]" %>
+        <%= label_tag :yin_yoga %><br />
+        <%= check_box_tag :yoga_at_work, "14", (:checked if @type_ids.include?(14)), name:"yoga_types[:yoga_at_work]" %>
+        <%= label_tag :yoga_at_work %><br />
+        <%= check_box_tag :yoga_for_seniors, "15", (:checked if @type_ids.include?(15)), name:"yoga_types[:yoga_for_seniors]" %>
+        <%= label_tag :yoga_for_seniors %><br /><br />
+      <%= submit_tag "Update", class:'btn' %>
+    </div>
+    <% end %>
+  </div>
+</div>

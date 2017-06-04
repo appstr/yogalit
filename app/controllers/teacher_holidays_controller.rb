@@ -20,10 +20,10 @@ class TeacherHolidaysController < ApplicationController
     teacher_holiday[:description] = params[:teacher_holiday][:description]
     if teacher_holiday.save!
       flash[:notice] = "Your Holiday was created successfully!"
-      path = teachers_path
+      path = teachers_path(section: "holidays")
     else
       flash[:notice] = "Your Holiday was not save saved. Please try again."
-      path = request.referrer
+      path = teachers_path(section: "holidays")
     end
     return redirect_to path
   end
@@ -31,7 +31,7 @@ class TeacherHolidaysController < ApplicationController
   def destroy
     teacher = Teacher.where(user_id: current_user).first
     TeacherHoliday.where(id: params[:id], teacher_id: teacher[:id]).first.delete
-    return redirect_to request.referrer
+    return redirect_to teachers_path(section: "holidays")
   end
 
   private

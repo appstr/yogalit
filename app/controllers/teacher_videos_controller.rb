@@ -8,7 +8,7 @@ class TeacherVideosController < ApplicationController
     else
       flash[:notice] = "Video Did Not Save. Please Try Again."
     end
-    return redirect_to request.referrer
+    return redirect_to teachers_path(section: "photos_and_videos")
   end
 
   def destroy
@@ -17,7 +17,7 @@ class TeacherVideosController < ApplicationController
     teacher_video.video = nil
     teacher_video.save!
     teacher_video.delete
-    return redirect_to teachers_path
+    return redirect_to teachers_path(section: "photos_and_videos")
   end
 
   private

@@ -1,0 +1,35 @@
+<div class="row top_row">
+  <div class="col m12">
+    <%= form_for(@teacher_price_range_form) do |f| %>
+      <%= f.label :thirty_minute_session, "30 Minute Price:" %>
+      <% if !@teacher_price_ranges.nil? %>
+        <%= f.text_field :thirty_minute_session, value: @teacher_price_ranges[:thirty_minute_session] %>
+      <% else %>
+        <%= f.text_field :thirty_minute_session %>
+      <% end %>
+      <br />
+      <%= f.label :sixty_minute_session, "60 Minute Price:" %>
+      <% if !@teacher_price_ranges.nil? %>
+        <%= f.text_field :sixty_minute_session, value: @teacher_price_ranges[:sixty_minute_session] %>
+      <% else %>
+        <%= f.text_field :sixty_minute_session %>
+      <% end %>
+      <br />
+      <%= f.label :ninety_minute_session, "90 Minute Price:" %>
+      <% if !@teacher_price_ranges.nil? %>
+        <%= f.text_field :ninety_minute_session, value: @teacher_price_ranges[:ninety_minute_session] %>
+      <% else %>
+        <%= f.text_field :ninety_minute_session %>
+      <% end %>
+      <br />
+      <%= f.label :sales_tax, "Sales Tax:" %>
+      <% if !@teacher_price_ranges.nil? %>
+        <%= f.text_field :sales_tax, value: @teacher_price_ranges[:sales_tax] %>
+      <% else %>
+        <%= f.text_field :sales_tax %>
+      <% end %>
+      <br />
+      <%= f.submit "Update", class:"btn" %>
+    <% end %>
+  </div>
+</div>

@@ -9,10 +9,14 @@ class YogaTypesController < ApplicationController
         yoga_type = YogaType.new
         yoga_type[:teacher_id] = teacher[:id]
         yoga_type[:type_id] = v.to_i
-        yoga_type.save!
+        if yoga_type.save!
+          flash[:notice] = "Your available Yoga Types have been updated!"
+        else
+          flash[:notice] = "Your available Yoga Types were not updated, please try again."
+        end
       end
     end
     Teacher.qualifies_for_search?(current_user)
-    return redirect_to request.referrer
+    return redirect_to teachers_path(section: "yoga_types")
   end
 end
