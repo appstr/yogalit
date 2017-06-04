@@ -3,8 +3,9 @@
     <div class="row top_row">
       <div class="col s12">
         <div class="col m4 s12 center">
-          <%= image_tag @teacher.profile_pic.url %>
           <p><%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></p>
+          <%= image_tag @teacher.profile_pic.url %><br /><br />
+          <%= link_to "Add to favorites", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %> <i class="fa fa-heart" aria-hidden="true"> <%= @favorite_teacher_count %></i>
         </div>
         <div class="col m8 s12">
           <h5>Bio</h5>
@@ -15,39 +16,30 @@
       </div>
     </div>
   </div>
-</section>
-
-
-
-
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br>
-      <h1>Searched Teacher Show Page</h1>
-      <br />
-      <h5>Teacher Name: <%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
-      <%= link_to "Favorite #{@favorite_teacher_count}", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %>
-      <h5>Type of Yoga: <%= params[:yoga_type] %></h5>
-      <h5>Day: <%= params[:day_of_week] %></h5>
-      <h5>Date: <%= sanitize_date_for_view(params[:session_date]) %></h5>
-      <h5>Duration: <%= params[:duration] %> minutes</h5>
-      <h5>Pricing:</h5>
-      <h6>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></h6>
-      <h6>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></h6>
-      <h6>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></h6>
-      <br />
-      <%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
-        <%= hidden_field_tag :search_params, nil, value: params.to_json %>
-        <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
-        <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
-        <br />
-        <%= submit_tag "Select", class:"btn" %>
-      <% end %>
-
+  <div class="teacher_show_select_image">
+    <div class="row teacher_show_select_row">
+      <div class="col s6 m3 offset-m2 center teacher_show_select_div">
+        <p>Type of Yoga: <%= params[:yoga_type] %></p>
+        <p>Day: <%= params[:day_of_week] %></p>
+        <p>Date: <%= sanitize_date_for_view(params[:session_date]) %></p>
+        <p>Duration: <%= params[:duration] %> minutes</p>
+        <p>Pricing:</p>
+        <p>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></p>
+        <p>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></p>
+        <p>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></p>
+      </div>
+      <div class="col s6 m3 offset-m2 teacher_show_select_div">
+        <%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
+          <%= hidden_field_tag :search_params, nil, value: params.to_json %>
+          <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
+          <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
+          <br />
+          <button>Select</button>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
 <script type="text/javascript">
   $(document).ready(function(){

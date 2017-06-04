@@ -1,5 +1,6 @@
 #new_payments {
   @include backgroundShorthand("/assets/yoga_mat.jpeg");
+  margin-bottom: -20px;
   // background-color: #117ba4;
   input {
     color: #ffffff;
@@ -25,7 +26,6 @@
     font-family: 'Arvo', serif;
   }
   .credit_card_info_div {
-    background-color: rgba(0, 0, 0, 0.48);
     border-radius: 1em;
     margin-top: 3.5em;
   }
@@ -48,6 +48,8 @@
     color: #ffffff;
   }
   .complete_booking_row {
+    background-color: rgba(0, 0, 0, 0.48);
+    padding-bottom: 1em;
     h4 {
       margin-bottom: 1em;
       color: #ffffff;
