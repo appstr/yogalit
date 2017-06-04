@@ -1,0 +1,121 @@
+<div class="row top_row">
+  <div class="col m12">
+    <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+      <h4>No upcoming Yoga Sessions</h4>
+    <% else %>
+    <h4>Upcoming Yoga Sessions</h4>
+      <table>
+        <tr class="hide-on-med-and-down">
+          <th>Teacher's Name</th>
+          <th>Date</th>
+          <th>Day Of Week</th>
+          <th>Time Frame</th>
+          <th>Duration</th>
+          <th>Time Zone</th>
+          <th>Type of Yoga</th>
+          <th></th>
+        </tr>
+        <tr class="hide-on-large-only">
+          <th>Date</th>
+          <th>Time Frame</th>
+          <th>Time Zone</th>
+          <th>Type of Yoga</th>
+          <th></th>
+        </tr>
+        <% @upcoming_yoga_sessions.each do |k, v| %>
+          <tr class="hide-on-med-and-down">
+            <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+            <td><%= v["date"] %></td>
+            <td><%= v["day_of_week"] %></td>
+            <td><%= v["time_range"] %></td>
+            <td><%= v["duration"] %> min</td>
+            <td><%= v["timezone"] %></td>
+            <td><%= v["yoga_type"] %></td>
+            <td>
+              <% if v["cancelled"] || v["refunded"] %>
+                Cancelled/Refunded
+              <% else %>
+                <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
+                <%= link_to "Refund", student_refund_request_path(id: v["yoga_session_id"]), method: :post, data: {confirm: "Are you sure you want a refund?"} %>
+              <% end %>
+            </td>
+          </tr>
+          <tr class="hide-on-large-only">
+            <td><%= v["date"] %></td>
+            <td><%= v["time_range"] %></td>
+            <td><%= v["timezone"] %></td>
+            <td><%= v["yoga_type"] %></td>
+            <td>
+              <% if v["cancelled"] || v["refunded"] %>
+                Cancelled/Refunded
+              <% else %>
+                <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
+                <%= link_to "Refund", student_refund_request_path(id: v["yoga_session_id"]), method: :post, data: {confirm: "Are you sure you want a refund?"} %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>
+<div class="row">
+  <div class="col m12">
+    <% if @most_recent_yoga_sessions.nil? %>
+      <h4>No Recent Yoga Sessions</h4>
+    <% else %>
+      <h4>Most Recent Sessions</h4>
+      <%= link_to "Rate a recent Yoga Teacher", new_teacher_rating_path %>
+      <table>
+        <tr class="hide-on-med-and-down">
+          <th>Teacher's Name</th>
+          <th>Date</th>
+          <th>Day Of Week</th>
+          <th>Time Frame</th>
+          <th>Duration</th>
+          <th>Time Zone</th>
+          <th>Type of Yoga</th>
+          <th></th>
+        </tr>
+        <tr class="hide-on-large-only">
+          <th>Date</th>
+          <th>Time Frame</th>
+          <th>Time Zone</th>
+          <th>Type of Yoga</th>
+          <th></th>
+        </tr>
+        <% @most_recent_yoga_sessions.each do |k, v| %>
+          <tr class="hide-on-med-and-down">
+            <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
+            <td><%= v["date"] %></td>
+            <td><%= v["day_of_week"] %></td>
+            <td><%= v["time_range"] %></td>
+            <td><%= v["duration"] %> min</td>
+            <td><%= v["timezone"] %></td>
+            <td><%= v["yoga_type"] %></td>
+            <td>
+              <% if v["refunded"] %>
+                Cancelled/Refunded
+              <% else %>
+                <%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %>
+              <% end %>
+            </td>
+          </tr>
+          <tr class="hide-on-large-only">
+            <td><%= v["date"] %></td>
+            <td><%= v["time_range"] %></td>
+            <td><%= v["timezone"] %></td>
+            <td><%= v["yoga_type"] %></td>
+            <td>
+              <% if v["refunded"] %>
+                Cancelled/Refunded
+              <% else %>
+                <%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    <% end %>
+  </div>
+</div>

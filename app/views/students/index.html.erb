@@ -17,121 +17,119 @@
   }
 </style>
 
-<div class="container">
-  <div class="row">
-    <div class="col s12">
-      <br />
-      <h1>Student Dashboard</h1>
-
-      <h3>Student Profile</h3>
-      <p>First: <%= @student[:first_name] %></p>
-      <p>Last: <%= @student[:last_name] %></p>
-      <p>Phone: <%= @student[:phone] %></p>
-      <%= link_to "Edit Profile", edit_student_path(@student) %><br />
-      <%= link_to "Edit Sign-In", edit_user_registration_path %>
-
-      <h3>Search for a Yoga Teacher</h3>
-      <%= render partial: "shared/yoga_teacher_search_form" %>
-      <br />
-      <h3>Upcoming YogaSessions</h3>
-      <small>Yoga Sessions can be joined 5 minutes before the posted "start time"</small>
-      <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
-        <h5>No upcoming Yoga-Sessions</h5>
-      <% else %>
-        <table>
-          <tr>
-            <th>Teacher's Name</th>
-            <th>Date</th>
-            <th>Day Of Week</th>
-            <th>Time Frame</th>
-            <th>Duration</th>
-            <th>Time Zone</th>
-            <th>Type of Yoga</th>
-            <th></th>
-          </tr>
-          <% @upcoming_yoga_sessions.each do |k, v| %>
-            <tr>
-              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
-              <td><%= v["date"] %></td>
-              <td><%= v["day_of_week"] %></td>
-              <td><%= v["time_range"] %></td>
-              <td><%= v["duration"] %> min</td>
-              <td><%= v["timezone"] %></td>
-              <td><%= v["yoga_type"] %></td>
-              <td>
-                <% if v["cancelled"] || v["refunded"] %>
-                  Cancelled/Refunded
-                <% else %>
-                  <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
-                  <%= link_to "Refund", student_refund_request_path(id: v["yoga_session_id"]), method: :post, data: {confirm: "Are you sure you want a refund?"} %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      <% end %>
-
-      <h3>Most Recent Yoga-Sessions</h3>
-      <%= link_to "Rate a recent Yoga Teacher", new_teacher_rating_path %>
-      <% if @most_recent_yoga_sessions.nil? %>
-        <h5>No Recent Yoga Sessions</h5>
-      <% else %>
-        <table>
-          <tr>
-            <th>Teacher's Name</th>
-            <th>Date</th>
-            <th>Day Of Week</th>
-            <th>Time Frame</th>
-            <th>Duration</th>
-            <th>Time Zone</th>
-            <th>Type of Yoga</th>
-            <th></th>
-          </tr>
-          <% @most_recent_yoga_sessions.each do |k, v| %>
-            <tr>
-              <td><%= "#{v['first_name'].capitalize} #{v['last_name'].capitalize}" %></td>
-              <td><%= v["date"] %></td>
-              <td><%= v["day_of_week"] %></td>
-              <td><%= v["time_range"] %></td>
-              <td><%= v["duration"] %> min</td>
-              <td><%= v["timezone"] %></td>
-              <td><%= v["yoga_type"] %></td>
-              <td>
-                <% if v["refunded"] %>
-                  Cancelled/Refunded
-                <% else %>
-                  <%= link_to "Report", report_a_yoga_session_problem_path(id: v["yoga_session_id"]), data: {confirm: "Are you sure you want to report this Yoga-Session?"} %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
-      <% end %>
-
-      <h3>My Favorite Yoga Teachers</h3>
-      <% if !@favorite_teachers.blank? %>
-        <small>Click on a Teacher's name to begin scheduling!</small>
-        <br />
-        <br />
-        <% @favorite_teachers.each do |ft| %>
-          <a class="waves-effect waves-light btn" href="<%= teacher_profile_path(id: ft[:id]) %>">
-            <%= "#{ft[:first_name].capitalize} #{ft[:last_name].capitalize}" %>
-          </a>
-          <br />
-          <%= link_to "Delete #{ft[:first_name].capitalize}", destroy_favorite_teacher_path(id: ft[:id]), data: {confirm: "Are you sure you want to delete this Teacher?"}, method: :delete %>
-          <br />
-          <br />
-        <% end %>
-      <% else %>
-        <h5>No Teachers added to Favorites.</h5>
-      <% end %>
+<div class="row student_dashboard_row hide-on-med-and-down">
+  <div class="col m3 student_sidebar">
+    <div class="row image_and_name center" onclick="dashboardWelcome();">
+      <div class="col s12">
+        <p><%= "#{@student[:first_name].capitalize} #{@student[:last_name].capitalize}" %></p>
+      </div>
+    </div>
+    <div class="sidebar_options">
+      <div id="search" class="row sidebar_option_div active" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-clock-o" aria-hidden="true"> Search</i>
+        </div>
+      </div>
+      <div id="student_yoga_sessions" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plus" aria-hidden="true"> My Yoga Sessions</i>
+        </div>
+      </div>
+      <div id="favorite_teachers" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-play-circle-o" aria-hidden="true"> My Favorite Teachers</i>
+        </div>
+      </div>
+      <div id="general" class="row sidebar_option_div" onclick="clickedSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-cog" aria-hidden="true"> General</i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col m9 student_main_dash">
+    <div class="dashboard_welcome dashboard_content">
+      <h1>Dashboard Welcome!</h1>
+    </div>
+    <div class="search dashboard_content">
+      <div class="row top_row">
+        <h4>Find a Yoga-Teacher</h4>
+        <%= render partial: "shared/yoga_teacher_search_form" %>
+      </div>
+    </div>
+    <div class="student_yoga_sessions dashboard_content">
+      <%= render partial: "shared/student_yoga_sessions" %>
+    </div>
+    <div class="favorite_teachers dashboard_content">
+      <%= render partial: "shared/favorite_teachers" %>
+    </div>
+    <div class="general dashboard_content">
+      <%= render partial: "shared/general" %>
     </div>
   </div>
 </div>
 
-<script type="text/javascript">
+<div class="row hide-on-large-only student_dashboard_row">
+  <div class="col s12 student_sidebar">
+    <div class="row image_and_name center" onclick="dashboardWelcome();">
+      <div class="col s12">
+        <p><%= "#{@student[:first_name].capitalize} #{@student[:last_name].capitalize}" %></p>
+      </div>
+    </div>
+    <div class="sidebar_options">
+      <div id="search_mobile" class="row sidebar_option_div active" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-clock-o" aria-hidden="true"> Search</i>
+        </div>
+      </div>
+      <div id="student_yoga_sessions_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-plus" aria-hidden="true"> My Yoga Sessions</i>
+        </div>
+      </div>
+      <div id="favorite_teachers_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-play-circle-o" aria-hidden="true"> Photo's and Video's</i>
+        </div>
+      </div>
+      <div id="general_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
+        <div class="col s12">
+          <i class="fa fa-cog" aria-hidden="true"> General</i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row student_main_dash">
+    <div class="col s12 dashboard_welcome dashboard_content">
+      <h4>Welcome Dashboard Mobile</h4>
+    </div>
+    <div class="col s12 search_mobile dashboard_content">
+      <div class="row top_row">
+        <h4>Find a Yoga-Teacher</h4>
+        <%= render partial: "shared/yoga_teacher_search_form" %>
+      </div>
+    </div>
+    <div class="col s12 student_yoga_sessions_mobile dashboard_content">
+      <%= render partial: "shared/student_yoga_sessions" %>
+    </div>
+    <div class="col s12 favorite_teachers_mobile dashboard_content">
+      <%= render partial: "shared/favorite_teachers" %>
+    </div>
+    <div class="col s12 general_mobile dashboard_content">
+      <%= render partial: "shared/general" %>
+    </div>
+  </div>
+</div>
+
+<script type='text/javascript'>
   $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    if("<%= params[:section] %>"){
+      $("#<%= params[:section] %>").css("background-color", "#16e0bd");
+      $("#<%= params[:section] %>_mobile").css("background-color", "#16e0bd");
+      $(".dashboard_content").hide();
+      $(".<%= params[:section] %>").show();
+      $(".<%= params[:section] %>_mobile").show();
+    }
     $('.modal').modal();
   });
 </script>

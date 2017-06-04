@@ -1,0 +1,21 @@
+<div class="row top_row">
+  <div class="col s12">
+    <h4>My Favorite Yoga Teachers</h4>
+    <% if !@favorite_teachers.blank? %>
+      <small>Click on a Teacher's name to begin scheduling!</small>
+      <br />
+      <br />
+      <% @favorite_teachers.each do |ft| %>
+        <a class="waves-effect waves-light btn" href="<%= teacher_profile_path(id: ft[:id]) %>">
+          <%= "#{ft[:first_name].capitalize} #{ft[:last_name].capitalize}" %>
+        </a>
+        <br />
+        <%= link_to "Delete #{ft[:first_name].capitalize}", destroy_favorite_teacher_path(id: ft[:id]), data: {confirm: "Are you sure you want to delete this Teacher?"}, method: :delete %>
+        <br />
+        <br />
+      <% end %>
+    <% else %>
+      <h5>No Teachers added to Favorites.</h5>
+    <% end %>
+  </div>
+</div>

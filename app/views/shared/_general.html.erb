@@ -1,30 +1,45 @@
 <div class="row top_row">
-  <div class="col m4">
-    <h4>Profile</h4>
-    <p>First: <%= @teacher[:first_name] %></p>
-    <p>Last: <%= @teacher[:last_name] %></p>
-    <p>Phone: <%= @teacher[:phone] %></p>
-    <p>Timezone: <%= @teacher[:timezone] %></p>
-    <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
-    <h4>Sign-In</h4>
-    <p>Email: <%= current_user[:email] %></p>
-    <p>Password: <i class="fa fa-lock" aria-hidden="true"></i></p>
-    <%= link_to "Edit Sign-In", edit_user_registration_path %>
-  </div>
-  <div class="col m4">
-    <h4>Rating</h4>
-    <% if @teacher[:average_rating] > 0.0 %>
-      <h5><%= @teacher[:average_rating] %> / 5.0</h5>
-      <% else %>
-      <h5>No Rating Yet.</h5>
-    <% end %>
-  </div>
-  <div class="col m4">
-    <h4>Favorite Count</h4>
-    <% if @favorited_count > 0 %>
-      <h5>Favorited by <%= @favorited_count %> student(s).</h5>
-      <% else %>
-      <h5>You have not been favorited yet by any Student.</h5>
-    <% end %>
-  </div>
+  <% if current_user[:teacher_or_student] == "teacher" %>
+    <div class="col m4">
+      <h4>Profile</h4>
+      <p>First: <%= @teacher[:first_name] %></p>
+      <p>Last: <%= @teacher[:last_name] %></p>
+      <p>Phone: <%= @teacher[:phone] %></p>
+      <p>Timezone: <%= @teacher[:timezone] %></p>
+      <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
+      <h4>Sign-In</h4>
+      <p>Email: <%= current_user[:email] %></p>
+      <p>Password: <i class="fa fa-lock" aria-hidden="true"></i></p>
+      <%= link_to "Edit Sign-In", edit_user_registration_path %>
+    </div>
+    <div class="col m4">
+      <h4>Rating</h4>
+      <% if @teacher[:average_rating] > 0.0 %>
+        <h5><%= @teacher[:average_rating] %> / 5.0</h5>
+        <% else %>
+        <h5>No Rating Yet.</h5>
+      <% end %>
+    </div>
+    <div class="col m4">
+      <h4>Favorite Count</h4>
+      <% if @favorited_count > 0 %>
+        <h5>Favorited by <%= @favorited_count %> student(s).</h5>
+        <% else %>
+        <h5>You have not been favorited yet by any Student.</h5>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="col s12">
+      <h4>Profile</h4>
+      <p>First: <%= @student[:first_name] %></p>
+      <p>Last: <%= @student[:last_name] %></p>
+      <p>Phone: <%= @student[:phone] %></p>
+      <p>Timezone: <%= @student[:timezone] %></p>
+      <%= link_to "Edit Profile", edit_student_path(@student) %><br />
+      <h4>Sign-In</h4>
+      <p>Email: <%= current_user[:email] %></p>
+      <p>Password: <i class="fa fa-lock" aria-hidden="true"></i></p>
+      <%= link_to "Edit Sign-In", edit_user_registration_path %>
+    </div>
+  <% end %>
 </div>

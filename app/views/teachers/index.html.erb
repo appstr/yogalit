@@ -21,7 +21,7 @@
 
 <div class="row teacher_dashboard_row hide-on-med-and-down">
   <div class="col m3 teacher_sidebar">
-    <div class="row image_and_name" onclick="teacherDashboardWelcome();">
+    <div class="row image_and_name" onclick="dashboardWelcome();">
       <div class="col s6">
         <%= image_tag @teacher.profile_pic.url %>
       </div>
@@ -97,7 +97,7 @@
 
 <div class="row hide-on-large-only teacher_dashboard_row">
   <div class="col s12 teacher_sidebar">
-    <div class="row image_and_name" onclick="teacherDashboardWelcome();">
+    <div class="row image_and_name" onclick="dashboardWelcome();">
       <div class="col s6">
         <%= image_tag @teacher.profile_pic.url %>
       </div>
@@ -172,26 +172,6 @@
 </div>
 
 <script type="text/javascript">
-  function clickedSidebar(l){
-    $(".sidebar_option_div").css("background-color", "#1c1b1b");
-    $("#"+l.id).css("background-color", "#16e0bd");
-    $(".dashboard_content").hide();
-    $("."+l.id).show();
-  }
-
-  function clickedMobileSidebar(l){
-    $(".sidebar_option_div").css("background-color", "#1c1b1b");
-    $("#"+l.id).css("background-color", "#16e0bd");
-    $(".dashboard_content").hide();
-    $("."+l.id).show();
-  }
-
-  function teacherDashboardWelcome(){
-    $(".sidebar_option_div").css("background-color", "#1c1b1b");
-    $(".dashboard_content").hide();
-    $(".dashboard_welcome").show();
-  }
-
   $(document).ready(function(){
     if("<%= params[:section] %>"){
       $("#<%= params[:section] %>").css("background-color", "#16e0bd");
@@ -205,5 +185,4 @@
       minDate: today
     });
   });
-
 </script>

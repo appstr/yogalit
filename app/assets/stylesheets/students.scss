@@ -37,3 +37,70 @@
     text-align: center;
   }
 }
+
+.student_dashboard_row {
+  margin-bottom: -20px !important;
+  background-color: #333333;
+  .student_sidebar {
+    margin-top: 3.9em;
+    background-color: #333333;
+    color: #cccccc;
+    .image_and_name {
+      padding-top: 3em;
+      width: 100%;
+      &:hover {
+        cursor: pointer;
+        cursor: hand;
+      }
+      img {
+        border-radius: 1em;
+      }
+      p {
+        margin-top: 1.5em;
+      }
+    }
+    .sidebar_options {
+      min-height: 200px;
+      color: white;
+      .sidebar_option_div {
+        background-color: #1c1b1b;
+        text-align: left;
+        margin-left: -10px;
+        margin-right: -10px;
+        padding: 1.5em;
+        margin-bottom: 0.2em;
+        &:hover {
+          cursor: pointer;
+          cursor: hand;
+        }
+      }
+    }
+  }
+  .student_main_dash {
+    @include backgroundShorthand("/assets/dashboard_background.png");
+    .border {
+      border: 1px solid #ffffff;
+    }
+    margin-top: 3.9em;
+    min-height: 800px !important;
+    .top_row {
+      margin-top: 3.9em;
+    }
+    .dashboard_content:nth-child(n+2) {
+      display: none;
+    }
+    .hours_of_operations {
+      input {
+        width: 50%;
+        @media(max-width: 600px){
+          text-align: center;
+        }
+        text-align: left;
+        display: initial;
+      }
+      .hoo_row {
+        text-align: center;
+      }
+    }
+  }
+}
