@@ -34,7 +34,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherSundayTimeFrame.where(teacher_id: yi)
         before_times.each do |bt|
           if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-            new_ids << yi if !before_times.nil? && new_ids.include?(yi)
+            new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
           end
         end
         time_frames = TeacherMondayTimeFrame.where(teacher_id: yi).first
@@ -42,7 +42,7 @@ class YogaTeacherSearchesController < ApplicationController
         after_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
         after_times.each do |at|
           if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(params[:date]).wday
-            new_ids << yi if !after_times.nil?
+            new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
           end
         end
       end
@@ -160,7 +160,9 @@ class YogaTeacherSearchesController < ApplicationController
         new_ids << yi
       else
         holidays.each do |hday|
-          new_ids << yi if !hday[:holiday_date_range].include?(int_search_date)
+          if !hday[:holiday_date_range].include?(int_search_date) && !new_ids.include?(yi)
+            new_ids << yi
+          end
         end
       end
     end

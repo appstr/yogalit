@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: 'users#index'
   # TODO Need to restrict resources to specific actions on those who do not use full CRUD.
   devise_for :users, :controllers => { registrations: "devise_registrations" }
   resources :users, only: [:index]
@@ -20,7 +21,6 @@ Rails.application.routes.draw do
   resources :teacher_price_ranges
   resources :user_messages
   resources :teacher_ratings
-  root to: 'users#index'
 
   # YogaTeacherSearches
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers

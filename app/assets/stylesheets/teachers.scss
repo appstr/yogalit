@@ -109,11 +109,10 @@
       color: #17d9b8;
     }
     .teacher_info_div {
-      background-color: rgb(50, 116, 141);
-      padding: 2em;
-      border-radius: 1em;
-      text-align: left;
-      letter-spacing: 0.1em;
+      h5 {
+        font-family: 'Source Sans Pro', sans-serif;
+        text-align: center;
+      }
     }
     .image_div {
       border: 20px solid rgb(50, 116, 141);
@@ -129,7 +128,7 @@
   }
   .teacher_show_select_image {
     @include backgroundShorthand("/assets/yoga_class.jpg");
-    min-height: 400px;
+    min-height: 500px;
     .teacher_show_select_row {
       padding-bottom: 20px;
       margin-bottom: -20px;
@@ -151,11 +150,17 @@
         }
         p,label,input {
           color: #ffffff;
+          font-family: 'Arvo', serif;
+          margin-top: 1em;
+        }
+        .student_choices {
+          color: #56caf8;
+          font-family: 'Rock Salt', cursive;
         }
         background-color: rgba(0, 0, 0, 0.5);
         padding: 2em;
         margin-top: 3em;
-        min-height: 400px;
+        min-height: 500px;
       }
     }
   }

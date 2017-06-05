@@ -2,12 +2,12 @@
   <div class="container-fluid teacher_top_info">
     <div class="row top_row">
       <div class="col s12">
-        <div class="col m4 s12 center">
-          <p><%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></p>
+        <div class="col m4 s12 center teacher_info_div">
+          <h5><%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
           <%= image_tag @teacher.profile_pic.url %><br /><br />
           <%= link_to "Add to favorites", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %> <i class="fa fa-heart" aria-hidden="true"> <%= @favorite_teacher_count %></i>
         </div>
-        <div class="col m8 s12">
+        <div class="col m8 s12 bio_div">
           <h5>Bio</h5>
           <p>
             Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -19,11 +19,16 @@
   <div class="teacher_show_select_image">
     <div class="row teacher_show_select_row">
       <div class="col s6 m3 offset-m2 center teacher_show_select_div">
-        <p>Type of Yoga: <%= params[:yoga_type] %></p>
-        <p>Day: <%= params[:day_of_week] %></p>
-        <p>Date: <%= sanitize_date_for_view(params[:session_date]) %></p>
-        <p>Duration: <%= params[:duration] %> minutes</p>
+        <p>Type of Yoga: </p>
+        <span class="student_choices"><%= params[:yoga_type] %></span>
+        <p>Day: </p>
+        <span class="student_choices"><%= params[:day_of_week] %></span>
+        <p>Date: </p>
+        <span class="student_choices"><%= sanitize_date_for_view(params[:session_date]) %></span>
+        <p>Duration: </p>
+        <span class="student_choices"><%= params[:duration] %> minutes</span>
         <p>Pricing:</p>
+        <span class="student_choices"></span>
         <p>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></p>
         <p>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></p>
         <p>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></p>

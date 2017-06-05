@@ -2,6 +2,7 @@
   <div class="row">
     <div class="col s12">
       <br />
+      <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
       <h1>Yogalit Admin Index</h1>
 
       <%= link_to "All Non-Refund Reported-Yoga-Sessions", admins_reported_non_refund_requested_yoga_sessions_path %><br />

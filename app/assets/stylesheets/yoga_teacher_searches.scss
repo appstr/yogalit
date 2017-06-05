@@ -1,0 +1,27 @@
+#search_results {
+  background-color: #333333;
+  font-family: 'Arvo', serif;
+  h4 {
+    color: #56caf8;
+    margin-bottom: 1em;
+    margin-top: 1em;
+    font-weight: 800;
+  }
+  img {
+    border-radius: 20%;
+    margin-bottom: 1em;
+  }
+  .teacher_searched_individual_div {
+    background-color: #444444;
+    padding: 1em;
+    margin-bottom: 1em;
+    min-height: 20em;
+    .fa-star {
+      color: #ffe400;
+    }
+    a {
+      color: #16debb;
+      letter-spacing: 0.1em;
+    }
+  }
+}
