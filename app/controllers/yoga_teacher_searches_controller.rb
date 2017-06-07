@@ -3,8 +3,7 @@ class YogaTeacherSearchesController < ApplicationController
   def search_for_teachers
     if params[:date]
       yoga_teacher_ids = yoga_teacher_ids_matching_yoga_type
-      int_search_date = format_search_date_to_int
-      yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, int_search_date)
+      yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids)
       @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
       @duration = params[:duration]
       @student_timezone = params["student_timezone"].first
@@ -152,7 +151,7 @@ class YogaTeacherSearchesController < ApplicationController
     return new_ids
   end
 
-  def yoga_teachers_not_on_holiday(yoga_teacher_ids, int_search_date)
+  def yoga_teachers_not_on_holiday(yoga_teacher_ids)
     new_ids = []
     yoga_teacher_ids.each do |yi|
       holidays = TeacherHoliday.where(teacher_id: yi)
@@ -160,7 +159,9 @@ class YogaTeacherSearchesController < ApplicationController
         new_ids << yi
       else
         holidays.each do |hday|
-          if !hday[:holiday_date_range].include?(int_search_date) && !new_ids.include?(yi)
+          search_date = format_search_date(hday[:teacher_id])
+          holiday_date_range = Time.at(hday[:holiday_date_range].first).in_time_zone(hday[:teacher_timezone])..Time.at(hday[:holiday_date_range].last).in_time_zone(hday[:teacher_timezone])
+          if !search_date.between?(Time.parse(holiday_date_range.first.to_s), Time.parse(holiday_date_range.last.to_s)) && !new_ids.include?(yi)
             new_ids << yi
           end
         end
@@ -185,11 +186,13 @@ class YogaTeacherSearchesController < ApplicationController
     return yoga_instructor_ids
   end
 
-  def format_search_date_to_int
+  def format_search_date(teacher_id)
+    teacher = Teacher.find(teacher_id)
     split_date = params[:date].split(" ")
     @month = YogaTeacherSearch::DATE_ENUMS[split_date[1].delete(",")]
     @day = split_date[0].to_i
     @year = split_date[2].to_i
-    return Time.new(@year, @month, @day).to_i
+    Time.zone = teacher[:timezone]
+    return Time.zone.local(@year, @month, @day, 00, 00)
   end
 end

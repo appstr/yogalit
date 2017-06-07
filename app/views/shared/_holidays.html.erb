@@ -1,13 +1,15 @@
 <div class="row top_row">
-  <div class="col m4">
-    <%= form_for(@teacher_holiday) do |f| %>
-      <%= f.label :holiday_date_range %>
-      <%= f.text_field :holiday_date_range, id: "teacher_holiday_datepicker", placeholder:"mm/dd/yyyy - mm/dd/yyyy" %><br />
-      <%= f.label :description %>
-      <%= f.text_field :description %><br />
-      <%= f.submit "Add", class:"btn" %>
-    <% end %>
-  </div>
+  <% if current_user[:teacher_or_student] == "teacher" %>
+    <div class="col m4">
+      <%= form_for(@teacher_holiday) do |f| %>
+        <%= f.label :holiday_date_range %>
+        <%= f.text_field :holiday_date_range, id: "teacher_holiday_datepicker", placeholder:"mm/dd/yyyy - mm/dd/yyyy" %><br />
+        <%= f.label :description %>
+        <%= f.text_field :description %><br />
+        <%= f.submit "Add", class:"btn" %>
+      <% end %>
+    </div>
+  <% end %>
   <div class="col m4"></div>
   <div class="col m4">
     <% @teacher_holidays.each do |holiday| %>

@@ -2,14 +2,21 @@
   <div class="container-fluid">
     <div class="row center-align top_row">
       <% if @yoga_teachers.nil? %>
-        <h4>No matching results</h4>
+        <h4>No matching results. Here are our most recent Teachers</h4>
         <% @first_ten_yoga_teachers.each do |yt| %>
           <div class="col s12 m3">
-            <%= link_to(teacher_profile_path(id: yt)) do %>
-            <%= image_tag yt.profile_pic.url %><br />
-            <%= yt[:first_name].capitalize %>
-            <%= yt[:last_name].capitalize %><br />
-            <% end %>
+            <div class="teacher_searched_individual_div">
+              <%= link_to(teacher_profile_path(id: yt)) do %>
+              <%= image_tag yt.profile_pic.url %><br />
+              <%= yt[:first_name].capitalize %>
+              <%= yt[:last_name].capitalize %><br />
+              <% if yt[:average_rating] != 0.0 %>
+                <i class="fa fa-star" aria-hidden="true"><%= yt[:average_rating] %></i>
+              <% else %>
+                <i class="fa fa-star" aria-hidden="true">No Rating</i>
+              <% end %>
+              <% end %>
+            </div>
           </div>
         <% end %>
       <% else %>

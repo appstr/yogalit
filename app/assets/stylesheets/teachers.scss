@@ -79,7 +79,20 @@
 }
 
 #teachers_show {
+  font-family: 'Arvo', serif;
   .teacher_top_info {
+    .photos_and_videos_div {
+      text-align: center;
+      h5 {
+        font-family: 'Source Sans Pro', sans-serif;
+        color: #17d9b8;
+        margin-top: 2em;
+        margin-bottom: 1em;
+      }
+    }
+    .border {
+      border: 1px solid #d0d0d0;
+    }
     .btn {
       letter-spacing: 0.2em;
       margin-bottom: 1em;
@@ -96,9 +109,6 @@
     }
     background-color: #ffffff;
     padding: 1em;
-    .fa-heart {
-      color: #b40000;
-    }
   }
   .top_row {
     margin-top: 7.5em;
@@ -109,6 +119,9 @@
       color: #17d9b8;
     }
     .teacher_info_div {
+      .fa-heart {
+        color: #b40000;
+      }
       h5 {
         font-family: 'Source Sans Pro', sans-serif;
         text-align: center;
@@ -257,5 +270,50 @@
   }
   .top_row {
     margin-top: 3.9em;
+  }
+}
+
+#teacher_profile {
+  margin-top: 3em;
+  font-family: 'Arvo', serif;
+  h5 {
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #17d9b8;
+    margin-top: 1em;
+  }
+  h4{
+    font-family: 'Source Sans Pro', sans-serif;
+    color: #56cbf9;
+    text-align: center;
+  }
+  .teacher_profile_search_row {
+    background-color: rgba(47, 47, 47, 0.5);
+    margin-bottom: -20px;
+    padding-bottom: 20px;
+  }
+  .teacher_profile_search_div {
+    @include backgroundShorthand("/assets/yoga_class.jpg");
+    color: #ffffff;
+    label {
+      color: #56cbf9;
+    }
+    .button_div {
+      text-align: center;
+    }
+    button {
+      letter-spacing: 0.2em;
+      margin-bottom: 1em;
+      border: 1px solid #16e0bd;
+      color: #ffffff;
+      background-color: #16e0bd;
+      padding: 1em;
+      width: 50%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: #16e0bd;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
+    }
   }
 }

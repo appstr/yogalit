@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.integer   "teacher_id"
     t.int8range "holiday_date_range"
     t.string    "description"
+    t.string    "teacher_timezone"
     t.datetime  "created_at",         null: false
     t.datetime  "updated_at",         null: false
   end

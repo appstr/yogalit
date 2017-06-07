@@ -49,5 +49,17 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $('select').material_select();
+    // Activate Carousel
+    $("#photoCarousel").carousel();
+
+    // Enable Carousel Indicators
+    $(".item").click(function(){
+        $("#photoCarousel").carousel(1);
+    });
+
+    // Enable Carousel Controls
+    $(".left").click(function(){
+        $("#photoCarousel").carousel("prev");
+    });
   });
 </script>

@@ -18,6 +18,7 @@ class TeacherHolidaysController < ApplicationController
     teacher_holiday[:teacher_id] = teacher[:id]
     teacher_holiday[:holiday_date_range] = params[:teacher_holiday][:holiday_date_range]
     teacher_holiday[:description] = params[:teacher_holiday][:description]
+    teacher_holiday[:teacher_timezone] = teacher[:timezone]
     if teacher_holiday.save!
       flash[:notice] = "Your Holiday was created successfully!"
       path = teachers_path(section: "holidays")

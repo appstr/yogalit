@@ -174,12 +174,24 @@ class TeachersController < ApplicationController
     filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
     @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
+    @teacher_images = TeacherImage.where(teacher_id: @teacher)
+    @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
   end
 
   def teacher_profile
     @teacher = Teacher.find(params[:id])
     @teacher_available_yoga_types = get_teacher_available_yoga_types
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
+    @teacher_images = TeacherImage.where(teacher_id: @teacher)
+    @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
+    @teacher_holidays = TeacherHoliday.where(teacher_id: @teacher)
+    @teacher_monday_time_frame = TeacherMondayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_tuesday_time_frame = TeacherTuesdayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_wednesday_time_frame = TeacherWednesdayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_thursday_time_frame = TeacherThursdayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_friday_time_frame = TeacherFridayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_saturday_time_frame = TeacherSaturdayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
+    @teacher_sunday_time_frame = TeacherSundayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
   end
 
   def toggle_vacation_mode
