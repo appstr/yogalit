@@ -7,7 +7,12 @@
       <div class="hide-on-med-and-down">
         <p>
           <%= current_user[:email].capitalize %><br />
-          Account Status: Searchable
+          Account Status:
+          <% if @teacher[:is_searchable] %>
+            <span class="account_status">Searchable</span>
+          <% else %>
+            <span class="account_status">Not Searchable</span>
+          <% end %>
         </p>
       </div>
     </div>
@@ -15,7 +20,18 @@
       <div class="hide-on-med-and-down">
         <p>
           Vacation-Mode:<br />
-          ON / OFF
+          <div class="switch">
+            <label>
+              Off
+              <% if @teacher[:vacation_mode] %>
+                <input type="checkbox" checked>
+              <% else %>
+                <input type="checkbox">
+              <% end %>
+              <span class="lever" onclick="toggleVacationMode();"></span>
+              On
+            </label>
+          </div>
         </p>
       </div>
     </div>
@@ -43,3 +59,21 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  function toggleVacationMode(){
+    var url = "/toggle_vacation_mode";
+    var request = $.ajax({
+      method: "POST",
+      url: url,
+      success: function(result){
+        console.log(result.searchable);
+        if(result.searchable){
+          $(".account_status").text("Searchable")
+        }else{
+          $(".account_status").text("Not Searchable")
+        }
+      }
+    });
+  }
+</script>

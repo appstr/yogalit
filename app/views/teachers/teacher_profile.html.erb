@@ -17,98 +17,99 @@
   }
 </style>
 
-<section id="teacher_profile">
-  <div class="container-fluid teacher_top_info">
-    <div class="row top_row">
-      <div class="col s12">
-        <div class="col m4 s12 center teacher_info_div">
-          <h5><%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
-          <%= image_tag @teacher.profile_pic.url %><br /><br />
-          <%= link_to "Add to favorites", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %> <i class="fa fa-heart" aria-hidden="true"> <%= @favorite_teacher_count %></i>
-        </div>
-        <div class="col m8 s12 bio_div">
-          <h5>Bio</h5>
-          <p>
-            Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="teacher_profile_select_image">
-    <div class="row center">
-      <%= render partial: "shared/photos_and_videos" %>
-    </div>
-  </div>
-  <div class="teacher_profile_teacher_time_info">
-    <div class="row center">
-      <div class="col s12">
-        <h5>Hours of operation</h5>
-        <table>
-          <tr>
-            <th>Mon</th>
-            <th>Tue</th>
-            <th>Wed</th>
-            <th>Thu</th>
-            <th>Fri</th>
-            <th>Sat</th>
-            <th>Sun</th>
-          </tr>
-          <tr>
-            <td><%= @teacher_monday_time_frame %></td>
-            <td><%= @teacher_tuesday_time_frame %></td>
-            <td><%= @teacher_wednesday_time_frame %></td>
-            <td><%= @teacher_thursday_time_frame %></td>
-            <td><%= @teacher_friday_time_frame %></td>
-            <td><%= @teacher_saturday_time_frame %></td>
-            <td><%= @teacher_sunday_time_frame %></td>
-          </tr>
-        </table>
-      </div>
-      <div class="col s12">
-        <br />
-        <br />
-        <h5>Unavailable Dates</h5>
-          <% @teacher_holidays.each do |holiday| %>
-          <div class="col m4">
-            <%= "#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%Y')} to #{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%Y')}" %><br />
-            <%= holiday[:description] %><br />
-            <br />
-            <br />
+<body class="teacher_profile_page">
+  <section id="teacher_profile">
+    <div class="container-fluid teacher_top_info">
+      <div class="row top_row">
+        <div class="col s12">
+          <div class="col m4 s12 center teacher_info_div">
+            <h5><%= @teacher[:first_name].capitalize %> <%= @teacher[:last_name].capitalize %></h5>
+            <%= image_tag @teacher.profile_pic.url %><br /><br />
+            <%= link_to "Add to favorites", add_favorite_teacher_path(id: @teacher[:id]), class:"btn", method: :post %> <i class="fa fa-heart" aria-hidden="true"> <%= @favorite_teacher_count %></i>
           </div>
+          <div class="col m8 s12 bio_div">
+            <h5>Bio</h5>
+            <p>
+              Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="teacher_profile_select_image">
+      <div class="row center">
+        <%= render partial: "shared/photos_and_videos" %>
+      </div>
+    </div>
+    <div class="teacher_profile_teacher_time_info">
+      <div class="row center">
+        <div class="col s12">
+          <h5>Hours of operation</h5>
+          <table>
+            <tr>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+              <th>Sun</th>
+            </tr>
+            <tr>
+              <td><%= @teacher_monday_time_frame %></td>
+              <td><%= @teacher_tuesday_time_frame %></td>
+              <td><%= @teacher_wednesday_time_frame %></td>
+              <td><%= @teacher_thursday_time_frame %></td>
+              <td><%= @teacher_friday_time_frame %></td>
+              <td><%= @teacher_saturday_time_frame %></td>
+              <td><%= @teacher_sunday_time_frame %></td>
+            </tr>
+          </table>
+        </div>
+        <div class="col s12">
+          <br />
+          <br />
+          <h5>Unavailable Dates</h5>
+            <% @teacher_holidays.each do |holiday| %>
+            <div class="col m4">
+              <%= "#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%Y')} to #{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%Y')}" %><br />
+              <%= holiday[:description] %><br />
+              <br />
+              <br />
+            </div>
+            <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="teacher_profile_search_div">
+      <div class="row teacher_profile_search_row">
+        <div class="col s12">
+          <h4>Start a Yoga Session</h4>
+          <%= form_tag({controller:"teachers", action:"show", id:@teacher[:id]}, method: :get) do %>
+            <%= hidden_field_tag :from_teacher_profile, nil, value:true %>
+            <%= hidden_field_tag :id, nil, value:@teacher[:id] %>
+            <%= hidden_field_tag :teacher_timezone, nil, value:@teacher[:timezone] %>
+            <%= label_tag :date %>
+            <%= text_field_tag :session_date, nil, class:"datepicker", type:"date" %><br />
+            <%= label_tag :type_of_yoga %>
+            <%= select_tag :yoga_type, options_for_select(@teacher_available_yoga_types)%><br />
+            <%= label_tag :duration %>
+            <%= select_tag :duration, options_for_select(yoga_session_duration_options) %><br />
+            <%= label_tag :student_timezone, "Select Your Current Time-Zone" %>
+            <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default" %>
+            <br />
+            <br />
+            <div class="button_div">
+              <button>Search for times</button>
+            </div>
+            <br />
+            <br />
           <% end %>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="teacher_profile_search_div">
-    <div class="row teacher_profile_search_row">
-      <div class="col s12">
-        <h4>Start a Yoga Session</h4>
-        <%= form_tag({controller:"teachers", action:"show", id:@teacher[:id]}, method: :get) do %>
-          <%= hidden_field_tag :from_teacher_profile, nil, value:true %>
-          <%= hidden_field_tag :id, nil, value:@teacher[:id] %>
-          <%= hidden_field_tag :teacher_timezone, nil, value:@teacher[:timezone] %>
-          <%= label_tag :date %>
-          <%= text_field_tag :session_date, nil, class:"datepicker", type:"date" %><br />
-          <%= label_tag :type_of_yoga %>
-          <%= select_tag :yoga_type, options_for_select(@teacher_available_yoga_types)%><br />
-          <%= label_tag :duration %>
-          <%= select_tag :duration, options_for_select(yoga_session_duration_options) %><br />
-          <%= label_tag :student_timezone, "Select Your Current Time-Zone" %>
-          <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default" %>
-          <br />
-          <br />
-          <div class="button_div">
-            <button>Search for times</button>
-          </div>
-          <br />
-          <br />
-        <% end %>
-      </div>
-    </div>
-  </div>
-</section>
-
+  </section>
+</body>
 <script type="text/javascript">
   $(document).ready(function(){
     $('select').material_select();

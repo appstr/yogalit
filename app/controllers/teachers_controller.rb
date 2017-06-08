@@ -1,5 +1,6 @@
 class TeachersController < ApplicationController
   before_action :authenticate_user!, except: [:teacher_profile]
+  skip_before_action :verify_authenticity_token, only: [:toggle_vacation_mode]
   include ApplicationHelper
   require 'signet/oauth_2/client'
 
@@ -153,12 +154,12 @@ class TeachersController < ApplicationController
   def show
     if params[:from_teacher_profile]
       build_params_from_teacher_profile
-      not_on_holiday_ids = YogaTeacherSearchesController.new.yoga_teachers_not_on_holiday([params[:id]], Time.parse(params[:session_date]).to_i)
+      not_on_holiday_ids = YogaTeacherSearchesController.new.yoga_teachers_not_on_holiday([params[:id]], Time.parse(params[:session_date]))
       if not_on_holiday_ids.empty?
         flash[:notice] = "Teacher is on Holiday for this date."
         return redirect_to request.referrer
       end
-      available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids)
+      available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids, params[:session_date])
       if available_on_day_of_week.empty?
         flash[:notice] = "Teacher is not available on #{params[:day_of_week]}'s."
         return redirect_to request.referrer
@@ -195,14 +196,19 @@ class TeachersController < ApplicationController
   end
 
   def toggle_vacation_mode
-    teacher = Teacher.find(params[:id])
+    teacher = Teacher.where(user_id: current_user).first
     teacher[:vacation_mode] = teacher[:vacation_mode] ? false : true
+    if teacher[:vacation_mode]
+      teacher[:is_searchable] = false
+    else
+      teacher[:is_searchable] = Teacher.qualifies_for_search?(current_user)
+    end
     if teacher.save!
       flash[:notice] = teacher[:vacation_mode] ? "Vacation Mode: ON" : "Vacation Mode: OFF"
     else
       flash[:notice] = "Your account could not be updated. Please try again or contact Yogalit directly."
     end
-    return redirect_to request.referrer
+    return render json: {searchable: teacher[:is_searchable]}
   end
 
   def new_teacher_interview

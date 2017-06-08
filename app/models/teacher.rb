@@ -71,7 +71,11 @@ class Teacher < ActiveRecord::Base
       teacher[:is_searchable] = false
       val = false
     end
-    teacher.save!
+    begin
+      teacher.save!
+    rescue e
+      puts e
+    end
     return val
   end
 

@@ -57,9 +57,16 @@
       }
       p {
         margin-top: 1.5em;
+        font-family: 'Source Sans Pro', sans-serif;
+        letter-spacing: 0.1em;
       }
     }
     .sidebar_options {
+      .i_text {
+        font-family: 'Source Sans Pro', sans-serif;
+        letter-spacing: 0.1em;
+        font-size: 1.1em;
+      }
       min-height: 200px;
       color: white;
       .sidebar_option_div {
@@ -74,6 +81,7 @@
           cursor: hand;
         }
       }
+
     }
   }
   .student_main_dash {

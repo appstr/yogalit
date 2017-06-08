@@ -182,11 +182,10 @@
 .teacher_navbar {
   background-color: #444444;
   position: relative;
+  font-family: 'Source Sans Pro', sans-serif;
   top: 0;
-  a {
-    color: #cccccc !important;
-  }
-  p {
+  a, p {
+    font-family: 'Source Sans Pro', sans-serif;
     color: #cccccc !important;
     text-align: center;
     margin-top: 1em;
@@ -194,6 +193,16 @@
     line-height: 1.2em;
     color: white;
     letter-spacing: 0.1em;
+  }
+  .account_status {
+    font-family: 'Special Elite', cursive;
+    font-size: 1.1em;
+    font-weight: 800;
+    color: #16e0bd;
+  }
+  .switch {
+    margin-top: 1.2em;
+    text-align: center;
   }
 }
 
@@ -231,6 +240,11 @@
         &:hover {
           cursor: pointer;
           cursor: hand;
+        }
+        .i_text {
+          font-family: 'Source Sans Pro', sans-serif;
+          letter-spacing: 0.1em;
+          font-size: 1.1em;
         }
       }
     }
@@ -274,7 +288,6 @@
 }
 
 #teacher_profile {
-  margin-top: 3em;
   font-family: 'Arvo', serif;
   h5 {
     font-family: 'Source Sans Pro', sans-serif;
@@ -285,6 +298,25 @@
     font-family: 'Source Sans Pro', sans-serif;
     color: #56cbf9;
     text-align: center;
+  }
+  .teacher_info_div {
+    .fa-heart {
+      color: #b40000;
+    }
+    .btn {
+      letter-spacing: 0.2em;
+      margin-bottom: 1em;
+      border: 1px solid #ffffff;
+      background-color: #16e0bd;
+      color: #ffffff;
+      width: 100%;
+      font-family: 'Source Sans Pro', sans-serif;
+      &:hover {
+        background-color: rgba(0,0,0,0.0);
+        border: 1px solid #16e0bd;
+        color: #16e0bd;
+      }
+    }
   }
   .teacher_profile_search_row {
     background-color: rgba(47, 47, 47, 0.5);
