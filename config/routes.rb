@@ -22,8 +22,6 @@ Rails.application.routes.draw do
   resources :user_messages
   resources :teacher_ratings
 
-  get '/.well-known/pki-validation/godaddy.html', to: 'users#godaddy'
-
   # YogaTeacherSearches
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers
 
