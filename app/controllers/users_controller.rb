@@ -1,5 +1,8 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:godaddy]
+
+  def godaddy
+  end
 
   def index
     if current_user[:teacher_or_student] == "teacher"
