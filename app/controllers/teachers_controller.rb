@@ -217,12 +217,17 @@ class TeachersController < ApplicationController
       return redirect_to teachers_path if teacher[:is_verified]
     end
     @teacher = Teacher.where(user_id: current_user).first
+    if Rails.env.development?
+      redirect_uri = "http://localhost:3000/new_teacher_interview"
+    else
+      redirect_uri = "http://yogalit.com/new_teacher_interview"
+    end
     if session[:google_calendar_access_token].nil?
       client = Signet::OAuth2::Client.new({
         client_id: ENV["google_calendar_client_id"],
         client_secret: ENV["google_calendar_client_secret"],
         token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
-        redirect_uri: "http://localhost:3000/new_teacher_interview",
+        redirect_uri: redirect_uri,
         code: request.query_parameters["code"]
       })
       data = client.fetch_access_token!
