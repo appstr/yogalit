@@ -11,7 +11,7 @@ class YogaTeacherSearchesController < ApplicationController
         @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
         @duration = params[:duration]
         @student_timezone = params["student_timezone"].first
-        @session_date = Time.new(@year, @month, @day)
+        @session_date = Time.parse(Date.parse(params[:date]).to_s)
         @day_of_week = @session_date.strftime("%A")
         yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)
         @yoga_teachers = get_filtered_teachers(yoga_teacher_ids)
