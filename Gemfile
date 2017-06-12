@@ -21,7 +21,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'font-awesome-sass'
 gem 'whenever', :require => false
 gem 'ahoy_matey'
-gem 'therubyracer',  platforms: :ruby
+gem 'therubyracer'
 
 group :development, :test do
   gem 'pry'
