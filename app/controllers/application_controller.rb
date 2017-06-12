@@ -91,7 +91,7 @@ class ApplicationController < ActionController::Base
     if Rails.env.development?
       redirect_uri = "http://localhost:3000/new_teacher_interview"
     else
-      redirect_uri = "https://yogalit.com/new_teacher_interview"
+      redirect_uri = "http://yogalit.com/new_teacher_interview"
     end
     session[:google_calendar_access_token] = nil
     client = Signet::OAuth2::Client.new({
