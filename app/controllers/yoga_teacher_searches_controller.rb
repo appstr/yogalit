@@ -3,14 +3,19 @@ class YogaTeacherSearchesController < ApplicationController
   def search_for_teachers
     if params[:date]
       yoga_teacher_ids = yoga_teacher_ids_matching_yoga_type
-      yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, search_date=nil)
-      @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
-      @duration = params[:duration]
-      @student_timezone = params["student_timezone"].first
-      @session_date = Time.new(@year, @month, @day)
-      @day_of_week = @session_date.strftime("%A")
-      yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)
-      @yoga_teachers = get_filtered_teachers(yoga_teacher_ids)
+      if yoga_teacher_ids.blank?
+        @yoga_teachers = nil
+        @first_ten_yoga_teachers = Teacher.where("id < ?", 11)
+      else
+        yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, search_date=nil)
+        @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
+        @duration = params[:duration]
+        @student_timezone = params["student_timezone"].first
+        @session_date = Time.new(@year, @month, @day)
+        @day_of_week = @session_date.strftime("%A")
+        yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)
+        @yoga_teachers = get_filtered_teachers(yoga_teacher_ids)
+      end
     else
       @yoga_teachers = nil
       @first_ten_yoga_teachers = Teacher.where("id < ?", 11)
