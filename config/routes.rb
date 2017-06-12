@@ -58,4 +58,8 @@ Rails.application.routes.draw do
   post '/general_refund_denial', to: 'payments#general_refund_denial', as: :general_refund_denial
   post '/custom_refund_denial', to: 'payments#custom_refund_denial', as: :custom_refund_denial
 
+  # Policies
+  get '/privacy_policy', to: 'policies#privacy_policy', as: :privacy_policy
+  get '/terms_and_conditions', to: 'policies#terms_and_conditions', as: :terms_and_conditions
+
 end
