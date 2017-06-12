@@ -10,7 +10,7 @@ class Payment < ActiveRecord::Base
   def self.payment_processed?(credit_card, amount, billing_address)
     require 'paypal-sdk-rest'
     include PayPal::SDK::REST
-    mode = Rails.environment.development? ? "sandbox" : "live"
+    mode = Rails.env.development? ? "sandbox" : "live"
     PayPal::SDK::REST.set_config(
       :mode => mode, # "sandbox" or "live"
       :client_id => ENV["paypal_client_id"],

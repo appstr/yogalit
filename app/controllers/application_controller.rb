@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
   end
 
   def google_authorize_teacher
-    if Rails.environment.development?
+    if Rails.env.development?
       redirect_uri = "http://localhost:3000/new_teacher_interview"
     else
       redirect_uri = "https://yogalit.com/new_teacher_interview"
