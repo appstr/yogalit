@@ -88,13 +88,18 @@ class ApplicationController < ActionController::Base
   end
 
   def google_authorize_teacher
+    if Rails.environment.development?
+      redirect_uri = "http://localhost:3000/new_teacher_interview"
+    else
+      redirect_uri = "https://yogalit.com/new_teacher_interview"
+    end
     session[:google_calendar_access_token] = nil
     client = Signet::OAuth2::Client.new({
       client_id: ENV["google_calendar_client_id"],
       client_secret: ENV["google_calendar_client_secret"],
       authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
       scope: "https://www.googleapis.com/auth/calendar",
-      redirect_uri: "http://localhost:3000/new_teacher_interview"
+      redirect_uri: redirect_uri
     })
     return redirect_to client.authorization_uri.to_s
   end
