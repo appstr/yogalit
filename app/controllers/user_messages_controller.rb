@@ -1,6 +1,13 @@
 class UserMessagesController < ApplicationController
   def new
     @user_message = UserMessage.new
+    if user_signed_in?
+      if current_user[:teacher_or_student] == "teacher"
+        @teacher = Teacher.where(user_id: current_user).first
+      elsif current_user[:teacher_or_student] == "student"
+        @student = Student.where(user_id: current_user).first
+      end
+    end
   end
 
   def create
