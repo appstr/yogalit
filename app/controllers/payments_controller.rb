@@ -269,7 +269,7 @@ class PaymentsController < ApplicationController
     @sales_tax = price_and_tax[1].to_f
     @price_without_tax = price_and_tax[0].to_f
     tax_amount = @price_without_tax * (@sales_tax * 0.01)
-    @total_price = @price_without_tax + tax_amount
+    @total_price = (@price_without_tax + tax_amount).round(2)
   end
 
   def parse_session_time
