@@ -1,9 +1,6 @@
 <div class="row top_row">
   <div class="col m4"></div>
   <div class="col m4">
-    <% if !@teacher[:is_searchable] %>
-      <small style="color:red">Must have at least 1 date under "Hours of Operation" filled out. Must also fill out pricing and yoga-type info before Students are able to search for you.</small>
-    <% end %>
     <div class="row">
       <%= form_tag(controller: "yoga_types", action: "create", method: :post) do %>
         <%= check_box_tag :ashtanga, "2", (:checked if @type_ids.include?(2)), name:"yoga_types[ashtanga]" %>

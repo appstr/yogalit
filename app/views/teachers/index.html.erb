@@ -68,8 +68,34 @@
     </div>
   </div>
   <div class="col m9 teacher_main_dash">
-    <div class="dashboard_welcome dashboard_content">
-      <h1>Dashboard Welcome!</h1>
+    <div class="dashboard_welcome dashboard_content text-center">
+      <h1>Welcome, <%= @teacher[:first_name].capitalize %>!</h1>
+      <div class="teacher_general_notice_div">
+        <% if @teacher[:is_verified] && @teacher[:is_searchable] %>
+          <h2>VERIFIED and SEARCHABLE!!</h2>
+        <% elsif @yoga_type_chosen.nil? || @teacher_prices_chosen.nil? || @date_chosen == false %>
+          <% if @yoga_type_chosen.nil? %>
+            <h2>Choose Yoga Type: Incomplete</h2>
+          <% else %>
+            <h2>Choose Yoga Type: Complete</h2>
+          <% end %>
+          <% if @teacher_prices_chosen.nil? %>
+            <h2>Choose Pricing: Incomplete</h2>
+          <% else %>
+            <h2>Complete Pricing: Complete</h2>
+          <% end %>
+          <% if @date_chosen %>
+            <h2>Choose Hours of Operation: Complete</h2>
+          <% else %>
+            <h2>Complete Hours of Operation: Incomplete</h2>
+          <% end %>
+        <% elsif !@teacher[:is_verified] && @teacher[:is_searchable] %>
+          <h2>Waiting to be VERIFIED!!</h2>
+        <% end %>
+      </div>
+      <div class="vacation_mode_div">
+        <h2>Vacation Mode</h2>
+      </div>
     </div>
     <div class="hours_of_operations dashboard_content">
       <%= render partial: "shared/hours_of_operations" %>
@@ -145,7 +171,33 @@
   </div>
   <div class="row teacher_main_dash">
     <div class="col s12 dashboard_welcome dashboard_content">
-      <h4>Welcome Dashboard Mobile</h4>
+      <h4>Welcome, <%= @teacher[:first_name].capitalize %>!</h4>
+      <div class="teacher_general_notice_div">
+        <% if @teacher[:is_verified] && @teacher[:is_searchable] %>
+          <h2>VERIFIED and SEARCHABLE!!</h2>
+        <% elsif @yoga_type_chosen.nil? || @teacher_prices_chosen.nil? || @date_chosen == false %>
+          <% if @yoga_type_chosen.nil? %>
+            <h2>Choose Yoga Type: Incomplete</h2>
+          <% else %>
+            <h2>Choose Yoga Type: Complete</h2>
+          <% end %>
+          <% if @teacher_prices_chosen.nil? %>
+            <h2>Choose Pricing: Incomplete</h2>
+          <% else %>
+            <h2>Complete Pricing: Complete</h2>
+          <% end %>
+          <% if @date_chosen %>
+            <h2>Choose Hours of Operation: Complete</h2>
+          <% else %>
+            <h2>Complete Hours of Operation: Incomplete</h2>
+          <% end %>
+        <% elsif !@teacher[:is_verified] && @teacher[:is_searchable] %>
+          <h2>Waiting to be VERIFIED!!</h2>
+        <% end %>
+      </div>
+      <div class="vacation_mode_div">
+        <h5>Vacation Mode</h5>
+      </div>
     </div>
     <div class="col s12 hours_of_operations_mobile dashboard_content">
       <%= render partial: "shared/hours_of_operations" %>

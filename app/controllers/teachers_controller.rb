@@ -37,6 +37,26 @@ class TeachersController < ApplicationController
     # Teacher Holidays
     @teacher_holiday = TeacherHoliday.new
     @teacher_holidays = TeacherHoliday.where(teacher_id: @teacher[:id])
+    # Searchables
+    @yoga_type_chosen = YogaType.where(teacher_id: @teacher).first
+    @teacher_prices_chosen = TeacherPriceRange.where(teacher_id: @teacher).first
+    if !@teacher_monday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_tuesday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_wednesday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_thursday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_friday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_saturday_time_frames.blank?
+      @date_chosen = true
+    elsif !@teacher_sunday_time_frames.blank?
+      @date_chosen = true
+    else
+      @date_chosen = false
+    end
   end
 
   def get_most_recent_yoga_sessions
@@ -208,7 +228,7 @@ class TeachersController < ApplicationController
     else
       flash[:notice] = "Your account could not be updated. Please try again or contact Yogalit directly."
     end
-    return render json: {searchable: teacher[:is_searchable]}
+    return render json: {searchable: teacher[:is_searchable], verified: teacher[:is_verified]}
   end
 
   def new_teacher_interview

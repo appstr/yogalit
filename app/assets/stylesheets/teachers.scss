@@ -259,6 +259,9 @@
     .top_row {
       margin-top: 3.9em;
     }
+    .vacation_mode_div {
+      display: none;
+    }
     .dashboard_content:nth-child(n+2) {
       display: none;
     }
@@ -331,9 +334,6 @@
     }
     .button_div {
       text-align: center;
-    }
-    .btn-flat {
-      padding-bottom: 3em;
     }
     button {
       letter-spacing: 0.2em;

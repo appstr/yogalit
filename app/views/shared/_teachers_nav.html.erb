@@ -8,7 +8,7 @@
         <p>
           <%= current_user[:email].capitalize %><br />
           Account Status:
-          <% if @teacher[:is_searchable] %>
+          <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
             <span class="account_status">Searchable</span>
           <% else %>
             <span class="account_status">Not Searchable</span>
@@ -48,6 +48,30 @@
           <li><%= link_to "Home", '/' %></li>
           <li><%= link_to "Contact", new_user_message_path %></li>
           <% if user_signed_in? %>
+            <a href="#"><p>
+              <%= current_user[:email].capitalize %><br />
+              Account Status:
+              <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
+                <span class="account_status">Searchable</span>
+              <% else %>
+                <span class="account_status">Not Searchable</span>
+              <% end %>
+            </p></a>
+            <a href="#"><p>
+              Vacation-Mode:<br />
+              <div class="switch">
+                <label>
+                  Off
+                  <% if @teacher[:vacation_mode] %>
+                    <input type="checkbox" checked>
+                  <% else %>
+                    <input type="checkbox">
+                  <% end %>
+                  <span class="lever" onclick="toggleVacationMode();"></span>
+                  On
+                </label>
+              </div>
+            </p></a>
             <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
           <% else %>
             <li><a href="#signup_modal">Sign-Up</a></li>
@@ -68,10 +92,14 @@
       url: url,
       success: function(result){
         console.log(result.searchable);
-        if(result.searchable){
+        if(result.searchable && result.verified){
           $(".account_status").text("Searchable")
+          $(".vacation_mode_div").hide();
+          $(".teacher_general_notice_div").show();
         }else{
           $(".account_status").text("Not Searchable")
+          $(".teacher_general_notice_div").hide();
+          $(".vacation_mode_div").show();
         }
       }
     });
