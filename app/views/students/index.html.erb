@@ -48,8 +48,17 @@
     </div>
   </div>
   <div class="col m9 student_main_dash">
-    <div class="dashboard_welcome dashboard_content">
-      <h1>Dashboard Welcome!</h1>
+    <div class="dashboard_welcome dashboard_content text-center">
+      <h4>Welcome, <%= @student[:first_name].capitalize %>!</h4>
+      <br />
+      <h5>You have
+        <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+          0
+        <% else %>
+          <%= @upcoming_yoga_sessions.length %>
+        <% end %>
+        upcoming Yoga-Sessions.
+      </h5>
     </div>
     <div class="search dashboard_content">
       <div class="row top_row">

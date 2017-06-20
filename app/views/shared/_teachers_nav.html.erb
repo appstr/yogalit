@@ -91,13 +91,20 @@
       method: "POST",
       url: url,
       success: function(result){
-        console.log(result.searchable);
         if(result.searchable && result.verified){
-          $(".account_status").text("Searchable")
+          $(".account_status").text("Searchable");
+          $(".vacation_mode_div").hide();
+          $(".teacher_general_notice_div").show();
+        }else if(!result.searchable && result.vacation_mode){
+          $(".account_status").text("Not Searchable");
+          $(".teacher_general_notice_div").hide();
+          $(".vacation_mode_div").show();
+        }else if(!result.searchable && !result.vacation_mode){
+          $(".account_status").text("Not Searchable");
           $(".vacation_mode_div").hide();
           $(".teacher_general_notice_div").show();
         }else{
-          $(".account_status").text("Not Searchable")
+          $(".account_status").text("Not Searchable");
           $(".teacher_general_notice_div").hide();
           $(".vacation_mode_div").show();
         }

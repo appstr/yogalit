@@ -32,7 +32,7 @@
     <div class="sidebar_options">
       <div id="hours_of_operations" class="row sidebar_option_div active" onclick="clickedSidebar(this);">
         <div class="col s12">
-          <i class="fa fa-clock-o" aria-hidden="true"> <span class="i_text">Hours Of Operations</span></i>
+          <i class="fa fa-clock-o" aria-hidden="true"> <span class="i_text">Hours Of Operation</span></i>
         </div>
       </div>
       <div id="yoga_types" class="row sidebar_option_div" onclick="clickedSidebar(this);">
@@ -69,28 +69,41 @@
   </div>
   <div class="col m9 teacher_main_dash">
     <div class="dashboard_welcome dashboard_content text-center">
-      <h1>Welcome, <%= @teacher[:first_name].capitalize %>!</h1>
+      <h4>Welcome, <%= @teacher[:first_name].capitalize %>!</h4>
+      <br />
       <div class="teacher_general_notice_div">
         <% if @teacher[:is_verified] && @teacher[:is_searchable] %>
-          <h2>VERIFIED and SEARCHABLE!!</h2>
+          <h5>Your account is searchable!</h5>
+          <h5>You have
+            <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+              0
+            <% else %>
+              <%= @upcoming_yoga_sessions_count %>
+            <% end %>
+            upcoming Yoga-Sessions.
+          </h5>
         <% elsif @yoga_type_chosen.nil? || @teacher_prices_chosen.nil? || @date_chosen == false %>
-          <% if @yoga_type_chosen.nil? %>
-            <h2>Choose Yoga Type: Incomplete</h2>
-          <% else %>
-            <h2>Choose Yoga Type: Complete</h2>
-          <% end %>
-          <% if @teacher_prices_chosen.nil? %>
-            <h2>Choose Pricing: Incomplete</h2>
-          <% else %>
-            <h2>Complete Pricing: Complete</h2>
-          <% end %>
-          <% if @date_chosen %>
-            <h2>Choose Hours of Operation: Complete</h2>
-          <% else %>
-            <h2>Complete Hours of Operation: Incomplete</h2>
-          <% end %>
+          <div class="row">
+            <div class="col m6 offset-m3 text-right">
+              <% if @yoga_type_chosen.nil? %>
+                <h5>Yoga Types: <span class="incomplete">Incomplete</span></h5>
+              <% else %>
+                <h5>Yoga Types: <span class="complete">Complete</span></h5>
+              <% end %>
+              <% if @teacher_prices_chosen.nil? %>
+                <h5>Session and Tax Prices: <span class="incomplete">Incomplete</span></h5>
+              <% else %>
+                <h5>Session and Tax Prices: <span class="complete">Complete</span></h5>
+              <% end %>
+              <% if @date_chosen %>
+                <h5>Hours of Operation: <span class="complete">Complete</span></h5>
+              <% else %>
+                <h5>Hours of Operation: <span class="incomplete">Incomplete</span></h5>
+              <% end %>
+            </div>
+          </div>
         <% elsif !@teacher[:is_verified] && @teacher[:is_searchable] %>
-          <h2>Waiting to be VERIFIED!!</h2>
+          <h5>Waiting for interview approval! You will receive an email indicating if you have been accepted.</h5>
         <% end %>
       </div>
       <div class="vacation_mode_div">
@@ -134,7 +147,7 @@
     <div class="sidebar_options">
       <div id="hours_of_operations_mobile" class="row sidebar_option_div active" onclick="clickedMobileSidebar(this);">
         <div class="col s12">
-          <i class="fa fa-clock-o" aria-hidden="true"> Hours Of Operations</i>
+          <i class="fa fa-clock-o" aria-hidden="true"> Hours Of Operation</i>
         </div>
       </div>
       <div id="yoga_types_mobile" class="row sidebar_option_div" onclick="clickedMobileSidebar(this);">
@@ -171,28 +184,40 @@
   </div>
   <div class="row teacher_main_dash">
     <div class="col s12 dashboard_welcome dashboard_content">
-      <h4>Welcome, <%= @teacher[:first_name].capitalize %>!</h4>
+      <h4 class="text-center">Welcome, <%= @teacher[:first_name].capitalize %>!</h4>
       <div class="teacher_general_notice_div">
         <% if @teacher[:is_verified] && @teacher[:is_searchable] %>
-          <h2>VERIFIED and SEARCHABLE!!</h2>
+          <h5>Your account is searchable!</h5>
+          <h5>You have
+            <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>
+              0
+            <% else %>
+              <%= @upcoming_yoga_sessions_count %>
+            <% end %>
+            upcoming Yoga-Sessions.
+          </h5>
         <% elsif @yoga_type_chosen.nil? || @teacher_prices_chosen.nil? || @date_chosen == false %>
-          <% if @yoga_type_chosen.nil? %>
-            <h2>Choose Yoga Type: Incomplete</h2>
-          <% else %>
-            <h2>Choose Yoga Type: Complete</h2>
-          <% end %>
-          <% if @teacher_prices_chosen.nil? %>
-            <h2>Choose Pricing: Incomplete</h2>
-          <% else %>
-            <h2>Complete Pricing: Complete</h2>
-          <% end %>
-          <% if @date_chosen %>
-            <h2>Choose Hours of Operation: Complete</h2>
-          <% else %>
-            <h2>Complete Hours of Operation: Incomplete</h2>
-          <% end %>
+          <div class="row">
+            <div class="col m6 offset-m3 text-right">
+              <% if @yoga_type_chosen.nil? %>
+                <h5>Yoga Types: <span class="incomplete">Incomplete</span></h5>
+              <% else %>
+                <h5>Yoga Types: <span class="complete">Complete</span></h5>
+              <% end %>
+              <% if @teacher_prices_chosen.nil? %>
+                <h5>Session and Tax Prices: <span class="incomplete">Incomplete</span></h5>
+              <% else %>
+                <h5>Session and Tax Prices: <span class="complete">Complete</span></h5>
+              <% end %>
+              <% if @date_chosen %>
+                <h5>Hours of Operation: <span class="complete">Complete</span></h5>
+              <% else %>
+                <h5>Hours of Operation: <span class="incomplete">Incomplete</span></h5>
+              <% end %>
+            </div>
+          </div>
         <% elsif !@teacher[:is_verified] && @teacher[:is_searchable] %>
-          <h2>Waiting to be VERIFIED!!</h2>
+          <h5>Waiting for interview approval! You will receive an email indicating if you have been accepted.</h5>
         <% end %>
       </div>
       <div class="vacation_mode_div">
@@ -225,13 +250,13 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
-    if("<%= params[:section] %>"){
-      $("#<%= params[:section] %>").css("background-color", "#16e0bd");
-      $("#<%= params[:section] %>_mobile").css("background-color", "#16e0bd");
-      $(".dashboard_content").hide();
-      $(".<%= params[:section] %>").show();
-      $(".<%= params[:section] %>_mobile").show();
-    }
+    // if("<%= params[:section] %>"){
+    //   $("#<%= params[:section] %>").css("background-color", "#16e0bd");
+    //   $("#<%= params[:section] %>_mobile").css("background-color", "#16e0bd");
+    //   $(".dashboard_content").hide();
+    //   $(".<%= params[:section] %>").show();
+    //   $(".<%= params[:section] %>_mobile").show();
+    // }
     var today = new Date();
     $("#teacher_holiday_datepicker").daterangepicker({
       minDate: today

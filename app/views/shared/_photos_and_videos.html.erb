@@ -39,21 +39,25 @@
   <br />
 <% end %>
 <div class="border"></div>
-<div class="row">
-  <h5>Photos</h5>
-  <% @teacher_images.each do |ti| %>
-    <div class="col s6 m3">
-      <%= image_tag ti.image.url %><br />
-      <%= link_to "Delete", teacher_image_path(id: ti), data:{confirm: "Are you sure you want to delete this image?"}, method: :delete if current_user[:teacher_or_student] == "teacher" %>
-    </div>
-  <% end %>
-</div>
-<div class="row">
-  <h5>Videos</h5>
-  <% @teacher_videos.each do |tv| %>
-    <div class="col s6 m6">
-      <%= video_tag(tv.video.url, :size => "320x240", :controls => true, :autobuffer => true) %>
-      <%= link_to "Delete", teacher_video_path(id: tv), data:{confirm: "Are you sure you want to delete this video?"}, method: :delete if current_user[:teacher_or_student] == "teacher" %>
-    </div>
-  <% end %>
-</div>
+<% if !@teacher_photos.blank? %>
+  <div class="row">
+    <h5>Photos</h5>
+    <% @teacher_photos.each do |ti| %>
+      <div class="col s6 m3">
+        <%= image_tag ti.image.url %><br />
+        <%= link_to "Delete", teacher_image_path(id: ti), data:{confirm: "Are you sure you want to delete this image?"}, method: :delete if user_signed_in? && current_user[:teacher_or_student] == "teacher" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+<% if !@teacher_videos.blank? %>
+  <div class="row">
+    <h5>Videos</h5>
+    <% @teacher_videos.each do |tv| %>
+      <div class="col s6 m6">
+        <%= video_tag(tv.video.url, :size => "320x240", :controls => true, :autobuffer => true) %>
+        <%= link_to "Delete", teacher_video_path(id: tv), data:{confirm: "Are you sure you want to delete this video?"}, method: :delete if user_signed_in? && current_user[:teacher_or_student] == "teacher" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

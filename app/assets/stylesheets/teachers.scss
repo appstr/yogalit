@@ -251,16 +251,27 @@
   }
   .teacher_main_dash {
     @include backgroundShorthand("/assets/dashboard_background.png");
+    margin-top: 3.9em;
+    min-height: 800px !important;
     .border {
       border: 1px solid #ffffff;
     }
-    margin-top: 3.9em;
-    min-height: 800px !important;
     .top_row {
       margin-top: 3.9em;
     }
     .vacation_mode_div {
       display: none;
+    }
+    .teacher_general_notice_div {
+      .incomplete {
+        color: #ff6b6b;
+      }
+      .complete {
+        color: green;
+      }
+    }
+    .dashboard_welcome {
+      margin-top: 3.9em;
     }
     .dashboard_content:nth-child(n+2) {
       display: none;

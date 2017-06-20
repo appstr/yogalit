@@ -66,19 +66,21 @@
             </tr>
           </table>
         </div>
-        <div class="col s12">
-          <br />
-          <br />
-          <h5>Unavailable Dates</h5>
-            <% @teacher_holidays.each do |holiday| %>
-            <div class="col m4">
-              <%= "#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%Y')} to #{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%Y')}" %><br />
-              <%= holiday[:description] %><br />
-              <br />
-              <br />
-            </div>
-            <% end %>
-        </div>
+        <% if !@teacher_holidays.blank? %>
+          <div class="col s12">
+            <br />
+            <br />
+            <h5>Unavailable Dates</h5>
+              <% @teacher_holidays.each do |holiday| %>
+              <div class="col m4">
+                <%= "#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].first).in_time_zone(@teacher[:timezone]).strftime('%Y')} to #{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%m')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%d')}-#{Time.at(holiday[:holiday_date_range].last).in_time_zone(@teacher[:timezone]).strftime('%Y')}" %><br />
+                <%= holiday[:description] %><br />
+                <br />
+                <br />
+              </div>
+              <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
     <div class="teacher_profile_search_div">

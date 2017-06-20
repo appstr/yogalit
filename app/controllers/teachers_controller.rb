@@ -10,13 +10,15 @@ class TeachersController < ApplicationController
     get_teacher_yoga_types
     # Teacher Images
     @teacher_image = TeacherImage.new
-    @teacher_images = TeacherImage.where(teacher_id: @teacher)
+    @teacher_photos = TeacherImage.where(teacher_id: @teacher)
     # Teacher Videos
     @teacher_video = TeacherVideo.new
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
+
     @teacher_price_range_form = TeacherPriceRange.new
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
     @upcoming_yoga_sessions = get_upcoming_yoga_sessions
+    @upcoming_yoga_sessions_count = @upcoming_yoga_sessions.length if !@upcoming_yoga_sessions.blank?
     @most_recent_yoga_sessions = get_most_recent_yoga_sessions
     @favorited_count = FavoriteTeacher.where(teacher_id: @teacher[:id]).count
     # Teacher H.O.O
@@ -203,7 +205,7 @@ class TeachersController < ApplicationController
     @teacher = Teacher.find(params[:id])
     @teacher_available_yoga_types = get_teacher_available_yoga_types
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
-    @teacher_images = TeacherImage.where(teacher_id: @teacher)
+    @teacher_photos = TeacherImage.where(teacher_id: @teacher)
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
     @teacher_holidays = TeacherHoliday.where(teacher_id: @teacher)
     @teacher_monday_time_frame = TeacherMondayTimeFrame.where(teacher_id: @teacher).first.nil? ? "Closed" : "Open"
@@ -228,7 +230,7 @@ class TeachersController < ApplicationController
     else
       flash[:notice] = "Your account could not be updated. Please try again or contact Yogalit directly."
     end
-    return render json: {searchable: teacher[:is_searchable], verified: teacher[:is_verified]}
+    return render json: {searchable: teacher[:is_searchable], verified: teacher[:is_verified], vacation_mode: teacher[:vacation_mode]}
   end
 
   def new_teacher_interview
