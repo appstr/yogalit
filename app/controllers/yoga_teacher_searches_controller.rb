@@ -33,7 +33,7 @@ class YogaTeacherSearchesController < ApplicationController
     @student_timezone = student_timezone if @student_timezone.nil?
     Time.zone = @student_timezone
     if @year.nil?
-      date = Time.parse(date)
+      date = Time.parse(params[:date])
       @year = date.strftime("%Y").to_i
       @month = date.strftime("%m").to_i
       @day = date.strftime("%d").to_i
