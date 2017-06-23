@@ -64,3 +64,34 @@ function dashboardWelcome(){
   $(".dashboard_content").hide();
   $(".dashboard_welcome").show();
 }
+
+function changeDuration(){
+  var val = $("#duration").val();
+  $("#time_range_select").find("li").remove();
+  $("#time_frame").find("option").remove();
+  var requestData = {"duration": val, "new_date_request": true};
+  var url = "/switch_time_frame";
+  var request = $.ajax({
+    method: "GET",
+    url: url,
+    data: requestData,
+    success: function(result){
+      var selectValues = result.available_times;
+      if(selectValues.length > 0){
+        var length = selectValues.length;
+        for(var i = 0; length > i; i++){
+          $("#time_range_select").find("ul").append('<li onclick="timeRangeActiveOption(this);" value='+selectValues[i][1]+'><span>'+selectValues[i][0]+'</span></li>');
+          $("#time_frame").append('<option value="'+selectValues[i][1]+'">'+selectValues[i][0]+'</option>');
+        }
+      }
+      $('#time_frame').material_select();
+    }
+  });
+}
+
+function timeRangeActiveOption(l){
+  $("#time_range_select").find("li").removeClass("active");
+  $(l).toggleClass("active selected");
+  $("#time_frame").val(l.value);
+  $('#time_frame').material_select();
+}

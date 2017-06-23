@@ -181,9 +181,9 @@ class TeachersController < ApplicationController
         flash[:notice] = "Teacher is on Holiday for this date."
         return redirect_to request.referrer
       end
-      available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids, params[:session_date])
+      available_on_day_of_week = YogaTeacherSearchesController.new.yoga_teachers_available_on(params[:day_of_week], not_on_holiday_ids, params[:session_date], params[:student_timezone], params[:time_frame] )
       if available_on_day_of_week.empty?
-        flash[:notice] = "Teacher is not available on #{params[:day_of_week]}'s."
+        flash[:notice] = "Teacher is unavailable. Please choose another date or time."
         return redirect_to request.referrer
       end
     end
@@ -199,6 +199,18 @@ class TeachersController < ApplicationController
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
     @teacher_images = TeacherImage.where(teacher_id: @teacher)
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
+    if params[:student_time_frame].nil?
+      Time.zone = params[:student_timezone]
+      split_time = params[:time_frame].split(" - ")
+      date = Time.parse(params[:session_date])
+      start_t = Time.parse(split_time.first, date)
+      end_t = Time.parse(split_time.last, date)
+      split_student_time_frame = [Time.zone.local(start_t.strftime("%Y"), start_t.strftime("%m"), start_t.strftime("%d"), start_t.strftime("%k"), start_t.strftime("%M")), Time.zone.local(end_t.strftime("%Y"), end_t.strftime("%m"), end_t.strftime("%d"), end_t.strftime("%k"), end_t.strftime("%M"))]
+      @student_time_frame = split_student_time_frame.first..split_student_time_frame.last
+    else
+      split_student_time_frame = params[:student_time_frame].split("..")
+      @student_time_frame = Time.parse(split_student_time_frame.first)..Time.parse(split_student_time_frame.last)
+    end
   end
 
   def teacher_profile

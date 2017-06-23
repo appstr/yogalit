@@ -18,7 +18,7 @@
   </div>
   <div class="teacher_show_select_image">
     <div class="row teacher_show_select_row">
-      <div class="col s6 m3 offset-m2 center teacher_show_select_div">
+      <div class="col s12 m4 offset-m4 center teacher_show_select_div">
         <p>Type of Yoga: </p>
         <span class="student_choices"><%= params[:yoga_type] %></span>
         <p>Day: </p>
@@ -27,19 +27,22 @@
         <span class="student_choices"><%= sanitize_date_for_view(params[:session_date]) %></span>
         <p>Duration: </p>
         <span class="student_choices"><%= params[:duration] %> minutes</span>
+        <p>Time-Frame</p>
+        <span class="student_choices"><%= "#{sanitize_date_for_time_only(@student_time_frame.first)} - #{sanitize_date_for_time_only(@student_time_frame.last)}" %></span><br /><br />
+        <span class="student_choices"><%= params[:student_timezone] %></span>
         <p>Pricing:</p>
         <span class="student_choices"></span>
-        <p>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></p>
-        <p>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></p>
-        <p>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></p>
-      </div>
-      <div class="col s6 m3 offset-m2 teacher_show_select_div">
+        <% if params[:duration] == "30" %>
+          <p>30-minutes: $<%= @teacher_price_ranges[:thirty_minute_session] %></p>
+        <% elsif params[:durarion] == "60" %>
+          <p>60-minutes: $<%= @teacher_price_ranges[:sixty_minute_session] %></p>
+        <% else %>
+          <p>90-minutes: $<%= @teacher_price_ranges[:ninety_minute_session] %></p>
+        <% end %>
         <%= form_tag({controller: "payments", action:"new"}, method: :get) do %>
           <%= hidden_field_tag :search_params, nil, value: params.to_json %>
-          <%= label_tag :session_time, "Available Times for this date in #{params[:student_timezone]}:" %>
-          <%= select_tag :session_time, options_for_select(@filtered_booking_time_options) %>
           <br />
-          <button>Select</button>
+          <button>Continue to Checkout</button>
         <% end %>
       </div>
     </div>

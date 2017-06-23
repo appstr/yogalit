@@ -15,7 +15,7 @@
       <div class="header-links hide-on-med-and-down">
         <%= link_to "Home", '/' %>
         <%= link_to "Contact", new_user_message_path %>
-        <%= link_to "Find-Teachers", search_for_teachers_path %>
+        <%= link_to "Find-Teachers", search_for_teachers_path if !user_signed_in? %>
         <%= link_to('Logout', destroy_user_session_path, :method => :delete) %>
       </div>
       <div class="header-bars hide-on-large-only">
@@ -24,7 +24,7 @@
           <br />
           <li><%= link_to "Home", '/' %></li>
           <li><%= link_to "Contact", new_user_message_path %></li>
-          <li><%= link_to "Find-Teachers", search_for_teachers_path %></li>
+          <li><%= link_to "Find-Teachers", search_for_teachers_path if !user_signed_in? %></li>
           <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
         </ul>
         <i class="fa fa-bars button-collapse" data-activates="slide-out" aria-hidden="true"></i>

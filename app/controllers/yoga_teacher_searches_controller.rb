@@ -5,7 +5,6 @@ class YogaTeacherSearchesController < ApplicationController
       yoga_teacher_ids = yoga_teacher_ids_matching_yoga_type
       if yoga_teacher_ids.blank?
         @yoga_teachers = nil
-        @first_ten_yoga_teachers = Teacher.where("id < ?", 11)
       else
         yoga_teacher_ids = yoga_teachers_not_on_holiday(yoga_teacher_ids, search_date=nil)
         @yoga_type = YogaType::ENUMS.key(params[:type_of_yoga].to_i)
@@ -13,12 +12,11 @@ class YogaTeacherSearchesController < ApplicationController
         @student_timezone = params["student_timezone"].first
         @session_date = Time.parse(Date.parse(params[:date]).to_s)
         @day_of_week = @session_date.strftime("%A")
-        yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids)
+        yoga_teacher_ids = yoga_teachers_available_on(@day_of_week, yoga_teacher_ids, nil, nil, params[:time_frame])
         @yoga_teachers = get_filtered_teachers(yoga_teacher_ids)
       end
     else
       @yoga_teachers = nil
-      @first_ten_yoga_teachers = Teacher.where("id < ?", 11)
     end
   end
 
@@ -30,130 +28,144 @@ class YogaTeacherSearchesController < ApplicationController
     return yoga_teachers
   end
 
-  def yoga_teachers_available_on(day_of_week, yoga_teacher_ids, date=nil)
-    date = params[:date] if date.nil?
+  def yoga_teachers_available_on(day_of_week, yoga_teacher_ids, date = nil, student_timezone = nil, student_time_frame)
+    split_time = student_time_frame.split(" - ")
+    @student_timezone = student_timezone if @student_timezone.nil?
+    Time.zone = @student_timezone
+    if @year.nil?
+      date = Time.parse(date)
+      @year = date.strftime("%Y").to_i
+      @month = date.strftime("%m").to_i
+      @day = date.strftime("%d").to_i
+    end
+    date = Time.zone.local(@year, @month, @day)
+    start_time = Time.parse(split_time.first, date)
+    end_time = Time.parse(split_time.last, date)
+    student_time_frame = Time.zone.local(@year, @month, @day, start_time.strftime("%k"), start_time.strftime("%M"))..Time.zone.local(@year, @month, @day, end_time.strftime("%k"), end_time.strftime("%M"))
+    @student_time_frame = student_time_frame
     new_ids = []
     if day_of_week == "Monday"
       yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
         before_times = TeacherSundayTimeFrame.where(teacher_id: yi)
-        before_times.each do |bt|
-          if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-            new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-          end
-        end
-        time_frames = TeacherMondayTimeFrame.where(teacher_id: yi).first
-        new_ids << yi if !time_frames.nil?
+        time_frames = TeacherMondayTimeFrame.where(teacher_id: yi)
         after_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
-        after_times.each do |at|
-          if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-            new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
       end
     elsif day_of_week == "Tuesday"
       yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
         before_times = TeacherMondayTimeFrame.where(teacher_id: yi)
-        before_times.each do |bt|
-          if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-            new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-          end
-        end
-        time_frames = TeacherTuesdayTimeFrame.where(teacher_id: yi).first
-        new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
+        time_frames = TeacherTuesdayTimeFrame.where(teacher_id: yi)
         after_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
-        after_times.each do |at|
-          if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-            new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
       end
     elsif day_of_week == "Wednesday"
-        yoga_teacher_ids.each do |yi|
-          before_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
-          before_times.each do |bt|
-            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-            end
-          end
-          time_frames = TeacherWednesdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
-          after_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
-          after_times.each do |at|
-            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
-            end
+      yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
+        before_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
+        time_frames = TeacherWednesdayTimeFrame.where(teacher_id: yi)
+        after_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
+      end
     elsif day_of_week == "Thursday"
-        yoga_teacher_ids.each do |yi|
-          before_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
-          before_times.each do |bt|
-            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-            end
-          end
-          time_frames = TeacherThursdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
-          after_times = TeacherFridayTimeFrame.where(teacher_id: yi)
-          after_times.each do |at|
-            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
-            end
+      yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
+        before_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
+        time_frames = TeacherThursdayTimeFrame.where(teacher_id: yi)
+        after_times = TeacherFridayTimeFrame.where(teacher_id: yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
+      end
     elsif day_of_week == "Friday"
-        yoga_teacher_ids.each do |yi|
-          before_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
-          before_times.each do |bt|
-            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-            end
-          end
-          time_frames = TeacherFridayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
-          after_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
-          after_times.each do |at|
-            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
-            end
+      yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
+        before_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
+        time_frames = TeacherFridayTimeFrame.where(teacher_id: yi)
+        after_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
+      end
     elsif day_of_week == "Saturday"
-        yoga_teacher_ids.each do |yi|
-          before_times = TeacherFridayTimeFrame.where(teacher_id: yi)
-          before_times.each do |bt|
-            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-            end
-          end
-          time_frames = TeacherSaturdayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
-          after_times = TeacherSundayTimeFrame.where(teacher_id: yi)
-          after_times.each do |at|
-            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
-            end
+      yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
+        before_times = TeacherFridayTimeFrame.where(teacher_id: yi)
+        time_frames = TeacherSaturdayTimeFrame.where(teacher_id: yi)
+        after_times = TeacherSundayTimeFrame.where(teacher_id: yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
-    else day_of_week == "Sunday"
-        yoga_teacher_ids.each do |yi|
-          before_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
-          before_times.each do |bt|
-            if Time.at(bt[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !before_times.nil? && !new_ids.include?(yi)
-            end
-          end
-          time_frames = TeacherSundayTimeFrame.where(teacher_id: yi).first
-          new_ids << yi if !time_frames.nil? && !new_ids.include?(yi)
-          after_times = TeacherMondayTimeFrame.where(teacher_id: yi)
-          after_times.each do |at|
-            if Time.at(at[:time_range].last).in_time_zone(@student_timezone).wday == Date.parse(date).wday
-              new_ids << yi if !after_times.nil? && !new_ids.include?(yi)
-            end
+      end
+    elsif day_of_week == "Sunday"
+      yoga_teacher_ids.each do |yi|
+        teacher = Teacher.find(yi)
+        before_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
+        time_frames = TeacherSundayTimeFrame.where(teacher_id: yi)
+        after_times = TeacherMondayTimeFrame.where(teacher_id: yi)
+        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+          if check_booked_times(student_time_frame, teacher)
+            new_ids << yi if !new_ids.include?(yi)
           end
         end
+      end
     end
     return new_ids
+  end
+
+  def check_hoo(student_time_frame, teacher, hoo)
+    return false if hoo.blank?
+    Time.zone = teacher[:timezone]
+    stf = student_time_frame
+    hoo.each do |h|
+      t = Time.at(h.time_range.first).in_time_zone(teacher[:timezone])..Time.at(h.time_range.last).in_time_zone(teacher[:timezone])
+      teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.last.strftime("%k"), t.last.strftime("%M"))
+      ttf = teacher_time_frame
+      if stf.first.between?(ttf.first, ttf.last) && stf.last.between?(ttf.first, ttf.last)
+        return true
+      end
+    end
+    return false
+  end
+
+  def check_booked_times(student_time_frame, teacher)
+    booked_times = TeacherBookedTime.where(teacher_id: teacher)
+    return true if booked_times.blank?
+    booked_times.each do |bt|
+      session_date = Time.parse(bt.session_date.to_s)
+      sd = session_date
+      Time.zone = bt[:teacher_timezone]
+      ttf = Time.zone.local(sd.strftime("%Y"), sd.strftime("%m"), sd.strftime("%d"), bt.time_range.first.in_time_zone(bt[:teacher_timezone]).strftime("%k"), bt.time_range.first.in_time_zone(bt[:teacher_timezone]).strftime("%M"))..Time.zone.local(sd.strftime("%Y"), sd.strftime("%m"), sd.strftime("%d"), bt.time_range.last.in_time_zone(bt[:teacher_timezone]).strftime("%k"), (bt.time_range.last - 1).in_time_zone(bt[:teacher_timezone]).strftime("%M"))
+      if student_time_frame.first.between?(ttf.first.in_time_zone(bt[:student_timezone]), (ttf.last - 1).in_time_zone(bt[:student_timezone]))
+        return false
+      elsif student_time_frame.last.between?((ttf.first).in_time_zone(bt[:student_timezone]), ttf.last.in_time_zone(bt[:student_timezone]))
+        return false
+      elsif ttf.first.between?(student_time_frame.first, student_time_frame.last)
+        return false
+      elsif ttf.last.between?(student_time_frame.first + 1, student_time_frame.last)
+        return false
+      end
+    end
+    return true
   end
 
   def yoga_teachers_not_on_holiday(yoga_teacher_ids, search_date = nil)

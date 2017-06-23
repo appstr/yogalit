@@ -93,10 +93,14 @@
             <%= hidden_field_tag :teacher_timezone, nil, value:@teacher[:timezone] %>
             <%= label_tag :date %>
             <%= text_field_tag :session_date, nil, class:"datepicker", type:"date", required: true %><br />
+            <%= label_tag :duration %>
+            <%= select_tag :duration, options_for_select(yoga_session_duration_options), required: true, onchange: "changeDuration();" %><br />
+            <div id="time_range_select">
+              <%= label_tag :time_frame %>
+              <%= select_tag :time_frame, options_for_select(time_frame_options(1800)), required: true %><br />
+            </div>
             <%= label_tag :type_of_yoga %>
             <%= select_tag :yoga_type, options_for_select(@teacher_available_yoga_types), required: true %><br />
-            <%= label_tag :duration %>
-            <%= select_tag :duration, options_for_select(yoga_session_duration_options), required: true %><br />
             <%= label_tag :student_timezone, "Select Your Current Time-Zone" %>
             <%= time_zone_select :student_timezone, nil, ActiveSupport::TimeZone.us_zones, class:"browser-default", required: true %>
             <br />

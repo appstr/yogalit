@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   # Students
   delete '/destroy_favorite_teacher', to: 'students#destroy_favorite_teacher', as: :destroy_favorite_teacher
   post '/add_favorite_teacher', to: 'students#add_favorite_teacher', as: :add_favorite_teacher
+  get '/switch_time_frame', to: 'students#switch_time_frame', as: :switch_time_frame
 
   # YogalitAdmins
   get '/reported_non_refund_requested_yoga_sessions', to: 'yogalit_admins#reported_non_refund_requested_yoga_sessions', as: :admins_reported_non_refund_requested_yoga_sessions

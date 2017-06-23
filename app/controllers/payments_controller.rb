@@ -273,7 +273,17 @@ class PaymentsController < ApplicationController
   end
 
   def parse_session_time
-    split_time = params["session_time"].split("..")
-    return DateTime.parse(split_time[0])..DateTime.parse(split_time[1])
+    if @search_params["student_time_frame"].nil?
+      Time.zone = @search_params["student_timezone"]
+      date = Time.parse(@search_params["session_date"])
+      split_time_frame = @search_params["time_frame"].split(" - ")
+      start_t = Time.parse(split_time_frame.first, date)
+      end_t = Time.parse(split_time_frame.last, date)
+      split_time = [Time.zone.local(date.strftime("%Y"), date.strftime("%m"), date.strftime("%d"), start_t.strftime("%k"), start_t.strftime("%M")), Time.zone.local(date.strftime("%Y"), date.strftime("%m"), date.strftime("%d"), end_t.strftime("%k"), end_t.strftime("%M"))]
+      return split_time.first..split_time.last
+    else
+      split_time = @search_params["student_time_frame"].split("..")
+      return DateTime.parse(split_time[0])..DateTime.parse(split_time[1])
+    end
   end
 end

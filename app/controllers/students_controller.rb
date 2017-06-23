@@ -28,6 +28,17 @@ class StudentsController < ApplicationController
     @most_recent_yoga_sessions = get_most_recent_yoga_sessions
   end
 
+  def switch_time_frame
+    if params[:duration] == "30"
+      new_time_frame = time_frame_options(1800)
+    elsif params[:duration] == "60"
+       new_time_frame = time_frame_options(3600)
+    else
+      new_time_frame = time_frame_options(5400)
+    end
+    return render json: {available_times: new_time_frame}
+  end
+
   def get_most_recent_yoga_sessions
     recent_booked_times = []
     booked_times = TeacherBookedTime.where(student_id: @student).where("session_date >= ? AND session_date <= ?", Date.today - 1, Date.today + 1)
