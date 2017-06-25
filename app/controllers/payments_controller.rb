@@ -1,8 +1,39 @@
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token, only: [:create]
   require "opentok"
+  if Rails.env.development?
+    Braintree::Configuration.environment = :sandbox
+    merchant_id = ENV["braintree_merchant_id_dev"]
+    public_key = ENV["braintree_public_key_dev"]
+    private_key = ENV["braintree_private_key_dev"]
+  else
+    Braintree::Configuration.environment = :production
+  end
+  Braintree::Configuration.merchant_id = merchant_id
+  Braintree::Configuration.public_key = public_key
+  Braintree::Configuration.private_key = private_key
 
   def new
+    student = Student.where(user_id: current_user).first
+    if student[:braintree_customer_id].nil?
+      result = Braintree::Customer.create(
+        :first_name => student[:first_name],
+        :last_name => student[:last_name],
+        :email => current_user[:email],
+        :phone => student[:phone],
+      )
+      if result.success?
+        customer_id = result.customer.id
+        student[:braintree_customer_id] = customer_id
+        student.save!
+      else
+        puts result.errors
+      end
+    else
+      customer_id = student[:braintree_customer_id]
+    end
+    @client_token = Braintree::ClientToken.generate(customer_id: customer_id)
     @search_params = JSON.parse(params[:search_params])
     @session_time = parse_session_time
     @teacher = Teacher.find(@search_params["id"])
@@ -10,68 +41,123 @@ class PaymentsController < ApplicationController
   end
 
   def create
-    @search_params = JSON.parse(params["search_params"])
-    credit_card_processed = Payment.payment_processed?(get_credit_card_params, params[:total_price].to_s, get_billing_address_params)
-    if credit_card_processed[0]
-      transaction_id = credit_card_processed[1]
-      @student = Student.where(user_id: current_user).first
-      student_email = User.find(@student[:user_id]).email
-      @teacher = Teacher.find(@search_params["id"])
-      teacher_email = User.find(@teacher[:user_id]).email
+    @student = Student.where(user_id: current_user).first
+    @teacher = Teacher.find(params[:id])
+    result = Braintree::Transaction.sale(
+      :amount => params["total_price"],
+      :payment_method_nonce => params["payload_nonce"],
+      :options => {
+        :submit_for_settlement => true
+      }
+    )
+    if result.success?
+      # Save Payment
       payment = Payment.new
-      payment[:teacher_id] = @teacher[:id]
-      payment[:student_id] = @student[:id]
-      payment[:sales_tax] = params[:sales_tax]
-      payment[:price_without_tax] = params[:price_without_tax]
-      payment[:total_price] = params[:total_price]
-      payment[:yogalit_tax] = ENV["yogalit_tax_amount"].to_f
+      payment.teacher_id = @teacher
+      payment.student_id = @student
+      payment.sales_tax = params[:sales_tax].to_f
+      payment.price_without_tax = params[:price_without_tax].to_f
+      payment.total_price = params[:total_price].to_f
       get_payout_params
+      payment.yogalit_tax = ENV["yogalit_tax_amount"].to_f
       payment[:yogalit_fee_amount] = @yogalit_fee_amount
       payment[:teacher_payout_amount] = @teacher_payout_amount
-      payment[:transaction_id] = transaction_id
-      if payment.save!
-        if create_open_tok_session
-          if create_teacher_booked_time
-            yoga_session = YogaSession.new
-            yoga_session[:payment_id] = payment[:id]
-            yoga_session[:teacher_id] = @teacher[:id]
-            yoga_session[:student_id] = @student[:id]
-            yoga_session[:teacher_booked_time_id] = @booked_time[:id]
-            yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
-            yoga_session[:teacher_payout_made] = false
-            yoga_session[:video_under_review] = false
-            yoga_session[:video_reviewed] = false
-            yoga_session[:teacher_cancelled_session] = false
-            yoga_session[:student_requested_refund] = false
-            yoga_session[:student_refund_given] = false
-            yoga_session[:opentok_session_id] = @opentok_session_id
-            if yoga_session.save!
-              flash[:notice] = "Your Yoga Session was booked successfully!"
-              UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
-              create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
-              return redirect_to payment_path(id: yoga_session)
-            else
-              flash[:notice] = "Yoga Session did not save."
-              return redirect_to request.referrer
-            end
-          else
-            flash[:notice] = "Teacher Booked Time did not save."
-            return redirect_to request.referrer
-          end
-        else
-          flash[:notice] = "OpenTok session did not process"
-          return redirect_to request.referrer
-        end
-      else
-        flash[:notice] = "Payment did not save."
-        return redirect_to request.referrer
+      begin
+        payment.save!
+      rescue e
+        puts e
       end
-      return payment_path(id: 1)
+      create_open_tok_session
+      create_teacher_booked_time
+      yoga_session = YogaSession.new
+      yoga_session[:payment_id] = payment[:id]
+      yoga_session[:teacher_id] = @teacher[:id]
+      yoga_session[:student_id] = @student[:id]
+      yoga_session[:teacher_booked_time_id] = @booked_time[:id]
+      yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
+      yoga_session[:teacher_payout_made] = false
+      yoga_session[:video_under_review] = false
+      yoga_session[:video_reviewed] = false
+      yoga_session[:teacher_cancelled_session] = false
+      yoga_session[:student_requested_refund] = false
+      yoga_session[:student_refund_given] = false
+      yoga_session[:opentok_session_id] = @opentok_session_id
+      begin
+        yoga_session.save!
+      rescue e
+        puts e
+      end
+      flash[:notice] = "Payment Accepted!"
+      return render json: {success: true}
     else
-      flash[:notice] = credit_card_processed[1]
-      return redirect_to request.referrer
+      flash[:notice] = "Payment Declined."
+      return render json: {success: false}
     end
   end
+
+  # def create
+  #   @search_params = JSON.parse(params["search_params"])
+  #   credit_card_processed = Payment.payment_processed?(get_credit_card_params, params[:total_price].to_s, get_billing_address_params)
+  #   if credit_card_processed[0]
+  #     transaction_id = credit_card_processed[1]
+  #     @student = Student.where(user_id: current_user).first
+  #     student_email = User.find(@student[:user_id]).email
+  #     @teacher = Teacher.find(@search_params["id"])
+  #     teacher_email = User.find(@teacher[:user_id]).email
+  #     payment = Payment.new
+  #     payment[:teacher_id] = @teacher[:id]
+  #     payment[:student_id] = @student[:id]
+  #     payment[:sales_tax] = params[:sales_tax]
+  #     payment[:price_without_tax] = params[:price_without_tax]
+  #     payment[:total_price] = params[:total_price]
+  #     payment[:yogalit_tax] = ENV["yogalit_tax_amount"].to_f
+  #     get_payout_params
+  #     payment[:yogalit_fee_amount] = @yogalit_fee_amount
+  #     payment[:teacher_payout_amount] = @teacher_payout_amount
+  #     payment[:transaction_id] = transaction_id
+  #     if payment.save!
+  #       if create_open_tok_session
+  #         if create_teacher_booked_time
+  #           yoga_session = YogaSession.new
+  #           yoga_session[:payment_id] = payment[:id]
+  #           yoga_session[:teacher_id] = @teacher[:id]
+  #           yoga_session[:student_id] = @student[:id]
+  #           yoga_session[:teacher_booked_time_id] = @booked_time[:id]
+  #           yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
+  #           yoga_session[:teacher_payout_made] = false
+  #           yoga_session[:video_under_review] = false
+  #           yoga_session[:video_reviewed] = false
+  #           yoga_session[:teacher_cancelled_session] = false
+  #           yoga_session[:student_requested_refund] = false
+  #           yoga_session[:student_refund_given] = false
+  #           yoga_session[:opentok_session_id] = @opentok_session_id
+  #           if yoga_session.save!
+  #             flash[:notice] = "Your Yoga Session was booked successfully!"
+  #             UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
+  #             create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
+  #             return redirect_to payment_path(id: yoga_session)
+  #           else
+  #             flash[:notice] = "Yoga Session did not save."
+  #             return redirect_to request.referrer
+  #           end
+  #         else
+  #           flash[:notice] = "Teacher Booked Time did not save."
+  #           return redirect_to request.referrer
+  #         end
+  #       else
+  #         flash[:notice] = "OpenTok session did not process"
+  #         return redirect_to request.referrer
+  #       end
+  #     else
+  #       flash[:notice] = "Payment did not save."
+  #       return redirect_to request.referrer
+  #     end
+  #     return payment_path(id: 1)
+  #   else
+  #     flash[:notice] = credit_card_processed[1]
+  #     return redirect_to request.referrer
+  #   end
+  # end
 
   def show
     @yoga_session = YogaSession.find(params[:id])

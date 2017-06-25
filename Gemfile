@@ -22,6 +22,7 @@ gem 'font-awesome-sass'
 gem 'whenever', :require => false
 gem 'ahoy_matey'
 gem 'therubyracer'
+gem 'braintree', '~> 2.76.0'
 
 group :development, :test do
   gem 'pry'

@@ -86,8 +86,9 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "phone"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "braintree_customer_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   add_index "students", ["user_id"], name: "index_students_on_user_id", using: :btree
