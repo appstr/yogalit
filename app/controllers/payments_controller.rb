@@ -9,6 +9,9 @@ class PaymentsController < ApplicationController
     private_key = ENV["braintree_private_key_dev"]
   else
     Braintree::Configuration.environment = :production
+    merchant_id = ENV["braintree_merchant_id_prod"]
+    public_key = ENV["braintree_public_key_prod"]
+    private_key = ENV["braintree_private_key_prod"]
   end
   Braintree::Configuration.merchant_id = merchant_id
   Braintree::Configuration.public_key = public_key
