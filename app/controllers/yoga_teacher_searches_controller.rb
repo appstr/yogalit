@@ -33,7 +33,11 @@ class YogaTeacherSearchesController < ApplicationController
     @student_timezone = student_timezone if @student_timezone.nil?
     Time.zone = @student_timezone
     if @year.nil?
-      date = Time.parse(params[:date])
+      if date.nil?
+        date = Time.parse(params[:date])
+      else
+        date = Time.parse(date)
+      end
       @year = date.strftime("%Y").to_i
       @month = date.strftime("%m").to_i
       @day = date.strftime("%d").to_i
@@ -50,7 +54,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherSundayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherMondayTimeFrame.where(teacher_id: yi)
         after_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -62,7 +66,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherMondayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherTuesdayTimeFrame.where(teacher_id: yi)
         after_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -74,7 +78,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherTuesdayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherWednesdayTimeFrame.where(teacher_id: yi)
         after_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -86,7 +90,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherWednesdayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherThursdayTimeFrame.where(teacher_id: yi)
         after_times = TeacherFridayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -98,7 +102,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherThursdayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherFridayTimeFrame.where(teacher_id: yi)
         after_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -110,7 +114,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherFridayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherSaturdayTimeFrame.where(teacher_id: yi)
         after_times = TeacherSundayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -122,7 +126,7 @@ class YogaTeacherSearchesController < ApplicationController
         before_times = TeacherSaturdayTimeFrame.where(teacher_id: yi)
         time_frames = TeacherSundayTimeFrame.where(teacher_id: yi)
         after_times = TeacherMondayTimeFrame.where(teacher_id: yi)
-        if check_hoo(student_time_frame, teacher, before_times) || check_hoo(student_time_frame, teacher, time_frames) || check_hoo(student_time_frame, teacher, after_times)
+        if check_hoo(student_time_frame, teacher, before_times, "before") || check_hoo(student_time_frame, teacher, time_frames, "current") || check_hoo(student_time_frame, teacher, after_times, "after")
           if check_booked_times(student_time_frame, teacher)
             new_ids << yi if !new_ids.include?(yi)
           end
@@ -132,16 +136,35 @@ class YogaTeacherSearchesController < ApplicationController
     return new_ids
   end
 
-  def check_hoo(student_time_frame, teacher, hoo)
+  def check_hoo(student_time_frame, teacher, hoo, before_current_after)
     return false if hoo.blank?
     Time.zone = teacher[:timezone]
     stf = student_time_frame
     hoo.each do |h|
       t = Time.at(h.time_range.first).in_time_zone(teacher[:timezone])..Time.at(h.time_range.last).in_time_zone(teacher[:timezone])
-      teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.last.strftime("%k"), t.last.strftime("%M"))
+      t = (t.first..(t.last + 60)) if t.last.strftime("%M").to_i == 59
+      if before_current_after == "before"
+        if t.first.wday == t.last.wday
+          teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d").to_i - 1, t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d").to_i - 1, t.last.strftime("%k"), t.last.strftime("%M"))
+        else
+          teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d").to_i - 1, t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.last.strftime("%k"), t.last.strftime("%M"))
+        end
+      elsif before_current_after == "current"
+        teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d"), t.last.strftime("%k"), t.last.strftime("%M"))
+        if teacher_time_frame.last.strftime("%k").to_i == 0 && teacher_time_frame.last.strftime("%M").to_i == 0
+          teacher_time_frame = (teacher_time_frame.first..((teacher_time_frame.last - 60) + 86400))
+        end
+      else
+        teacher_time_frame = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d").to_i + 1, t.first.strftime("%k"), t.first.strftime("%M"))..teacher_tz = Time.zone.local(stf.first.strftime("%Y"), stf.first.strftime("%m"), stf.first.strftime("%d").to_i + 1, t.last.strftime("%k"), t.last.strftime("%M"))
+      end
       ttf = teacher_time_frame
+      if stf.last.strftime("%k").to_i == 0 && stf.last.strftime("%M").to_i == 0
+        stf = (stf.first..((stf.last - 60) + 86400))
+      end
       if stf.first.between?(ttf.first, ttf.last) && stf.last.between?(ttf.first, ttf.last)
-        return true
+        if stf.first.in_time_zone(teacher[:timezone]) >= Time.now.in_time_zone(teacher[:timezone]) + 3600
+          return true
+        end
       end
     end
     return false
