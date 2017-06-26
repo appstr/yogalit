@@ -97,6 +97,7 @@ class PaymentsController < ApplicationController
       rescue e
         puts e
       end
+      create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
       flash[:notice] = "Payment Accepted!"
       UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
       return render json: {success: true}
