@@ -204,6 +204,16 @@
 
 <div class="row top_row hoo_row hide-on-med-and-down">
   <h4><%= @teacher[:timezone] %></h4>
+  <small>Multiple time-frames can be created for the same day, but cannot interfere with each other. The "start-time" must always be less than the "end-time".</small>
+  <br />
+  <small>Example:</small>
+  <br />
+  <small>Acceptable: Monday - 9:00am-2:00pm, 4:00pm-8:00pm, 3:00am-8:30am</small>
+  <br />
+  <small>Unacceptable: Monday - 9:00am-2:00pm, 1:00pm-8:00pm, 2:00pm-11:00am</small>
+  <br />
+  <br />
+  <br />
   <div class="col m3">
     <p>Monday</p>
     <%= form_tag(@teacher_monday_time_frame) do %>

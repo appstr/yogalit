@@ -22,6 +22,9 @@ Rails.application.routes.draw do
   resources :user_messages
   resources :teacher_ratings
 
+  # General
+  get '/about', to: 'general#about', as: :about
+
   # YogaTeacherSearches
   get '/search_for_teachers', to: 'yoga_teacher_searches#search_for_teachers', as: :search_for_teachers
 
@@ -58,6 +61,7 @@ Rails.application.routes.draw do
   post '/refund_yoga_session', to: 'payments#refund_yoga_session', as: :refund_yoga_session
   post '/general_refund_denial', to: 'payments#general_refund_denial', as: :general_refund_denial
   post '/custom_refund_denial', to: 'payments#custom_refund_denial', as: :custom_refund_denial
+  get  '/payment_confirmation', to: 'payments#payment_confirmation', as: :payment_confirmation
 
   # Policies
   get '/privacy_policy', to: 'policies#privacy_policy', as: :privacy_policy

@@ -20,6 +20,7 @@ ahoy.trackAll();
 
 $(document).ready(function(){
   $('select').material_select();
+  $('.modal').modal();
 });
 
 function isNumber(evt) {

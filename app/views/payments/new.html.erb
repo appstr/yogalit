@@ -23,13 +23,21 @@
           <strong>Total Price:</strong><br /> <span>$<%= @total_price %></span><br /><br />
           <div id="dropin-container"></div>
           <br />
-          <button id="submit-button">Book Now!</button>
+          <a href="#payment_processing"><button id="submit-button">Book Now!</button></a>
           <div class="payment_disclosure_div text-center">
             <small><i>By clicking "Book Now!" you are agreeing to the Yogalit <%= link_to "Terms of Use", terms_and_conditions_path %> and <%= link_to "Privacy Policy", privacy_policy_path %>.</i></small>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div id="payment_processing" class="modal">
+    <div class="modal-content">
+      <h4>Payment Processing</h4>
+      <h5>Please wait...</h5>
+      <div id="paymentProgress">
+        <div id="paymentBar"></div>
+      </div>
   </div>
 </section>
 
@@ -51,10 +59,13 @@
           url: url,
           data: requestData,
           success: function(result){
-            if(result.payment_made){
-              console.log("Payment Made!!");
+            if(result.success){
+              window.location.replace("/payment_confirmation");
             }else{
-              console.log("Payment Declined :(");
+              // raise error message
+              console.log("Payment Failed!");
+              alert("Payment Failed");
+              location.reload();
             }
           }
         });

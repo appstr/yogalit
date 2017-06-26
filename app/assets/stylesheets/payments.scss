@@ -87,4 +87,28 @@
   span {
     color: #16e0bd;
   }
+  .payment_processing {
+    #paymentProgress {
+      width: 100%;
+      background-color: grey;
+    }
+    #paymentBar {
+      width: 1%;
+      height: 30px;
+      background-color: green;
+    }
+  }
+}
+
+#payment_confirmation {
+  font-family: 'Source Sans Pro', sans-serif;
+  text-align: center;
+  min-height: 40em;
+  h4 {
+    color: #56cbf9;
+    margin-bottom: 2em;
+  }
+  p {
+    font-size: 1.1em;
+  }
 }

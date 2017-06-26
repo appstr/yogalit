@@ -138,3 +138,23 @@ video, img {
   @include backgroundShorthand("/assets/tree_woman_yoga_pose.jpg");
   min-height: 40em;
 }
+
+#about {
+  font-family: 'Source Sans Pro', sans-serif;
+  .about_container {
+    min-height: 50em;
+    p {
+      margin-top: 3.9em;
+      font-size: 1.5em;
+      color: #56cbf9;
+    }
+  }
+  #nav_bar {
+    .header-links a {
+      color: #58cbf9;
+    }
+    .header-links button {
+      color: #58cbf9;
+    }
+  }
+}

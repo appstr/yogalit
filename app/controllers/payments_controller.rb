@@ -44,8 +44,14 @@ class PaymentsController < ApplicationController
   end
 
   def create
+    if params[:student_timezone].include?("amp;")
+      params[:student_timezone] = params[:student_timezone].split("amp;").join("")
+      params[:teacher_timezone] = params[:teacher_timezone].split("amp;").join("")
+    end
     @student = Student.where(user_id: current_user).first
+    student_email = User.find(@student[:user_id]).email
     @teacher = Teacher.find(params[:id])
+    teacher_email = User.find(@teacher[:user_id]).email
     result = Braintree::Transaction.sale(
       :amount => params["total_price"],
       :payment_method_nonce => params["payload_nonce"],
@@ -65,6 +71,7 @@ class PaymentsController < ApplicationController
       payment.yogalit_tax = ENV["yogalit_tax_amount"].to_f
       payment[:yogalit_fee_amount] = @yogalit_fee_amount
       payment[:teacher_payout_amount] = @teacher_payout_amount
+      payment[:transaction_id] = result.transaction.id
       begin
         payment.save!
       rescue e
@@ -77,7 +84,7 @@ class PaymentsController < ApplicationController
       yoga_session[:teacher_id] = @teacher[:id]
       yoga_session[:student_id] = @student[:id]
       yoga_session[:teacher_booked_time_id] = @booked_time[:id]
-      yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
+      yoga_session[:yoga_type] = YogaType::ENUMS[params["yoga_type"]]
       yoga_session[:teacher_payout_made] = false
       yoga_session[:video_under_review] = false
       yoga_session[:video_reviewed] = false
@@ -91,76 +98,13 @@ class PaymentsController < ApplicationController
         puts e
       end
       flash[:notice] = "Payment Accepted!"
+      UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
       return render json: {success: true}
     else
       flash[:notice] = "Payment Declined."
       return render json: {success: false}
     end
   end
-
-  # def create
-  #   @search_params = JSON.parse(params["search_params"])
-  #   credit_card_processed = Payment.payment_processed?(get_credit_card_params, params[:total_price].to_s, get_billing_address_params)
-  #   if credit_card_processed[0]
-  #     transaction_id = credit_card_processed[1]
-  #     @student = Student.where(user_id: current_user).first
-  #     student_email = User.find(@student[:user_id]).email
-  #     @teacher = Teacher.find(@search_params["id"])
-  #     teacher_email = User.find(@teacher[:user_id]).email
-  #     payment = Payment.new
-  #     payment[:teacher_id] = @teacher[:id]
-  #     payment[:student_id] = @student[:id]
-  #     payment[:sales_tax] = params[:sales_tax]
-  #     payment[:price_without_tax] = params[:price_without_tax]
-  #     payment[:total_price] = params[:total_price]
-  #     payment[:yogalit_tax] = ENV["yogalit_tax_amount"].to_f
-  #     get_payout_params
-  #     payment[:yogalit_fee_amount] = @yogalit_fee_amount
-  #     payment[:teacher_payout_amount] = @teacher_payout_amount
-  #     payment[:transaction_id] = transaction_id
-  #     if payment.save!
-  #       if create_open_tok_session
-  #         if create_teacher_booked_time
-  #           yoga_session = YogaSession.new
-  #           yoga_session[:payment_id] = payment[:id]
-  #           yoga_session[:teacher_id] = @teacher[:id]
-  #           yoga_session[:student_id] = @student[:id]
-  #           yoga_session[:teacher_booked_time_id] = @booked_time[:id]
-  #           yoga_session[:yoga_type] = YogaType::ENUMS[@search_params["yoga_type"]]
-  #           yoga_session[:teacher_payout_made] = false
-  #           yoga_session[:video_under_review] = false
-  #           yoga_session[:video_reviewed] = false
-  #           yoga_session[:teacher_cancelled_session] = false
-  #           yoga_session[:student_requested_refund] = false
-  #           yoga_session[:student_refund_given] = false
-  #           yoga_session[:opentok_session_id] = @opentok_session_id
-  #           if yoga_session.save!
-  #             flash[:notice] = "Your Yoga Session was booked successfully!"
-  #             UserMailer.new_yoga_session_booked_email(student_email, teacher_email).deliver_now
-  #             create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
-  #             return redirect_to payment_path(id: yoga_session)
-  #           else
-  #             flash[:notice] = "Yoga Session did not save."
-  #             return redirect_to request.referrer
-  #           end
-  #         else
-  #           flash[:notice] = "Teacher Booked Time did not save."
-  #           return redirect_to request.referrer
-  #         end
-  #       else
-  #         flash[:notice] = "OpenTok session did not process"
-  #         return redirect_to request.referrer
-  #       end
-  #     else
-  #       flash[:notice] = "Payment did not save."
-  #       return redirect_to request.referrer
-  #     end
-  #     return payment_path(id: 1)
-  #   else
-  #     flash[:notice] = credit_card_processed[1]
-  #     return redirect_to request.referrer
-  #   end
-  # end
 
   def show
     @yoga_session = YogaSession.find(params[:id])
@@ -276,9 +220,9 @@ class PaymentsController < ApplicationController
     booked_time[:student_id] = @student[:id]
     booked_time[:session_date] = @session_date
     booked_time[:time_range] = @time_range
-    booked_time[:duration] = @search_params["duration"].to_i
-    booked_time[:student_timezone] = @search_params["student_timezone"]
-    booked_time[:teacher_timezone] = @search_params["teacher_timezone"]
+    booked_time[:duration] = params["duration"].to_i
+    booked_time[:student_timezone] = params["student_timezone"]
+    booked_time[:teacher_timezone] = params["teacher_timezone"]
     booked_time[:teacher_rating_given] = false
     if booked_time.save!
       @booked_time = booked_time
@@ -301,12 +245,12 @@ class PaymentsController < ApplicationController
   end
 
   def get_session_date_in_teacher_tz
-    Time.zone = @search_params["student_timezone"]
-    date = Date.parse(@search_params["session_date"])
+    Time.zone = params["student_timezone"]
+    date = Date.parse(params["session_date"])
     year = date.strftime("%Y")
     month = date.strftime("%m")
     day = date.strftime("%d")
-    @session_date = Time.zone.local(year, month, day, @start_hour, @start_minute).in_time_zone(@search_params["teacher_timezone"])
+    @session_date = Time.zone.local(year, month, day, @start_hour, @start_minute).in_time_zone(params["teacher_timezone"])
   end
 
   def get_session_time_range
