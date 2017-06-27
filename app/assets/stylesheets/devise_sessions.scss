@@ -18,6 +18,12 @@
       position: absolute;
       top: 50%;
       left: 8%;
+      @media(min-width: 1350px) {
+        left: 12%;
+      }
+      @media(min-width: 1550px) {
+        left: 25%;
+      }
       text-align: center;
 
       p {
