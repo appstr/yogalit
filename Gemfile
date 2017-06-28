@@ -23,6 +23,7 @@ gem 'whenever', :require => false
 gem 'ahoy_matey'
 gem 'therubyracer'
 gem 'braintree', '~> 2.76.0'
+gem 'meta-tags'
 
 group :development, :test do
   gem 'pry'
