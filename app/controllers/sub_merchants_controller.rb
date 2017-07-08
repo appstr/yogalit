@@ -1,5 +1,6 @@
 class SubMerchantsController < ApplicationController
   before_action :authenticate_user!
+  require 'SecureRandom'
 
   if Rails.env.development?
     Braintree::Configuration.environment = :sandbox
@@ -22,6 +23,7 @@ class SubMerchantsController < ApplicationController
 
   def create
     teacher = Teacher.where(user_id: current_user).first
+    unique_merchant_id = SecureRandom.hex(16)
     merchant_account_params = {
       individual: {
         first_name: params[:first_name],
@@ -63,11 +65,11 @@ class SubMerchantsController < ApplicationController
     end
     merchant_account_params[:master_merchant_account_id] = "yogalit"
     merchant_account_params[:tos_accepted] = true
-    merchant_account_params[:id] = current_user[:id].to_s
+    merchant_account_params[:id] = unique_merchant_id
     result = Braintree::MerchantAccount.create(merchant_account_params)
     if result.success?
       teacher[:merchant_account_requested] = true
-      teacher[:merchant_account_id] = current_user[:id]
+      teacher[:merchant_account_id] = unique_merchant_id
       teacher[:merchant_account_active] = false
       begin
         teacher.save!

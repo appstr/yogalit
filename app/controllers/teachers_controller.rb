@@ -115,6 +115,8 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
+      elsif !teacher[:merchant_account_requested]
+        return redirect_to new_sub_merchant_path
       elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
@@ -250,7 +252,11 @@ class TeachersController < ApplicationController
   def new_teacher_interview
     if Teacher.teacher_exists?(current_user)
       teacher = Teacher.where(user_id: current_user).first
-      return redirect_to teachers_path if teacher[:is_verified]
+      if teacher[:is_verified]
+        return redirect_to teachers_path
+      elsif !teacher[:merchant_account_requested]
+        return redirect_to new_sub_merchant_path
+      end
     end
     @teacher = Teacher.where(user_id: current_user).first
     if Rails.env.development?

@@ -25,7 +25,6 @@ class Teacher < ActiveRecord::Base
   validates :certificate, presence: true
   validates :profile_pic, presence: true
   validates :payout_type, presence: true
-  validates :registered_business, presence: true
 
   has_attached_file :profile_pic,
                 :storage => :s3,
