@@ -220,7 +220,8 @@ class YogaTeacherSearchesController < ApplicationController
         is_verified = teacher.is_verified
         is_blacklisted = teacher.blacklisted
         is_blocked = teacher.blocked
-        yoga_instructor_ids << yt[:teacher_id] if is_searchable && is_verified && !is_blacklisted && !is_blocked
+        merchant_account_active = teacher.merchant_account_active
+        yoga_instructor_ids << yt[:teacher_id] if is_searchable && is_verified && !is_blacklisted && !is_blocked && merchant_account_active
       end
     end
     return yoga_instructor_ids

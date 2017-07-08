@@ -197,4 +197,25 @@ module ApplicationHelper
     return opts
   end
 
+  def birth_year_options
+    current_year = Time.now.strftime("%Y").to_i
+    next_year = current_year
+    yrs = []
+    while ((current_year - 100) <= next_year ) do
+      yrs << [next_year, next_year.to_s]
+      next_year -= 1
+    end
+    return yrs
+  end
+
+  def thirty_one_day_option
+    days = []
+    counter = 1
+    while counter <= 31 do
+      days << [counter, counter.to_s]
+      counter += 1
+    end
+    return days
+  end
+
 end

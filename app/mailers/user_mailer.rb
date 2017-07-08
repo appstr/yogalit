@@ -51,4 +51,9 @@ class UserMailer < ApplicationMailer
     @new_message = new_message
     mail(to: "yogalityoga@gmail.com", subject: 'New Yogalit Message', from:"Yogalit <no_reply@yogalit.com>")
   end
+
+  def send_payout_failure_email(yoga_session_id)
+    @ys_id = yoga_session_id
+    mail(to: "christopherpelnar@gmail.com", subject: 'PAYOUT FAILURE!!!', from:"Yogalit <no_reply@yogalit.com>")
+  end
 end

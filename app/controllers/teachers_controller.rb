@@ -129,6 +129,8 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
+      elsif !teacher[:merchant_account_requested]
+        return redirect_to new_sub_merchant_path
       elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
@@ -141,7 +143,7 @@ class TeachersController < ApplicationController
     teacher[:user_id] = current_user[:id]
     teacher[:average_rating] = 0
     if teacher.valid? && teacher.save!
-      return google_authorize_teacher
+      return redirect_to new_sub_merchant_path
     else
       error_message = ""
       teacher.errors.full_messages.each {|err| error_message << "#{err} "}
@@ -189,13 +191,13 @@ class TeachersController < ApplicationController
     end
     @teacher = Teacher.find(params[:id])
     @teacher_price_ranges = TeacherPriceRange.where(teacher_id: @teacher).first
-    duration = get_duration_in_seconds
-    teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
-    available_booking_times = build_teacher_time_frame(teacher_time_frames, duration)
-    extra_booking_times = get_teacher_extra_time_frames_for(params[:day_of_week], duration)
-    available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
-    filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
-    @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
+    # duration = get_duration_in_seconds
+    # teacher_time_frames = get_teacher_time_frames_for(params[:day_of_week])
+    # available_booking_times = build_teacher_time_frame(teacher_time_frames, duration)
+    # extra_booking_times = get_teacher_extra_time_frames_for(params[:day_of_week], duration)
+    # available_booking_times = merge_booking_times(available_booking_times, extra_booking_times) if !extra_booking_times.nil?
+    # filtered_booking_times = get_res_filtered_booking_times(available_booking_times, duration)
+    # @filtered_booking_time_options = format_filtered_booking_times(filtered_booking_times)
     @favorite_teacher_count = FavoriteTeacher.where(teacher_id: @teacher).count
     @teacher_images = TeacherImage.where(teacher_id: @teacher)
     @teacher_videos = TeacherVideo.where(teacher_id: @teacher)
@@ -709,6 +711,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :paypal_email, :certificate)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :certificate, :payout_type, :registered_business)
   end
 end

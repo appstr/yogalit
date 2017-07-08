@@ -1,0 +1,73 @@
+<div class="container">
+  <div class="row top_row">
+    <div class="col s12">
+      <h4>Braintree Sub-Merchant Application</h4>
+      <%= form_tag({controller:"sub_merchants", action:"create"}) do %>
+        <h5>Individual's Info</h5>
+        <%= label_tag :first_name %>
+        <%= text_field_tag :first_name, nil, value: @teacher[:first_name] %>
+
+        <%= label_tag :last_name %>
+        <%= text_field_tag :last_name, nil, value: @teacher[:last_name] %>
+
+        <%= label_tag :phone %>
+        <%= text_field_tag :phone, nil, value: @teacher[:phone] %>
+
+        <%= label_tag :email %>
+        <%= text_field_tag :email, nil, value: current_user[:email] %>
+
+        <%= label_tag :dob_year %>
+        <%= select_tag :dob_year, options_for_select(birth_year_options) %>
+        <br />
+
+        <%= label_tag :dob_month %>
+        <%= select_tag :dob_month, options_for_select(month_exp_options) %>
+        <br />
+
+        <%= label_tag :dob_day %>
+        <%= select_tag :dob_day, options_for_select(thirty_one_day_option) %>
+        <br />
+
+        <%= label_tag :ssn %>
+        <%= text_field_tag :ssn %>
+
+        <%= label_tag :street_address %>
+        <%= text_field_tag :street_address %>
+
+        <%= label_tag :city %>
+        <%= text_field_tag :city %>
+
+        <%= label_tag :state %>
+        <%= select_tag :state, options_for_select(state_options) %>
+        <br />
+
+        <%= label_tag :postal %>
+        <%= text_field_tag :postal %>
+
+        <% if @teacher[:registered_business] %>
+          <h5>Business's Info</h5>
+          <%= label_tag :legal_name %>
+          <%= text_field_tag :legal_name %>
+
+          <%= label_tag :tax_id, "Tax-ID" %>
+          <%= text_field_tag :tax_id %>
+        <% end %>
+
+        <% if @teacher[:payout_type] == "bank" %>
+          <h5>Banking Info</h5>
+            <%= label_tag :account_number %>
+            <%= text_field_tag :account_number %>
+            <%= label_tag :routing_number %>
+            <%= text_field_tag :routing_number %>
+          <% elsif @teacher[:payout_type] == "mobile_phone" %>
+            <%= label_tag :venmo_mobile_phone %>
+            <%= text_field_tag :venmo_mobile_phone %>
+          <% else %>
+            <%= label_tag :venmo_email %>
+            <%= text_field_tag :venmo_email %>
+        <% end %>
+        <%= submit_tag "Submit To Braintree" %>
+      <% end %>
+    </div>
+  </div>
+</div>

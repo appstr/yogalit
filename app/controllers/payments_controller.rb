@@ -52,12 +52,16 @@ class PaymentsController < ApplicationController
     student_email = User.find(@student[:user_id]).email
     @teacher = Teacher.find(params[:id])
     teacher_email = User.find(@teacher[:user_id]).email
+    get_payout_params
     result = Braintree::Transaction.sale(
-      :amount => params["total_price"],
+      :amount => params[:total_price],
+      :merchant_account_id => @teacher[:merchant_id],
       :payment_method_nonce => params["payload_nonce"],
       :options => {
-        :submit_for_settlement => true
-      }
+        :submit_for_settlement => true,
+        :hold_in_escrow => true
+      },
+      :service_fee_amount => @yogalit_fee_amount
     )
     if result.success?
       # Save Payment
@@ -67,7 +71,6 @@ class PaymentsController < ApplicationController
       payment.sales_tax = params[:sales_tax].to_f
       payment.price_without_tax = params[:price_without_tax].to_f
       payment.total_price = params[:total_price].to_f
-      get_payout_params
       payment.yogalit_tax = ENV["yogalit_tax_amount"].to_f
       payment[:yogalit_fee_amount] = @yogalit_fee_amount
       payment[:teacher_payout_amount] = @teacher_payout_amount
@@ -199,7 +202,9 @@ class PaymentsController < ApplicationController
   private
 
   def get_payout_params
-    @yogalit_fee_amount = (params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)).round(2)
+    yogalit_fee_amount = (params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)).round(2)
+    braintree_fee_amount = ((yogalit_fee_amount * 0.29) + 0.30).round(2)
+    @yogalit_fee_amount = yogalit_fee_amount + braintree_fee_amount
     @teacher_payout_amount = (params[:total_price].to_f - @yogalit_fee_amount).round(2)
   end
 

@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # http_basic_authenticate_with name: ENV["yogalit_auth_name"], password: ENV["yogalit_auth_password"]
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
-  protect_from_forgery with: :exception
+  protect_from_forgery with: :null_session
   after_action :not_blocked_or_blacklisted?
   Ahoy.geocode = :async
 

@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :teacher_price_ranges
   resources :user_messages
   resources :teacher_ratings
+  resources :sub_merchants
 
   # General
   get '/about', to: 'general#about', as: :about
@@ -66,5 +67,8 @@ Rails.application.routes.draw do
   # Policies
   get '/privacy_policy', to: 'policies#privacy_policy', as: :privacy_policy
   get '/terms_and_conditions', to: 'policies#terms_and_conditions', as: :terms_and_conditions
+
+  # WebHooks
+  post '/sub_merchant_webhook', to: 'web_hooks#sub_merchant_webhook', as: :sub_merchant_webhook
 
 end
