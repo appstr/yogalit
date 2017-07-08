@@ -1,6 +1,6 @@
 class SubMerchantsController < ApplicationController
   before_action :authenticate_user!
-  require 'SecureRandom'
+  require 'securerandom'
 
   if Rails.env.development?
     Braintree::Configuration.environment = :sandbox
@@ -55,12 +55,12 @@ class SubMerchantsController < ApplicationController
     elsif teacher[:payout_type] == "mobile_phone"
       merchant_account_params[:funding] = {
         destination: teacher[:payout_type],
-        mobile_phone: params[:mobile_phone]
+        mobile_phone: params[:venmo_mobile_phone]
       }
     else
       merchant_account_params[:funding] = {
         destination: teacher[:payout_type],
-        email: params[:email]
+        email: params[:venmo_email]
       }
     end
     merchant_account_params[:master_merchant_account_id] = "yogalit"
