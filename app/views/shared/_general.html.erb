@@ -6,6 +6,7 @@
       <p>Last: <%= @teacher[:last_name] %></p>
       <p>Phone: <%= @teacher[:phone] %></p>
       <p>Timezone: <%= @teacher[:timezone] %></p>
+      <p>Description: ...</p>
       <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
       <h4>Sign-In</h4>
       <p>Email: <%= current_user[:email] %></p>
@@ -28,6 +29,15 @@
         <h5>You have not been favorited yet by any Student.</h5>
       <% end %>
     </div>
+    <div class="col m4">
+      <% if @teacher[:bio].nil? %>
+        <%= form_tag({controller:"teachers", action:"add_bio_to_teacher_table"}) do %>
+          <%= label_tag :my_biography %>
+          <%= text_area_tag :my_biography %>
+          <%= submit_tag "Submit", class:"btn" %>
+        <% end %>
+      <% end %>
+    </div>
   <% else %>
     <div class="col s12">
       <h4>Profile</h4>
@@ -35,11 +45,19 @@
       <p>Last: <%= @student[:last_name] %></p>
       <p>Phone: <%= @student[:phone] %></p>
       <p>Timezone: <%= @student[:timezone] %></p>
+      <p>Description: ...</p>
       <%= link_to "Edit Profile", edit_student_path(@student) %><br />
       <h4>Sign-In</h4>
       <p>Email: <%= current_user[:email] %></p>
       <p>Password: <i class="fa fa-lock" aria-hidden="true"></i></p>
       <%= link_to "Edit Sign-In", edit_user_registration_path %>
+      <% if @teacher[:bio].nil? %>
+        <%= form_tag({controller:"teachers", action:"add_bio_to_teacher_table"}) do %>
+          <%= label_tag :my_biography %>
+          <%= text_area_tag :my_biography %>
+          <%= submit_tag "Submit", class:"btn" %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 </div>

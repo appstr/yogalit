@@ -110,6 +110,19 @@ class TeachersController < ApplicationController
     return sorted = most_recent.sort_by{|k, v| v["timestamp"]}
   end
 
+  def add_bio_to_teacher_table
+    teacher = Teacher.where(user_id: current_user).first
+    teacher[:bio] = params[:my_biography]
+    begin
+      teacher.save!
+      flash[:notice] = "Your bio was saved successfully!"
+    rescue e
+      puts e
+      flash[:notice] = 'Your bio was not saved, please try again.'
+    end
+    return redirect_to request.referrer
+  end
+
   def new
     if Teacher.teacher_exists?(current_user)
       teacher = Teacher.where(user_id: current_user).first
@@ -717,6 +730,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :certificate, :payout_type, :registered_business)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :certificate, :payout_type, :registered_business, :bio)
   end
 end

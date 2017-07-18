@@ -22,23 +22,23 @@ class WebHooksController < ApplicationController
     )
     if notification.kind == Braintree::WebhookNotification::Kind::SubMerchantAccountApproved
       if notification.merchant_account.status == "active"
-        teacher = Teacher.where(user_id: notification.merchant_account.id).first
+        teacher = Teacher.where(merchant_account_id: notification.merchant_account.id).first
         teacher[:merchant_account_active] = true
         begin
           teacher.save!
         rescue e
           puts "RAILS_ERROR: #{e}"
+          # Mail "failed to save approved merchant web-hook"
         end
       end
     elsif notification.kind == Braintree::WebhookNotification::Kind::SubMerchantAccountDeclined
-      teacher_email = User.find(teacher[:user_id]).email
+      teacher_email = Teacher.where(merchant_account_id: notification.merchant_account.id).first.email
       # Send email with UserMailer.sub_merchant_declined_email(notification.message, teacher_email)
+      # Add link to allow Teacher to re-submit their application to Braintree on the dashboard in the "general" tab.
+    elsif notification.kind == Braintree::WebhookNotification::Kind::Check
+      puts "BRAINTREE WEBHOOK SUCCESSFUL!!!!"
     end
     return render json: {success: true}
   end
-
-  # def disbursements
-  #
-  # end
 
 end

@@ -14,8 +14,8 @@
           <%= f.label :phone %>
           <%= f.text_field :phone %>
           <br />
-          <%= f.label :paypal_email %>
-          <%= f.text_field :paypal_email %>
+          <%= f.label :bio %>
+          <%= f.text_area :bio %>
           <br />
           <%= f.label :timezone %>
           <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: @teacher[:timezone]}, class:"browser-default" %>

@@ -257,6 +257,7 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.string   "first_name"
     t.string   "last_name"
     t.string   "phone"
+    t.string   "bio"
     t.string   "timezone"
     t.float    "average_rating"
     t.boolean  "is_searchable"
@@ -268,7 +269,7 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.boolean  "vacation_mode"
     t.string   "payout_type"
     t.boolean  "registered_business"
-    t.integer  "merchant_account_id"
+    t.string   "merchant_account_id"
     t.boolean  "merchant_account_requested"
     t.boolean  "merchant_account_active"
     t.datetime "created_at",                 null: false

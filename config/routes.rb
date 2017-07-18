@@ -40,6 +40,7 @@ Rails.application.routes.draw do
   post '/confirm_teacher_interview', to: 'teachers#confirm_teacher_interview', as: :confirm_teacher_interview
   post '/toggle_vacation_mode', to: 'teachers#toggle_vacation_mode', as: :toggle_vacation_mode
   post '/emergency_cancel', to: 'teachers#emergency_cancel', as: :emergency_cancel
+  post '/add_bio_to_teacher_table', to: 'teachers#add_bio_to_teacher_table', as: :add_bio_to_teacher_table
 
   # Students
   delete '/destroy_favorite_teacher', to: 'students#destroy_favorite_teacher', as: :destroy_favorite_teacher

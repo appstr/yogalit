@@ -5,6 +5,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.string  :first_name
       t.string  :last_name
       t.string  :phone
+      t.string  :bio
       t.string  :timezone
       t.float   :average_rating
       t.boolean :is_searchable
@@ -16,7 +17,7 @@ class CreateTeachers < ActiveRecord::Migration
       t.boolean :vacation_mode
       t.string  :payout_type
       t.boolean :registered_business
-      t.integer :merchant_account_id
+      t.string  :merchant_account_id
       t.boolean :merchant_account_requested
       t.boolean :merchant_account_active
       t.timestamps null: false
