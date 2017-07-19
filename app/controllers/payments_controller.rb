@@ -55,7 +55,7 @@ class PaymentsController < ApplicationController
     get_payout_params
     result = Braintree::Transaction.sale(
       :amount => params[:total_price],
-      :merchant_account_id => @teacher[:merchant_id],
+      :merchant_account_id => @teacher[:merchant_account_id],
       :payment_method_nonce => params["payload_nonce"],
       :options => {
         :submit_for_settlement => true,
@@ -80,8 +80,14 @@ class PaymentsController < ApplicationController
       rescue e
         puts e
       end
-      create_open_tok_session
-      create_teacher_booked_time
+      if !create_open_tok_session
+        flash[:notice] = "Error!! Please contact Yogalit immediately!"
+        return render json: {success: false}
+      end
+      if !create_teacher_booked_time
+        flash[:notice] = "Error! Please contact Yogalit immediately!"
+        return render json: {success: false}
+      end
       yoga_session = YogaSession.new
       yoga_session[:payment_id] = payment[:id]
       yoga_session[:teacher_id] = @teacher[:id]
@@ -99,6 +105,8 @@ class PaymentsController < ApplicationController
         yoga_session.save!
       rescue e
         puts e
+        flash[:notice] = "Error! Please contact Yogalit immediately!"
+        return render json: {success: false}
       end
       create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
       flash[:notice] = "Payment Accepted!"
@@ -230,10 +238,11 @@ class PaymentsController < ApplicationController
     booked_time[:student_timezone] = params["student_timezone"]
     booked_time[:teacher_timezone] = params["teacher_timezone"]
     booked_time[:teacher_rating_given] = false
-    if booked_time.save!
+    begin
+      booked_time.save!
       @booked_time = booked_time
       return true
-    else
+    rescue
       return false
     end
   end
@@ -265,13 +274,17 @@ class PaymentsController < ApplicationController
   end
 
   def create_open_tok_session
-    opentok = OpenTok::OpenTok.new ENV["opentok_api_key"], ENV["opentok_api_secret"]
-    session = opentok.create_session :archive_mode => :always, :media_mode => :routed
-    @opentok_session_id = session.session_id
-    if @opentok_session_id.nil?
+    begin
+      opentok = OpenTok::OpenTok.new ENV["opentok_api_key"], ENV["opentok_api_secret"]
+      session = opentok.create_session :archive_mode => :always, :media_mode => :routed
+      @opentok_session_id = session.session_id
+      if @opentok_session_id.nil?
+        return false
+      else
+        return true
+      end
+    rescue
       return false
-    else
-      return true
     end
   end
 

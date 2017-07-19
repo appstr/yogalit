@@ -177,7 +177,6 @@ class TeachersController < ApplicationController
     teacher[:last_name] = params[:teacher][:last_name].downcase
     teacher[:phone] = params[:teacher][:phone]
     teacher[:timezone] = params[:teacher][:timezone]
-    teacher[:paypal_email] = params[:teacher][:paypal_email]
     teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
     teacher.certificate = params[:teacher][:certificate] if !params[:teacher][:certificate].nil?
     if teacher.save!

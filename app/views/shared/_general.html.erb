@@ -51,13 +51,6 @@
       <p>Email: <%= current_user[:email] %></p>
       <p>Password: <i class="fa fa-lock" aria-hidden="true"></i></p>
       <%= link_to "Edit Sign-In", edit_user_registration_path %>
-      <% if @teacher[:bio].nil? %>
-        <%= form_tag({controller:"teachers", action:"add_bio_to_teacher_table"}) do %>
-          <%= label_tag :my_biography %>
-          <%= text_area_tag :my_biography %>
-          <%= submit_tag "Submit", class:"btn" %>
-        <% end %>
-      <% end %>
     </div>
   <% end %>
 </div>
