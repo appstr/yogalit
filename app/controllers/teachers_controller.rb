@@ -117,7 +117,7 @@ class TeachersController < ApplicationController
       teacher.save!
       flash[:notice] = "Your bio was saved successfully!"
     rescue e
-      puts e
+      puts "RAILS_ERROR: #{e}"
       flash[:notice] = 'Your bio was not saved, please try again.'
     end
     return redirect_to request.referrer
@@ -128,8 +128,6 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
-      elsif !teacher[:merchant_account_requested]
-        return redirect_to new_sub_merchant_path
       elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
@@ -144,8 +142,6 @@ class TeachersController < ApplicationController
       teacher = Teacher.where(user_id: current_user).first
       if teacher[:is_verified]
         return redirect_to teachers_path
-      elsif !teacher[:merchant_account_requested]
-        return redirect_to new_sub_merchant_path
       elsif InterviewBookedTime.where(teacher_id: teacher).first.nil?
         return google_authorize_teacher
       else
@@ -154,16 +150,16 @@ class TeachersController < ApplicationController
     end
     params[:teacher][:first_name].downcase!
     params[:teacher][:last_name].downcase!
-    teacher = Teacher.new(teacher_params)
-    teacher[:user_id] = current_user[:id]
-    teacher[:average_rating] = 0
-    if teacher.valid? && teacher.save!
-      return redirect_to new_sub_merchant_path
+    @teacher = Teacher.new(teacher_params)
+    @teacher[:user_id] = current_user[:id]
+    @teacher[:average_rating] = 0
+    if @teacher.valid? && @teacher.save!
+      return google_authorize_teacher
     else
       error_message = ""
-      teacher.errors.full_messages.each {|err| error_message << "#{err} "}
+      @teacher.errors.full_messages.each {|err| error_message << "#{err} "}
       flash[:notice] = error_message
-      return redirect_to request.referrer
+      render("new")
     end
   end
 
@@ -172,21 +168,21 @@ class TeachersController < ApplicationController
   end
 
   def update
-    teacher = Teacher.find(params[:id])
-    teacher[:first_name] = params[:teacher][:first_name].downcase
-    teacher[:last_name] = params[:teacher][:last_name].downcase
-    teacher[:phone] = params[:teacher][:phone]
-    teacher[:timezone] = params[:teacher][:timezone]
-    teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
-    teacher.certificate = params[:teacher][:certificate] if !params[:teacher][:certificate].nil?
-    if teacher.save!
+    @teacher = Teacher.find(params[:id])
+    @teacher[:first_name] = params[:teacher][:first_name].downcase
+    @teacher[:last_name] = params[:teacher][:last_name].downcase
+    @teacher[:phone] = params[:teacher][:phone]
+    @teacher[:timezone] = params[:teacher][:timezone]
+    @teacher[:bio] = params[:teacher][:bio]
+    @teacher.profile_pic = params[:teacher][:profile_pic] if !params[:teacher][:profile_pic].nil?
+    @teacher.certificate = params[:teacher][:certificate] if !params[:teacher][:certificate].nil?
+    if @teacher.save
       flash[:notice] = "Your profile info was updated successfully!"
-      path = teachers_path
+      return redirect_to teachers_path
     else
       flash[:notice] = "Your profile info was not updated."
-      path = request.referrer
+      render("edit")
     end
-    return redirect_to path
   end
 
   def show
@@ -264,11 +260,7 @@ class TeachersController < ApplicationController
   def new_teacher_interview
     if Teacher.teacher_exists?(current_user)
       teacher = Teacher.where(user_id: current_user).first
-      if teacher[:is_verified]
-        return redirect_to teachers_path
-      elsif !teacher[:merchant_account_requested]
-        return redirect_to new_sub_merchant_path
-      end
+      return redirect_to teachers_path if teacher[:is_verified]
     end
     @teacher = Teacher.where(user_id: current_user).first
     if Rails.env.development?
@@ -729,6 +721,6 @@ class TeachersController < ApplicationController
   end
 
   def teacher_params
-    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :certificate, :payout_type, :registered_business, :bio)
+    params.require(:teacher).permit(:first_name, :last_name, :phone, :timezone, :profile_pic, :is_searchable, :is_verified, :blacklisted, :has_been_blacklisted, :unblackist_date, :blocked, :vacation_mode, :certificate, :bio)
   end
 end

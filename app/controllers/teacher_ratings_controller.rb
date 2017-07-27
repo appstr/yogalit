@@ -21,7 +21,7 @@ class TeacherRatingsController < ApplicationController
       begin
         bt.save!
       rescue e
-        puts e
+        puts "RAILS_ERROR: #{e}"
       end
       update_teacher_average_rating(ys[:teacher_id])
       flash[:notice] = "Your rating has been submitted!"
@@ -44,7 +44,7 @@ class TeacherRatingsController < ApplicationController
     begin
       teacher.save!
     rescue e
-      puts e
+      puts "RAILS_ERROR: #{e}"
     end
   end
 

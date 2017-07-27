@@ -64,7 +64,7 @@ class YogaSessionsController < ApplicationController
       begin
         reported_yoga_session.save!
       rescue e
-        puts e
+        puts "RAILS_ERROR: #{e}"
       end
       flash[:notice] = "Your report was made and a Yogalit administrator will contact your email with any further questions or information."
     else

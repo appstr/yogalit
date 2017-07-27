@@ -1,0 +1,103 @@
+<section id="edit_sub_merchants">
+  <div class="container">
+    <div class="row top_row">
+      <div class="col s12">
+        <h4 class="text-center">Edit Braintree Information</h4>
+        <%= form_tag({controller: "sub_merchants", action: "update"}, method: :put) do %>
+          <%= label_tag :first_name %>
+          <%= text_field_tag :first_name, nil, value: @subm[:first_name], name: "sub_merchant[first_name]" %>
+          <%= label_tag :last_name %>
+          <%= text_field_tag :last_name, nil, value: @subm[:last_name], name: "sub_merchant[last_name]" %>
+          <%= label_tag :email %>
+          <%= text_field_tag :email, nil, value: @subm[:email], name: "sub_merchant[email]" %>
+          <%= label_tag :phone %>
+          <%= text_field_tag :phone, nil, value: @subm[:phone], name: "sub_merchant[phone]" %>
+          <%= label_tag :dob_year %>
+          <%= select_tag :dob_year, options_for_select(birth_year_options, @dob_year) %>
+          <br />
+          <%= label_tag :dob_month %>
+          <%= select_tag :dob_month, options_for_select(month_exp_options, @dob_month) %>
+          <br />
+          <%= label_tag :dob_day %>
+          <%= select_tag :dob_day, options_for_select(thirty_one_day_option, @dob_day) %>
+          <br />
+          <%= label_tag :ssn, "SSN (Last 4 digits)" %>
+          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]" %>
+          <%= label_tag :street_adress %>
+          <%= text_field_tag :street_adress, nil, value: @subm[:street_address], name: "sub_merchant[street_address]" %>
+          <%= label_tag :locality %>
+          <%= text_field_tag :locality, nil, value: @subm[:locality], name: "sub_merchant[locality]" %>
+          <%= label_tag :region %>
+          <%= select_tag :region, options_for_select(state_options, @subm[:region]), name: "sub_merchant[region]" %>
+          <br />
+          <%= label_tag :postal_code %>
+          <%= text_field_tag :postal_code, nil, value: @subm[:postal_code], name: "sub_merchant[postal_code]" %>
+          <br />
+          <%= label_tag :payout_type, "How would you like to receive payment?" %>
+          <br />
+
+          <h6> -Bank</h6>
+            <input name="sub_merchant[payout_type]" type="radio" id="direct_deposit_radio_btn" value="bank" onclick="paymentTypeChoice(this);" />
+            <label for="direct_deposit_radio_btn">Direct-Deposit</label><br />
+
+          <h6> -Venmo (Must have Venmo account already set up.)</h6>
+
+            <input name="sub_merchant[payout_type]" type="radio" id="email_radio_btn" value="email" onclick="paymentTypeChoice(this);" />
+            <label for="email_radio_btn">Email</label><br />
+
+            <input name="sub_merchant[payout_type]" type="radio" id="mobile_phone_radio_btn" value="mobile_phone" onclick="paymentTypeChoice(this);" />
+            <label for="mobile_phone_radio_btn">Mobile-Phone</label>
+
+          <div class="bank_div payment_div">
+            <%= label_tag :account_number %>
+            <%= text_field_tag :account_number, nil, name: "sub_merchant[account_number]" %>
+            <%= label_tag :routing_number %>
+            <%= text_field_tag :routing_number, nil, name: "sub_merchant[routing_number]"  %>
+          </div>
+          <div class="email_div payment_div">
+            <%= label_tag :venmo_email %>
+            <%= text_field_tag :venmo_email, nil, name: "sub_merchant[venmo_email]" %>
+          </div>
+          <div class="mobile_phone_div payment_div">
+            <%= label_tag :venmo_mobile_phone %>
+            <%= text_field_tag :venmo_mobile_phone, nil, name: "sub_merchant[venmo_mobile_phone]" %>
+          </div>
+          <br />
+          <br />
+
+          <%= label_tag :registered_business, "Are you a registered business? (Legal Name, Tax-ID)" %>
+          <br />
+            <input name="sub_merchant[registered_business]" type="radio" id="is_registered_radio_btn" value="true", onclick="registeredBusinessChoice(this);" />
+            <label for="is_registered_radio_btn">Yes</label><br />
+
+            <input name="sub_merchant[registered_business]" type="radio" id="isnt_registered_radio_btn" value="false", onclick="registeredBusinessChoice(this);" />
+            <label for="isnt_registered_radio_btn">No</label>
+          <br />
+          <br />
+          <% if @subm[:registered_business] %>
+            <div class="initial_registered_business_div">
+              <%= label_tag :legal_name, "Legal business name" %>
+              <%= text_field_tag :legal_name, nil, name: "sub_merchant[legal_name]", value: @subm[:legal_name] %>
+              <%= label_tag :tax_id %>
+              <%= text_field_tag :tax_id, nil, name: "sub_merchant[tax_id]" %>
+            </div>
+          <% end %>
+          <div class="registered_business_div">
+            <%= label_tag :legal_name, "Legal business name" %>
+            <%= text_field_tag :legal_name, nil, name: "sub_merchant[legal_name]", value: @subm[:legal_name] %>
+            <%= label_tag :tax_id %>
+            <%= text_field_tag :tax_id, nil, name: "sub_merchant[tax_id]" %>
+          </div>
+
+          <div class="braintree_button_div">
+            <button class="button">Submit to Braintree</button><br />
+            <small>Make sure all information is correct before submitting.</small>
+            <small>
+              Yogalit uses Braintree, a division of PayPal, Inc. (Braintree) for payment processing services. By using the Braintree payment processing services you agree to the Braintree Payment Services Agreement available at https://www.braintreepayments.com/legal/gateway-agreement, and the applicable bank agreement available at https://www.braintreepayments.com/legal/bank-agreement.
+            </small>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

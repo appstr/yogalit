@@ -6,7 +6,7 @@
       <p>Last: <%= @teacher[:last_name] %></p>
       <p>Phone: <%= @teacher[:phone] %></p>
       <p>Timezone: <%= @teacher[:timezone] %></p>
-      <p>Description: ...</p>
+      <p>Bio: ...</p>
       <%= link_to "Edit Profile", edit_teacher_path(@teacher) %><br />
       <h4>Sign-In</h4>
       <p>Email: <%= current_user[:email] %></p>
@@ -36,6 +36,26 @@
           <%= text_area_tag :my_biography %>
           <%= submit_tag "Submit", class:"btn" %>
         <% end %>
+      <% end %>
+    </div>
+    <div class="col m4">
+      <h4>Braintree</h4>
+      <h5>Account Status:</h5>
+      <% if !@teacher[:is_verified] %>
+        <p><i class="incomplete">Not-Active</i></p>
+        <p>"Setup Braintree" link available after interview approved.</p>
+      <% elsif @teacher[:is_verified] && !@teacher[:merchant_account_requested] %>
+        <p><i class="incomplete">Not-Active</i></p>
+        <%= link_to "Setup Braintree", new_sub_merchant_path %>
+      <% elsif @teacher[:is_verified] && !@teacher[:merchant_account_id].nil? && @teacher[:merchant_account_denied].nil? %>
+        <p><i class="incomplete">Not-Active</i></p>
+        <p>Waiting on Braintree's response...</p>
+      <% elsif @teacher[:is_verified] && @teacher[:merchant_account_requested] && !@teacher[:merchant_account_denied] %>
+        <p><i class="complete">Active</i></p>
+        <%= link_to "Update Sub-Merchant Info", edit_sub_merchant_path(@teacher) %>
+      <% elsif @teacher[:merchant_account_denied] %>
+        <p>The information sent to Braintree was denied. Please update information based on the errors specified in the email sent to: <%= current_user[:email].capitalize %>.</p>
+        <%= link_to "Update Sub-Merchant Info", edit_sub_merchant_path(@teacher) %>
       <% end %>
     </div>
   <% else %>

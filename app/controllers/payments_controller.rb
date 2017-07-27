@@ -44,10 +44,12 @@ class PaymentsController < ApplicationController
   end
 
   def create
-    if params[:student_timezone].include?("amp;")
-      params[:student_timezone] = params[:student_timezone].split("amp;").join("")
-      params[:teacher_timezone] = params[:teacher_timezone].split("amp;").join("")
-    end
+    # TODO: Remove patch. -Start-
+      if params[:student_timezone].include?("amp;")
+        params[:student_timezone] = params[:student_timezone].split("amp;").join("")
+        params[:teacher_timezone] = params[:teacher_timezone].split("amp;").join("")
+      end
+    # Remove patch. -End-
     @student = Student.where(user_id: current_user).first
     student_email = User.find(@student[:user_id]).email
     @teacher = Teacher.find(params[:id])
@@ -78,7 +80,7 @@ class PaymentsController < ApplicationController
       begin
         payment.save!
       rescue e
-        puts e
+        puts "RAILS_ERROR: #{e}"
       end
       if !create_open_tok_session
         flash[:notice] = "Error!! Please contact Yogalit immediately!"
@@ -104,7 +106,7 @@ class PaymentsController < ApplicationController
       begin
         yoga_session.save!
       rescue e
-        puts e
+        puts "RAILS_ERROR: #{e}"
         flash[:notice] = "Error! Please contact Yogalit immediately!"
         return render json: {success: false}
       end
@@ -142,7 +144,7 @@ class PaymentsController < ApplicationController
         begin
           yoga_session.save!
         rescue e
-          puts e
+          puts "RAILS_ERROR: #{e}"
         end
         flash[:notice] = "Your Yoga Session payment has been refunded successfully!"
       else

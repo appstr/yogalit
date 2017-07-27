@@ -8,7 +8,7 @@
         <p>
           <%= current_user[:email].capitalize %><br />
           Account Status:
-          <% if @teacher[:is_searchable] && @teacher[:is_verified] %>
+          <% if @teacher[:is_searchable] && @teacher[:is_verified] && @teacher[:merchant_account_active] && !@teacher[:vacation_mode] %>
             <span class="account_status">Searchable</span>
           <% else %>
             <span class="account_status">Not Searchable</span>

@@ -24,27 +24,6 @@
           <br />
           <%= f.text_field :phone, required: true, onkeypress: "return isNumber(event);" %>
           <br />
-          <br />
-          <%= f.label :payout_type, "How would you like to receive payment?" %>
-          <br />
-          <h6> -Bank</h6>
-          <input name="teacher[payout_type]" type="radio" id="direct_deposit_radio_btn" value="bank" />
-          <label for="direct_deposit_radio_btn">Direct-Deposit</label><br />
-          <h6> -Venmo (Must have Venmo account already set up.)</h6>
-          <input name="teacher[payout_type]" type="radio" id="email_radio_btn" value="email" />
-          <label for="email_radio_btn">Email</label><br />
-          <input name="teacher[payout_type]" type="radio" id="mobile_phone_radio_btn" value="mobile_phone" />
-          <label for="mobile_phone_radio_btn">Mobile-Phone</label>
-          <br />
-          <br />
-          <%= f.label :registered_business, "Are you a registered business? (Legal Name, Tax-ID)" %>
-          <br />
-          <input name="teacher[registered_business]" type="radio" id="is_registered_radio_btn" value="true" />
-          <label for="is_registered_radio_btn">Yes</label><br />
-          <input name="teacher[registered_business]" type="radio" id="isnt_registered_radio_btn" value="false" />
-          <label for="isnt_registered_radio_btn">No</label>
-          <br />
-          <br />
           <%= f.label :time_zone %>
           <br />
           <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: "Eastern Time (US & Canada)"}, class:"browser-default" %>

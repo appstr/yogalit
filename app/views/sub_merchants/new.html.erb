@@ -6,67 +6,95 @@
         <%= form_tag({controller:"sub_merchants", action:"create"}) do %>
           <h5>Individual's Info</h5>
           <%= label_tag :first_name %>
-          <%= text_field_tag :first_name, nil, value: @teacher[:first_name] %>
+          <%= text_field_tag :first_name, nil, value: @teacher[:first_name], name: "sub_merchant[first_name]" %>
 
           <%= label_tag :last_name %>
-          <%= text_field_tag :last_name, nil, value: @teacher[:last_name] %>
+          <%= text_field_tag :last_name, nil, value: @teacher[:last_name], name: "sub_merchant[last_name]" %>
 
           <%= label_tag :phone %>
-          <%= text_field_tag :phone, nil, value: @teacher[:phone] %>
+          <%= text_field_tag :phone, nil, value: @teacher[:phone], name: "sub_merchant[phone]" %>
 
           <%= label_tag :email %>
-          <%= text_field_tag :email, nil, value: current_user[:email] %>
+          <%= text_field_tag :email, nil, value: current_user[:email], name: "sub_merchant[email]" %>
 
           <%= label_tag :dob_year %>
-          <%= select_tag :dob_year, options_for_select(birth_year_options) %>
+          <%= select_tag :dob_year, options_for_select(birth_year_options), name: "sub_merchant[dob_year]" %>
           <br />
 
           <%= label_tag :dob_month %>
-          <%= select_tag :dob_month, options_for_select(month_exp_options) %>
+          <%= select_tag :dob_month, options_for_select(month_exp_options), name: "sub_merchant[dob_month]" %>
           <br />
 
           <%= label_tag :dob_day %>
-          <%= select_tag :dob_day, options_for_select(thirty_one_day_option) %>
+          <%= select_tag :dob_day, options_for_select(thirty_one_day_option), name: "sub_merchant[dob_day]" %>
           <br />
 
-          <%= label_tag :ssn %>
-          <%= text_field_tag :ssn %>
+          <%= label_tag :ssn, "SSN (Last 4 digits)" %>
+          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]" %>
 
           <%= label_tag :street_address %>
-          <%= text_field_tag :street_address %>
+          <%= text_field_tag :street_address, nil, name: "sub_merchant[street_address]" %>
 
-          <%= label_tag :city %>
-          <%= text_field_tag :city %>
+          <%= label_tag :locality, "City" %>
+          <%= text_field_tag :locality, nil, name: "sub_merchant[locality]" %>
 
-          <%= label_tag :state %>
-          <%= select_tag :state, options_for_select(state_options) %>
+          <%= label_tag :region, "State" %>
+          <%= select_tag :region, options_for_select(state_options), name: "sub_merchant[region]" %>
           <br />
 
-          <%= label_tag :postal %>
-          <%= text_field_tag :postal %>
+          <%= label_tag :postal_code %>
+          <%= text_field_tag :postal_code, nil, name: "sub_merchant[postal_code]" %>
 
-          <% if @teacher[:registered_business] %>
-            <h5>Business's Info</h5>
-            <%= label_tag :legal_name %>
-            <%= text_field_tag :legal_name %>
+          <br />
+          <br />
+          <%= label_tag :payout_type, "How would you like to receive payment?" %>
+          <br />
+          <h6> -Bank</h6>
 
-            <%= label_tag :tax_id, "Tax-ID" %>
-            <%= text_field_tag :tax_id %>
-          <% end %>
+          <input name="sub_merchant[payout_type]" type="radio" id="direct_deposit_radio_btn" value="bank" onclick="paymentTypeChoice(this);" />
+          <label for="direct_deposit_radio_btn">Direct-Deposit</label><br />
 
-          <% if @teacher[:payout_type] == "bank" %>
-            <h5>Banking Info</h5>
-              <%= label_tag :account_number %>
-              <%= text_field_tag :account_number %>
-              <%= label_tag :routing_number %>
-              <%= text_field_tag :routing_number %>
-            <% elsif @teacher[:payout_type] == "mobile_phone" %>
-              <%= label_tag :venmo_mobile_phone %>
-              <%= text_field_tag :venmo_mobile_phone %>
-            <% else %>
-              <%= label_tag :venmo_email %>
-              <%= text_field_tag :venmo_email %>
-          <% end %>
+          <h6> -Venmo (Must have Venmo account already set up.)</h6>
+          <input name="sub_merchant[payout_type]" type="radio" id="email_radio_btn" value="email" onclick="paymentTypeChoice(this);" />
+          <label for="email_radio_btn">Email</label><br />
+
+          <input name="sub_merchant[payout_type]" type="radio" id="mobile_phone_radio_btn" value="mobile_phone" onclick="paymentTypeChoice(this);" />
+          <label for="mobile_phone_radio_btn">Mobile-Phone</label>
+
+          <br />
+          <br />
+          <div class="bank_div payment_div">
+            <%= label_tag :account_number %>
+            <%= text_field_tag :account_number, nil, name: "sub_merchant[account_number]" %>
+            <%= label_tag :routing_number %>
+            <%= text_field_tag :routing_number, nil, name: "sub_merchant[routing_number]"  %>
+          </div>
+          <div class="email_div payment_div">
+            <%= label_tag :venmo_email %>
+            <%= text_field_tag :venmo_email, nil, name: "sub_merchant[venmo_email]" %>
+          </div>
+          <div class="mobile_phone_div payment_div">
+            <%= label_tag :venmo_mobile_phone %>
+            <%= text_field_tag :venmo_mobile_phone, nil, name: "sub_merchant[venmo_mobile_phone]" %>
+          </div>
+
+          <br />
+          <br />
+          <%= label_tag :registered_business, "Are you a registered business? (Legal Name, Tax-ID)" %>
+          <br />
+          <input name="sub_merchant[registered_business]" type="radio" id="is_registered_radio_btn" value="true", onclick="registeredBusinessChoice(this);" />
+          <label for="is_registered_radio_btn">Yes</label><br />
+          <input name="sub_merchant[registered_business]" type="radio" id="isnt_registered_radio_btn" value="false", onclick="registeredBusinessChoice(this);" />
+          <label for="isnt_registered_radio_btn">No</label>
+          <br />
+          <br />
+          <div class="registered_business_div">
+            <%= label_tag :legal_name, "Legal business name" %>
+            <%= text_field_tag :legal_name, nil, name: "sub_merchant[legal_name]" %>
+            <%= label_tag :tax_id %>
+            <%= text_field_tag :tax_id, nil, name: "sub_merchant[tax_id]" %>
+          </div>
+
           <div class="braintree_button_div">
             <button class="button">Submit to Braintree</button><br />
             <small>Make sure all information is correct before submitting.</small>

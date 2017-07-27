@@ -18,6 +18,18 @@ video, img {
   width: 100%;
 }
 
+.incomplete {
+  color: #ff6b6b;
+}
+
+.complete {
+  color: green;
+}
+
+.registered_business_div, .payment_div {
+  display: none;
+}
+
 .hide_greater_than_oet_768 {
   @media(min-width: 768px){
     display: none;

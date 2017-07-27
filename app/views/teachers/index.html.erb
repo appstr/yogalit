@@ -72,7 +72,13 @@
       <h4>Welcome, <%= @teacher[:first_name].capitalize %>!</h4>
       <br />
       <div class="teacher_general_notice_div">
-        <% if @teacher[:is_verified] && @teacher[:is_searchable] %>
+        <% if !@teacher[:merchant_account_requested] %>
+        <!-- Notification indicating the Teacher needs to fill out the Braintree sub-merchant form. -->
+          <h5>After your interview is approved, you will be allowed to create a Braintree Sub-Merchant account through our link.</h5>
+          <h5>Click the 'General' tab on the left and then the link that says 'Setup Braintree'</h5>
+        <% elsif @teacher[:merchant_account_requested] && !@teacher[:merchant_account_active] %>
+          <h5>We are waiting for Braintree to approve your application. Please check back in a couple minutes.</h5>
+        <% elsif @teacher[:is_verified] && @teacher[:is_searchable] && @teacher[:merchant_account_active] %>
           <h5>Your account is searchable!</h5>
           <h5>You have
             <% if @upcoming_yoga_sessions == "no-upcoming-sessions" %>

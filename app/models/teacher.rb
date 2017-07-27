@@ -17,6 +17,7 @@ class Teacher < ActiveRecord::Base
   has_many :reported_yoga_sessions
   has_one :interview_booked_time
   has_one :teacher_price_range
+  has_one :sub_merchant
 
   validates :first_name, format: {with: /\A[a-zA-Z]+\z/, message: "can only contain letters."}
   validates :last_name, format: {with: /\A[a-zA-Z]+\z/, message: "can only contain letters."}
@@ -24,7 +25,6 @@ class Teacher < ActiveRecord::Base
   validates :timezone, presence: true
   validates :certificate, presence: true
   validates :profile_pic, presence: true
-  validates :payout_type, presence: true
 
   has_attached_file :profile_pic,
                 :storage => :s3,
@@ -74,7 +74,7 @@ class Teacher < ActiveRecord::Base
     begin
       teacher.save!
     rescue e
-      puts e
+      puts "RAILS_ERROR: #{e}"
     end
     return val
   end

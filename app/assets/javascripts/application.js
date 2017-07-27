@@ -96,3 +96,19 @@ function timeRangeActiveOption(l){
   $("#time_frame").val(l.value);
   $('#time_frame').material_select();
 }
+
+function paymentTypeChoice(l){
+  $(".payment_div").hide();
+  $(".initial_payment_div").hide();
+  $("."+l.value+"_div").show();
+}
+
+function registeredBusinessChoice(l){
+  console.log(l.value);
+  if(l.value == "true"){
+    $(".registered_business_div").show();
+  }else{
+    $(".registered_business_div").hide();
+  }
+  $(".initial_registered_business_div").hide();
+}

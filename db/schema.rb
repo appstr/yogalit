@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170526031552) do
+ActiveRecord::Schema.define(version: 20170722140829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -92,6 +92,26 @@ ActiveRecord::Schema.define(version: 20170526031552) do
   end
 
   add_index "students", ["user_id"], name: "index_students_on_user_id", using: :btree
+
+  create_table "sub_merchants", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "email"
+    t.string   "phone"
+    t.string   "date_of_birth"
+    t.string   "street_address"
+    t.string   "locality"
+    t.string   "region"
+    t.string   "postal_code"
+    t.string   "payout_type"
+    t.boolean  "registered_business"
+    t.string   "legal_name"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "sub_merchants", ["teacher_id"], name: "index_sub_merchants_on_teacher_id", using: :btree
 
   create_table "teacher_booked_times", force: :cascade do |t|
     t.integer   "teacher_id"
@@ -267,11 +287,10 @@ ActiveRecord::Schema.define(version: 20170526031552) do
     t.boolean  "has_been_blacklisted"
     t.boolean  "blocked"
     t.boolean  "vacation_mode"
-    t.string   "payout_type"
-    t.boolean  "registered_business"
     t.string   "merchant_account_id"
     t.boolean  "merchant_account_requested"
     t.boolean  "merchant_account_active"
+    t.boolean  "merchant_account_denied"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.string   "profile_pic_file_name"
