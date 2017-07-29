@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :users, only: [:index]
   resources :students
   resources :teachers
+  resources :teacher_time_frames
   resources :teacher_monday_time_frames
   resources :teacher_tuesday_time_frames
   resources :teacher_wednesday_time_frames

@@ -104,7 +104,6 @@ function paymentTypeChoice(l){
 }
 
 function registeredBusinessChoice(l){
-  console.log(l.value);
   if(l.value == "true"){
     $(".registered_business_div").show();
   }else{

@@ -48,10 +48,8 @@ body, html {
 
   function checkExpireTime(){
     if(new Date >= new Date("<%= @gmt_end_time %>")){
-      console.log("EXPIRE TIME!");
       window.location.replace("/");
     }
-    console.log(counter);
     counter += 1;
     setTimeout(checkExpireTime, 60000);
   }

@@ -1,33 +1,43 @@
 <div class="row top_row hoo_row hide-on-large-only">
-  <h4>Please list the hours you are available virtually in the <%= @teacher[:timezone] %> timezone</h4>
+  <h4><%= @teacher[:timezone] %> timezone</h4>
   <small>Times left blank are displayed as 'Closed'</small>
+  <br />
+  <br />
   <div class="row">
     <div class="col s6">
       <p>Monday</p>
       <%= form_tag(@teacher_monday_time_frame) do %>
-        <%= label_tag :start_time %>
+        <div class="monday_start_time_div">
+          <%= label_tag :start_time %>
+          <br />
+          <%= select_tag :start_time, options_for_select(time_options), id: "monday_start" %>
+        </div>
         <br />
-        <%= select_tag :start_time, options_for_select(time_options) %>
+        <div class="monday_end_time_div">
+          <%= label_tag :end_time %>
+          <br />
+          <%= select_tag :end_time, options_for_select(time_options), id: "monday_end" %>
+        </div>
         <br />
-        <%= label_tag :end_time %>
-        <br />
-        <%= select_tag :end_time, options_for_select(time_options) %>
-        <br />
-        <%= submit_tag "Submit", class:'btn' %>
+        <p class="btn" onclick="submitHOOdata('monday');">Submit</p>
       <% end %>
     </div>
     <div class="col s6">
       <p>Tuesday</p>
       <%= form_tag(@teacher_tuesday_time_frame) do %>
-        <%= label_tag :start_time %>
+        <div class="tuesday_start_time_div">
+          <%= label_tag :start_time %>
+          <br />
+          <%= select_tag :start_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= select_tag :start_time, options_for_select(time_options) %>
+        <div class="tuesday_end_time_div">
+          <%= label_tag :end_time %>
+          <br />
+          <%= select_tag :end_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= label_tag :end_time %>
-        <br />
-        <%= select_tag :end_time, options_for_select(time_options) %>
-        <br />
-        <%= submit_tag "Submit", class:'btn' %>
+        <p class="btn" onclick="submitHOOdata('tuesday');">Submit</p>
       <% end %>
     </div>
   </div>
@@ -35,29 +45,37 @@
     <div class="col s6">
       <p>Wednesday</p>
       <%= form_tag(@teacher_wednesday_time_frame) do %>
-        <%= label_tag :start_time %>
+        <div class="wednesday_start_time_div">
+          <%= label_tag :start_time %>
+          <br />
+          <%= select_tag :start_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= select_tag :start_time, options_for_select(time_options) %>
+        <div class="wednesday_end_time_div">
+          <%= label_tag :end_time %>
+          <br />
+          <%= select_tag :end_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= label_tag :end_time %>
-        <br />
-        <%= select_tag :end_time, options_for_select(time_options) %>
-        <br />
-        <%= submit_tag "Submit", class:'btn' %>
+        <p class="btn" onclick="submitHOOdata('wednesday');">Submit</p>
       <% end %>
     </div>
     <div class="col s6">
       <p>Thursday</p>
       <%= form_tag(@teacher_thursday_time_frame) do %>
-        <%= label_tag :start_time %>
+        <div class="thursday_start_time_div">
+          <%= label_tag :start_time %>
+          <br />
+          <%= select_tag :start_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= select_tag :start_time, options_for_select(time_options) %>
+        <div class="thursday_end_time_div">
+          <%= label_tag :end_time %>
+          <br />
+          <%= select_tag :end_time, options_for_select(time_options) %>
+        </div>
         <br />
-        <%= label_tag :end_time %>
-        <br />
-        <%= select_tag :end_time, options_for_select(time_options) %>
-        <br />
-        <%= submit_tag "Submit", class:'btn' %>
+        <p class="btn" onclick="submitHOOdata('thursday');">Submit</p>
       <% end %>
     </div>
   </div>
@@ -65,29 +83,37 @@
   <div class="col s6">
     <p>Friday</p>
     <%= form_tag(@teacher_friday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="friday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="friday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('friday');">Submit</p>
     <% end %>
   </div>
   <div class="col s6">
     <p>Saturday</p>
     <%= form_tag(@teacher_saturday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="saturday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="saturday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('saturday');">Submit</p>
     <% end %>
   </div>
 </div>
@@ -95,15 +121,19 @@
   <div class="col s6">
     <p>Sunday</p>
     <%= form_tag(@teacher_sunday_time_frame) do %>
-    <%= label_tag :start_time %>
+    <div class="sunday_start_time_div">
+      <%= label_tag :start_time %>
+      <br />
+      <%= select_tag :start_time, options_for_select(time_options) %>
+    </div>
     <br />
-    <%= select_tag :start_time, options_for_select(time_options) %>
+    <div class="sunday_end_time_div">
+      <%= label_tag :end_time %>
+      <br />
+      <%= select_tag :end_time, options_for_select(time_options) %>
+    </div>
     <br />
-    <%= label_tag :end_time %>
-    <br />
-    <%= select_tag :end_time, options_for_select(time_options) %>
-    <br />
-    <%= submit_tag "Submit", class:'btn' %>
+    <p class="btn" onclick="submitHOOdata('friday');">Submit</p>
     <% end %>
   </div>
 </div>
@@ -111,91 +141,106 @@
 <br />
 <div class="border"></div>
 <h4>My Hours</h4>
-
+<small>*For newly submitted times, refresh page after all times submitted to view 'Delete' links.</small>
+<br />
 <div class="row hoo_row">
   <div class="row">
     <div class="col s6">
       <p>Monday</p>
-      <% @teacher_monday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_monday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="monday_show_times_div">
+        <% @teacher_monday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"monday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
     <div class="col s6">
       <p>Tuesday</p>
-      <% @teacher_tuesday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_tuesday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="tuesday_show_times_div">
+        <% @teacher_tuesday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"tuesday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col s6">
       <p>Wednesday</p>
-      <% @teacher_wednesday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_wednesday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="wednesday_show_times_div">
+        <% @teacher_wednesday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"wednesday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
     <div class="col s6">
       <p>Thursday</p>
-      <% @teacher_thursday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_thursday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="thursday_show_times_div">
+        <% @teacher_thursday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"thursday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col s6">
       <p>Friday</p>
-      <% @teacher_friday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_friday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="friday_show_times_div">
+        <% @teacher_friday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"friday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
     <div class="col s6">
       <p>Saturday</p>
-      <% @teacher_saturday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_saturday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="saturday_show_times_div">
+        <% @teacher_saturday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"saturday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="col s6">
       <p>Sunday</p>
-      <% @teacher_sunday_time_frames.each do |tf| %>
-        <p>
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-          -
-          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-          <%= link_to "Delete", teacher_sunday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-        </p>
-      <% end %>
+      <div class="sunday_show_times_div">
+        <% @teacher_sunday_time_frames.each do |tf| %>
+          <p>
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+            -
+            <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+            <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"sunday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+          </p>
+        <% end %>
+      </div>
     </div>
   </div>
  </div>
@@ -218,57 +263,73 @@
   <div class="col m3">
     <p>Monday</p>
     <%= form_tag(@teacher_monday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="monday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="monday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('monday');">Submit</p>
     <% end %>
   </div>
   <div class="col m3">
     <p>Tuesday</p>
     <%= form_tag(@teacher_tuesday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="tuesday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="tuesday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('tuesday');">Submit</p>
     <% end %>
   </div>
   <div class="col m3">
     <p>Wednesday</p>
     <%= form_tag(@teacher_wednesday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="wednesday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="wednesday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('wednesday');">Submit</p>
     <% end %>
   </div>
   <div class="col m3">
     <p>Thursday</p>
     <%= form_tag(@teacher_thursday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="thursday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="thursday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('thursday');">Submit</p>
     <% end %>
     <br />
     <br />
@@ -278,43 +339,55 @@
   <div class="col m3">
     <p>Friday</p>
     <%= form_tag(@teacher_friday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="friday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="friday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('friday');">Submit</p>
     <% end %>
   </div>
   <div class="col m3">
     <p>Saturday</p>
     <%= form_tag(@teacher_saturday_time_frame) do %>
-      <%= label_tag :start_time %>
+      <div class="saturday_start_time_div">
+        <%= label_tag :start_time %>
+        <br />
+        <%= select_tag :start_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= select_tag :start_time, options_for_select(time_options) %>
+      <div class="saturday_end_time_div">
+        <%= label_tag :end_time %>
+        <br />
+        <%= select_tag :end_time, options_for_select(time_options) %>
+      </div>
       <br />
-      <%= label_tag :end_time %>
-      <br />
-      <%= select_tag :end_time, options_for_select(time_options) %>
-      <br />
-      <%= submit_tag "Submit", class:'btn' %>
+      <p class="btn" onclick="submitHOOdata('saturday');">Submit</p>
     <% end %>
   </div>
   <div class="col m3">
     <p>Sunday</p>
     <%= form_tag(@teacher_sunday_time_frame) do %>
-    <%= label_tag :start_time %>
+    <div class="sunday_start_time_div">
+      <%= label_tag :start_time %>
+      <br />
+      <%= select_tag :start_time, options_for_select(time_options) %>
+    </div>
     <br />
-    <%= select_tag :start_time, options_for_select(time_options) %>
+    <div class="sunday_end_time_div">
+      <%= label_tag :end_time %>
+      <br />
+      <%= select_tag :end_time, options_for_select(time_options) %>
+    </div>
     <br />
-    <%= label_tag :end_time %>
-    <br />
-    <%= select_tag :end_time, options_for_select(time_options) %>
-    <br />
-    <%= submit_tag "Submit", class:'btn' %>
+    <p class="btn" onclick="submitHOOdata('sunday');">Submit</p>
     <% end %>
   </div>
 </div>
@@ -322,50 +395,61 @@
 <br />
 <div class="border"></div>
 <h4>My Hours</h4>
+<small>*For newly submitted times, refresh page after all times submitted to view 'Delete' links.</small>
+<br />
+<br />
 <div class="row hoo_row">
   <div class="col m3">
     <p>Monday</p>
-    <% @teacher_monday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_monday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="monday_show_times_div">
+      <% @teacher_monday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"monday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="col m3">
     <p>Tuesday</p>
-    <% @teacher_tuesday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_tuesday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="tuesday_show_times_div">
+      <% @teacher_tuesday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"tuesday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="col m3">
     <p>Wednesday</p>
-    <% @teacher_wednesday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_wednesday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="wednesday_show_times_div">
+      <% @teacher_wednesday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"wednesday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="col m3">
     <p>Thursday</p>
-    <% @teacher_thursday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_thursday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="thursday_show_times_div">
+      <% @teacher_thursday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"thursday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
 </div>
 <br />
@@ -374,38 +458,72 @@
   <div class="col m2"></div>
   <div class="col m3">
     <p>Friday</p>
-    <% @teacher_friday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_friday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="friday_show_times_div">
+      <% @teacher_friday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week: "friday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="col m3">
     <p>Saturday</p>
-    <% @teacher_saturday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_saturday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="saturday_show_times_div">
+      <% @teacher_saturday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"saturday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
   <div class="col m3">
     <p>Sunday</p>
-    <% @teacher_sunday_time_frames.each do |tf| %>
-      <p>
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
-        -
-        <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
-        <%= link_to "Delete", teacher_sunday_time_frame_path(tf), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
-      </p>
-    <% end %>
+    <div class="sunday_show_times_div">
+      <% @teacher_sunday_time_frames.each do |tf| %>
+        <p>
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].first).in_time_zone(@teacher[:timezone])) %>
+          -
+          <%= sanitize_date_for_time_only(Time.at(tf[:time_range].last).in_time_zone(@teacher[:timezone])) %><br />
+          <%= link_to "Delete", teacher_time_frame_path(id:tf, day_of_week:"sunday"), data:{confirm:"Are you sure you want to delete this time-frame?"}, method: :delete %>
+        </p>
+      <% end %>
+    </div>
   </div>
 </div>
 </div>
 <br />
 <br />
+
+<script type="text/javascript">
+  function submitHOOdata(day_of_week){
+    var start_time = $("."+day_of_week+"_start_time_div").find("ul").find("li.active").find("span").html();
+    var end_time = $("."+day_of_week+"_end_time_div").find("ul").find("li.active").find("span").html();
+    if(start_time == undefined){
+      start_time = "12:00am"
+    }
+    if(end_time == undefined){
+      end_time = "12:00am"
+    }
+    var requestData = {"start_time": start_time, "end_time": end_time, "day_of_week": day_of_week};
+    var url = "/teacher_time_frames";
+    var request = $.ajax({
+      method: "POST",
+      url: url,
+      data: requestData,
+      success: function(result){
+        if(result.success){
+          $("."+day_of_week+"_show_times_div").append("<p>"+start_time+" - "+end_time+"</p>");
+          alert(result.message);
+        }else{
+          alert(result.message);
+        }
+      }
+    });
+  }
+</script>
