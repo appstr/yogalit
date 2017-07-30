@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170722140829) do
+ActiveRecord::Schema.define(version: 20170730145613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,38 @@ ActiveRecord::Schema.define(version: 20170722140829) do
   add_index "ahoy_events", ["time"], name: "index_ahoy_events_on_time", using: :btree
   add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
   add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
+
+  create_table "disbursements", force: :cascade do |t|
+    t.integer  "teacher_id"
+    t.string   "braintree_disbursement_id"
+    t.float    "amount"
+    t.date     "date_of_disbursement"
+    t.boolean  "successful_disbursement"
+    t.string   "exception_message"
+    t.string   "follow_up_action"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "disbursements", ["teacher_id"], name: "index_disbursements_on_teacher_id", using: :btree
+
+  create_table "disputes", force: :cascade do |t|
+    t.integer  "disbursement_id"
+    t.string   "braintree_dispute_id"
+    t.float    "amount_requested"
+    t.date     "received_date"
+    t.date     "reply_date"
+    t.date     "date_opened"
+    t.date     "date_won"
+    t.string   "status"
+    t.string   "reason"
+    t.string   "trans_id"
+    t.float    "trans_amount"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "disputes", ["disbursement_id"], name: "index_disputes_on_disbursement_id", using: :btree
 
   create_table "favorite_teachers", force: :cascade do |t|
     t.integer  "student_id"
@@ -304,6 +336,15 @@ ActiveRecord::Schema.define(version: 20170722140829) do
   end
 
   add_index "teachers", ["user_id"], name: "index_teachers_on_user_id", using: :btree
+
+  create_table "transactions", force: :cascade do |t|
+    t.integer  "disbursement_id"
+    t.string   "trans_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "transactions", ["disbursement_id"], name: "index_transactions_on_disbursement_id", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
     t.integer  "user_id"

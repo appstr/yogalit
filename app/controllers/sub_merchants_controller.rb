@@ -155,15 +155,12 @@ class SubMerchantsController < ApplicationController
     if result.success?
       if @subm.update_attributes(sub_merchant_params)
         @subm[:date_of_birth] = attr_hash[:individual][:date_of_birth]
-        @subm.save!
-        flash[:notice] = "Your information was sent to Braintree successfully!"
-        @teacher[:merchant_account_active] = false
-        @teacher[:merchant_account_denied] = nil
         begin
-          @teacher.save
+          @subm.save
         rescue e
           puts "RAILS_ERROR: #{e}"
         end
+        flash[:notice] = "Your information was sent to Braintree successfully!"
         return redirect_to teachers_path
       else
         flash[:notice] = "Your Braintree information was sent, but we failed to save the record on our server. Please contact Yogalit directly."

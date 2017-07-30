@@ -72,5 +72,7 @@ Rails.application.routes.draw do
 
   # WebHooks
   post '/sub_merchant_webhook', to: 'web_hooks#sub_merchant_webhook', as: :sub_merchant_webhook
+  post '/dispursement_webhook', to: 'web_hooks#dispursement_webhook', as: :dispursement_webhook
+  post '/dispute_webhook', to: 'web_hooks#dispute_webhook', as: :dispute_webhook
 
 end
