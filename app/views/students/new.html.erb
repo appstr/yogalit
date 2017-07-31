@@ -5,22 +5,22 @@
         <br />
         <h4>Finish Registration</h4>
         <%= form_for(@student) do |f| %>
-        <%= f.label :first_name %>
-        <br />
-        <%= f.text_field :first_name, required: true %>
-        <br />
-        <%= f.label :last_name %>
-        <br />
-        <%= f.text_field :last_name %>
-        <br />
-        <%= f.label :phone %>
-        <br />
-        <%= f.text_field :phone %>
-        <br />
-        <br />
-        <div class="continued_registration_btn_div">
-          <button>Complete</button>
-        </div>
+          <%= f.label :first_name %>
+          <br />
+          <%= f.text_field :first_name, required: true %>
+          <br />
+          <%= f.label :last_name %>
+          <br />
+          <%= f.text_field :last_name, required: true %>
+          <br />
+          <%= f.label :phone %>
+          <br />
+          <%= f.text_field :phone, required: true %>
+          <br />
+          <br />
+          <div class="continued_registration_btn_div">
+            <button>Complete</button>
+          </div>
           <br />
         <% end %>
       </div>

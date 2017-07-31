@@ -5,13 +5,13 @@
         <h4 class="text-center">Edit Braintree Information</h4>
         <%= form_tag({controller: "sub_merchants", action: "update"}, method: :put) do %>
           <%= label_tag :first_name %>
-          <%= text_field_tag :first_name, nil, value: @subm[:first_name], name: "sub_merchant[first_name]" %>
+          <%= text_field_tag :first_name, nil, value: @subm[:first_name], name: "sub_merchant[first_name]", required:true %>
           <%= label_tag :last_name %>
-          <%= text_field_tag :last_name, nil, value: @subm[:last_name], name: "sub_merchant[last_name]" %>
+          <%= text_field_tag :last_name, nil, value: @subm[:last_name], name: "sub_merchant[last_name]", required:true %>
           <%= label_tag :email %>
-          <%= text_field_tag :email, nil, value: @subm[:email], name: "sub_merchant[email]" %>
+          <%= text_field_tag :email, nil, value: @subm[:email], name: "sub_merchant[email]", required:true %>
           <%= label_tag :phone %>
-          <%= text_field_tag :phone, nil, value: @subm[:phone], name: "sub_merchant[phone]" %>
+          <%= text_field_tag :phone, nil, value: @subm[:phone], name: "sub_merchant[phone]", required:true %>
           <%= label_tag :dob_year %>
           <%= select_tag :dob_year, options_for_select(birth_year_options, @dob_year) %>
           <br />
@@ -22,16 +22,16 @@
           <%= select_tag :dob_day, options_for_select(thirty_one_day_option, @dob_day) %>
           <br />
           <%= label_tag :ssn, "SSN (Last 4 digits)" %>
-          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]" %>
+          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]", required:true %>
           <%= label_tag :street_adress %>
-          <%= text_field_tag :street_adress, nil, value: @subm[:street_address], name: "sub_merchant[street_address]" %>
+          <%= text_field_tag :street_adress, nil, value: @subm[:street_address], name: "sub_merchant[street_address]", required:true %>
           <%= label_tag :locality %>
-          <%= text_field_tag :locality, nil, value: @subm[:locality], name: "sub_merchant[locality]" %>
+          <%= text_field_tag :locality, nil, value: @subm[:locality], name: "sub_merchant[locality]", required:true %>
           <%= label_tag :region %>
           <%= select_tag :region, options_for_select(state_options, @subm[:region]), name: "sub_merchant[region]" %>
           <br />
           <%= label_tag :postal_code %>
-          <%= text_field_tag :postal_code, nil, value: @subm[:postal_code], name: "sub_merchant[postal_code]" %>
+          <%= text_field_tag :postal_code, nil, value: @subm[:postal_code], name: "sub_merchant[postal_code]", required:true %>
           <br />
           <%= label_tag :payout_type, "How would you like to receive payment?" %>
           <br />

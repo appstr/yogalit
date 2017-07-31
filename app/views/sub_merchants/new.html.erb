@@ -6,16 +6,16 @@
         <%= form_tag({controller:"sub_merchants", action:"create"}) do %>
           <h5>Individual's Info</h5>
           <%= label_tag :first_name %>
-          <%= text_field_tag :first_name, nil, value: @teacher[:first_name], name: "sub_merchant[first_name]" %>
+          <%= text_field_tag :first_name, nil, value: @teacher[:first_name], name: "sub_merchant[first_name]", required: true %>
 
           <%= label_tag :last_name %>
-          <%= text_field_tag :last_name, nil, value: @teacher[:last_name], name: "sub_merchant[last_name]" %>
+          <%= text_field_tag :last_name, nil, value: @teacher[:last_name], name: "sub_merchant[last_name]", required: true %>
 
           <%= label_tag :phone %>
-          <%= text_field_tag :phone, nil, value: @teacher[:phone], name: "sub_merchant[phone]" %>
+          <%= text_field_tag :phone, nil, value: @teacher[:phone], name: "sub_merchant[phone]", required: true %>
 
           <%= label_tag :email %>
-          <%= text_field_tag :email, nil, value: current_user[:email], name: "sub_merchant[email]" %>
+          <%= text_field_tag :email, nil, value: current_user[:email], name: "sub_merchant[email]", required: true %>
 
           <%= label_tag :dob_year %>
           <%= select_tag :dob_year, options_for_select(birth_year_options), name: "sub_merchant[dob_year]" %>
@@ -30,20 +30,20 @@
           <br />
 
           <%= label_tag :ssn, "SSN (Last 4 digits)" %>
-          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]" %>
+          <%= text_field_tag :ssn, nil, name: "sub_merchant[ssn]", required:true %>
 
           <%= label_tag :street_address %>
-          <%= text_field_tag :street_address, nil, name: "sub_merchant[street_address]" %>
+          <%= text_field_tag :street_address, nil, name: "sub_merchant[street_address]", required:true %>
 
           <%= label_tag :locality, "City" %>
-          <%= text_field_tag :locality, nil, name: "sub_merchant[locality]" %>
+          <%= text_field_tag :locality, nil, name: "sub_merchant[locality]", required:true %>
 
           <%= label_tag :region, "State" %>
           <%= select_tag :region, options_for_select(state_options), name: "sub_merchant[region]" %>
           <br />
 
           <%= label_tag :postal_code %>
-          <%= text_field_tag :postal_code, nil, name: "sub_merchant[postal_code]" %>
+          <%= text_field_tag :postal_code, nil, name: "sub_merchant[postal_code]", required:true %>
 
           <br />
           <br />
