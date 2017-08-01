@@ -35,7 +35,7 @@
               <% if v["cancelled"] || v["refunded"] %>
                 Cancelled/Refunded
               <% else %>
-                <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]) %><br />
+                <%= link_to "Join", live_yoga_session_path(id: v["yoga_session_id"]), target: :_blank %><br />
                 <%= link_to "Refund", student_refund_request_path(id: v["yoga_session_id"]), method: :post, data: {confirm: "Are you sure you want a refund?"} %>
               <% end %>
             </td>
