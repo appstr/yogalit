@@ -49,7 +49,7 @@ class UserMailer < ApplicationMailer
 
   def message_to_yogalit(new_message)
     @new_message = new_message
-    mail(to: "yogalityoga@gmail.com", subject: 'New Yogalit Message', from:"Yogalit <no_reply@yogalit.com>")
+    mail(to: "christopherpelnar@gmail.com", subject: 'New Yogalit Message', from:"Yogalit <no_reply@yogalit.com>")
   end
 
   def send_payout_failure_email(yoga_session_id)
