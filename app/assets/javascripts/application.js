@@ -53,13 +53,6 @@ function clickedSidebar(l){
   $("."+l.id).show();
 }
 
-function clickedMobileSidebar(l){
-  $(".sidebar_option_div").css("background-color", "#1c1b1b");
-  $("#"+l.id).css("background-color", "#16e0bd");
-  $(".dashboard_content").hide();
-  $("."+l.id).show();
-}
-
 function dashboardWelcome(){
   $(".sidebar_option_div").css("background-color", "#1c1b1b");
   $(".dashboard_content").hide();
