@@ -1,4 +1,4 @@
-class CreateTeachers < ActiveRecord::Migration
+class CreateTeachers < ActiveRecord::Migration[5.1]
   def change
     create_table :teachers do |t|
       t.belongs_to :user, index: true

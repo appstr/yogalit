@@ -1,4 +1,4 @@
-class CreateTeacherPriceRanges < ActiveRecord::Migration
+class CreateTeacherPriceRanges < ActiveRecord::Migration[5.1]
   def change
     create_table :teacher_price_ranges do |t|
       t.belongs_to :teacher, index: true

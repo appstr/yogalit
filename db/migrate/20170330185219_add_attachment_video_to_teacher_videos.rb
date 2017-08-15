@@ -1,4 +1,4 @@
-class AddAttachmentVideoToTeacherVideos < ActiveRecord::Migration
+class AddAttachmentVideoToTeacherVideos < ActiveRecord::Migration[5.1]
   def self.up
     change_table :teacher_videos do |t|
       t.attachment :video

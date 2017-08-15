@@ -1,4 +1,4 @@
-class CreateYogaTypes < ActiveRecord::Migration
+class CreateYogaTypes < ActiveRecord::Migration[5.1]
   def change
     create_table :yoga_types do |t|
       t.belongs_to :teacher, index: true

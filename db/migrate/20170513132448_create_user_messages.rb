@@ -1,4 +1,4 @@
-class CreateUserMessages < ActiveRecord::Migration
+class CreateUserMessages < ActiveRecord::Migration[5.1]
   def change
     create_table :user_messages do |t|
       t.belongs_to :user, index: true

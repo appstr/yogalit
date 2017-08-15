@@ -44,19 +44,25 @@
 
 <script>
   var button = document.querySelector('#submit-button');
-
   braintree.dropin.create({
     authorization: "<%= @client_token %>",
-    container: '#dropin-container'
+    container: '#dropin-container',
   }, function (createErr, instance) {
     button.addEventListener('click', function () {
       instance.requestPaymentMethod(function (err, payload) {
         var nonce = payload.nonce.toString();
-        var requestData = {"day_of_week": "<%= @search_params['day_of_week'] %>", "duration": "<%= @search_params['duration'] %>", "session_date": "<%= @search_params['session_date'] %>", "student_time_frame": "<%= @search_params['student_time_frame'] %>", "student_timezone": "<%= @search_params['student_timezone'] %>", "teacher_timezone": "<%= @search_params['teacher_timezone'] %>", "yoga_type": "<%= @search_params['yoga_type'] %>", "id": "<%= @search_params['id'] %>", "session_time": "<%= ((@session_time.first)..(@session_time.last)) %>", "price_without_tax": "<%= @price_without_tax %>", "sales_tax": "<%= @sales_tax %>", "total_price": "<%= @total_price %>", "payload_nonce": nonce };
+        var requestData = {
+          "day_of_week": "<%= @search_params['day_of_week'] %>", "duration": "<%= @search_params['duration'] %>",
+          "session_date": "<%= @search_params['session_date'] %>", "student_time_frame": "<%= @search_params['student_time_frame'] %>",
+          "student_timezone": "<%= @search_params['student_timezone'] %>", "teacher_timezone": "<%= @search_params['teacher_timezone'] %>",
+          "yoga_type": "<%= @search_params['yoga_type'] %>", "id": "<%= @search_params['id'] %>", "session_time": "<%= ((@session_time.first)..(@session_time.last)) %>",
+          "price_without_tax": "<%= @price_without_tax %>", "sales_tax": "<%= @sales_tax %>", "total_price": "<%= @total_price %>", "payload_nonce": nonce
+        };
         var url = "/payments";
         var request = $.ajax({
           method: "POST",
           url: url,
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
           data: requestData,
           success: function(result){
             if(result.success){

@@ -1,7 +1,8 @@
 class PaymentsController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token, only: [:create]
+  # skip_before_action :verify_authenticity_token
   require "opentok"
+
   if Rails.env.development?
     Braintree::Configuration.environment = :sandbox
     merchant_id = ENV["braintree_merchant_id_dev"]
@@ -13,6 +14,7 @@ class PaymentsController < ApplicationController
     public_key = ENV["braintree_public_key_prod"]
     private_key = ENV["braintree_private_key_prod"]
   end
+
   Braintree::Configuration.merchant_id = merchant_id
   Braintree::Configuration.public_key = public_key
   Braintree::Configuration.private_key = private_key
@@ -63,13 +65,13 @@ class PaymentsController < ApplicationController
         :submit_for_settlement => true,
         :hold_in_escrow => true
       },
-      :service_fee_amount => @yogalit_fee_amount
+      :service_fee_amount => @yogalit_fee_amount.to_s
     )
     if result.success?
       # Save Payment
       payment = Payment.new
-      payment.teacher_id = @teacher
-      payment.student_id = @student
+      payment.teacher_id = @teacher.id
+      payment.student_id = @student.id
       payment.sales_tax = params[:sales_tax].to_f
       payment.price_without_tax = params[:price_without_tax].to_f
       payment.total_price = params[:total_price].to_f
@@ -77,17 +79,22 @@ class PaymentsController < ApplicationController
       payment[:yogalit_fee_amount] = @yogalit_fee_amount
       payment[:teacher_payout_amount] = @teacher_payout_amount
       payment[:transaction_id] = result.transaction.id
-      begin
-        payment.save!
-      rescue e
-        puts "RAILS_ERROR: #{e}"
+      if !payment.save
+        flash[:notice] = "Error!! Something went wrong please try again."
+        Payment.refund_successful?(payment[:transaction_id])
+        return render json: {success: false}
       end
       if !create_open_tok_session
-        flash[:notice] = "Error!! Please contact Yogalit immediately!"
+        flash[:notice] = "Error!! Something went wrong please try again."
+        Payment.refund_successful?(payment[:transaction_id])
+        payment.delete
         return render json: {success: false}
       end
       if !create_teacher_booked_time
-        flash[:notice] = "Error! Please contact Yogalit immediately!"
+        flash[:notice] = "Error! Something went wrong please try again."
+        Payment.refund_successful?(payment[:transaction_id])
+        payment.delete
+        @booked_time.delete
         return render json: {success: false}
       end
       yoga_session = YogaSession.new
@@ -103,11 +110,12 @@ class PaymentsController < ApplicationController
       yoga_session[:student_requested_refund] = false
       yoga_session[:student_refund_given] = false
       yoga_session[:opentok_session_id] = @opentok_session_id
-      begin
-        yoga_session.save!
-      rescue e
-        puts "RAILS_ERROR: #{e}"
-        flash[:notice] = "Error! Please contact Yogalit immediately!"
+      if !yoga_session.save
+        flash[:notice] = "Error! Something went wrong please try again."
+        Payment.refund_successful?(payment[:transaction_id])
+        payment.delete
+        @booked_time.delete
+        yoga_session.delete
         return render json: {success: false}
       end
       create_favorite_teacher_for_student(yoga_session[:teacher_id], yoga_session[:student_id])
@@ -143,8 +151,8 @@ class PaymentsController < ApplicationController
         yoga_session[:student_refund_given] = true
         begin
           yoga_session.save!
-        rescue e
-          puts "RAILS_ERROR: #{e}"
+        rescue
+          puts "RAILS_ERROR"
         end
         flash[:notice] = "Your Yoga Session payment has been refunded successfully!"
       else
@@ -164,7 +172,7 @@ class PaymentsController < ApplicationController
       yoga_session[:video_under_review] = false
       yoga_session[:video_reviewed] = true
       yoga_session[:student_refund_given] = true
-      if yoga_session.save!
+      if yoga_session.save
         student = Student.find(yoga_session[:student_id])
         student_email = User.find(student[:user_id]).email
         UserMailer.student_refund_email(student_email).deliver_now
@@ -214,7 +222,7 @@ class PaymentsController < ApplicationController
   def get_payout_params
     yogalit_fee_amount = (params[:total_price].to_f * (ENV["yogalit_tax_amount"].to_f * 0.01)).round(2)
     braintree_fee_amount = ((yogalit_fee_amount * 0.29) + 0.30).round(2)
-    @yogalit_fee_amount = yogalit_fee_amount + braintree_fee_amount
+    @yogalit_fee_amount = (yogalit_fee_amount + braintree_fee_amount).round(2)
     @teacher_payout_amount = (params[:total_price].to_f - @yogalit_fee_amount).round(2)
   end
 

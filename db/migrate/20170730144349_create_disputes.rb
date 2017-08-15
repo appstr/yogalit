@@ -1,4 +1,4 @@
-class CreateDisputes < ActiveRecord::Migration
+class CreateDisputes < ActiveRecord::Migration[5.1]
   def change
     create_table :disputes do |t|
       t.belongs_to :disbursement, index: true

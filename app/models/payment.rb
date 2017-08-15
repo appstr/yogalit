@@ -20,7 +20,12 @@ class Payment < ActiveRecord::Base
   Braintree::Configuration.private_key = private_key
 
   def self.refund_successful?(transaction_id)
-    result = Braintree::Transaction.refund(transaction_id)
+    transaction = Braintree::Transaction.find(transaction_id)
+    if transaction.escrow_status == "hold_pending"
+      result = Braintree::Transaction.void(transaction_id)
+    else
+      result = Braintree::Transaction.refund(transaction_id)
+    end
     if result.success?
       return true
     else
@@ -29,27 +34,30 @@ class Payment < ActiveRecord::Base
   end
 
   def self.teacher_payouts
-    booked_times = TeacherBookedTime.where("session_date == ?", Date.today - 3)
+    booked_times = TeacherBookedTime.where("session_date = ?", Date.today - 3)
     return true if booked_times.blank?
     booked_times.each do |bt|
       yoga_session = YogaSession.where(teacher_booked_time_id: bt).first
-      if yoga_session[:video_under_review] == false && yoga_session[:teacher_payout_made] == false && yoga_session[:student_refund_given] == false
+      if !yoga_session[:video_under_review] && !yoga_session[:teacher_payout_made] && !yoga_session[:student_refund_given]
         payment = Payment.find(yoga_session[:payment_id])
-        result = Braintree::Transaction.release_from_escrow(payment[:transaction_id])
-        if result.success?
-           yoga_session[:teacher_payout_made] = true
-           save_yoga_session(yoga_session)
+        trans = Braintree::Transaction.find(payment[:transaction_id])
+        if trans.escrow_status == "held"
+          result = Braintree::Transaction.release_from_escrow(payment[:transaction_id])
+          if result.success?
+             yoga_session[:teacher_payout_made] = true
+             Payment.save_yoga_session(yoga_session, payment)
+          end
         end
       end
     end
     return true
   end
 
-  def save_yoga_session(yoga_session)
+  def self.save_yoga_session(yoga_session, payment)
     begin
       yoga_session.save!
-    rescue e
-      puts "Payout to Yoga-Session-ID: #{yoga_session[:id]} FAILED TO SAVE!!!"
+    rescue
+      puts "RAILS_ERROR: Payout to Yoga-Session-ID: #{yoga_session[:id]}, Transaction-ID: #{payment[:id]} FAILED TO SAVE!!!"
       UserMailer.send_payout_failure_email(yoga_session[:id]).deliver_now
     end
   end

@@ -1,4 +1,4 @@
-class CreateSubMerchants < ActiveRecord::Migration
+class CreateSubMerchants < ActiveRecord::Migration[5.1]
   def change
     create_table :sub_merchants do |t|
       t.belongs_to :teacher, index: true

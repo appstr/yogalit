@@ -1,4 +1,4 @@
-class CreateTeacherMondayTimeFrames < ActiveRecord::Migration
+class CreateTeacherMondayTimeFrames < ActiveRecord::Migration[5.1]
   def change
     create_table :teacher_monday_time_frames do |t|
       t.belongs_to :teacher, index: true

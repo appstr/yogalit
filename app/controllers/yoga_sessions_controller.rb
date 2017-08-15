@@ -4,8 +4,8 @@ class YogaSessionsController < ApplicationController
 
   def live_yoga_session
     if current_user[:teacher_or_student] == "teacher"
-      teacher = Teacher.where(user_id: current_user).first
-      yoga_session = YogaSession.where(teacher_id: teacher, id: params[:id]).first
+      @teacher = Teacher.where(user_id: current_user).first
+      yoga_session = YogaSession.where(teacher_id: @teacher, id: params[:id]).first
       booked_time = TeacherBookedTime.find(yoga_session[:teacher_booked_time_id])
     elsif current_user[:teacher_or_student] == "student"
       student = Student.where(user_id: current_user).first
