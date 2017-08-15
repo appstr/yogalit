@@ -33,11 +33,11 @@ class DeviseRegistrationsController < Devise::RegistrationsController
   end
 
   def sign_up_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :teacher_or_student, :blacklisted)
+    params.require(:user).permit(:email, :password, :password_confirmation, :teacher_or_student, :blacklisted)
   end
 
   def account_update_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :current_password, :teacher_or_student, :blacklisted)
+    params.require(:user).permit(:email, :password, :password_confirmation, :current_password)
   end
 
 end

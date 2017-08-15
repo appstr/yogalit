@@ -1,4 +1,4 @@
-class CreateTeacherHolidays < ActiveRecord::Migration
+class CreateTeacherHolidays < ActiveRecord::Migration[5.1]
   def change
     create_table :teacher_holidays do |t|
       t.belongs_to :teacher, index: true

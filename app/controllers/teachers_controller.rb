@@ -249,7 +249,7 @@ class TeachersController < ApplicationController
     else
       teacher[:is_searchable] = Teacher.qualifies_for_search?(current_user)
     end
-    if teacher.save!
+    if teacher.save
       flash[:notice] = teacher[:vacation_mode] ? "Vacation Mode: ON" : "Vacation Mode: OFF"
     else
       flash[:notice] = "Your account could not be updated. Please try again or contact Yogalit directly."

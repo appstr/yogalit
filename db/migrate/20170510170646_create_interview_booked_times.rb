@@ -1,4 +1,4 @@
-class CreateInterviewBookedTimes < ActiveRecord::Migration
+class CreateInterviewBookedTimes < ActiveRecord::Migration[5.1]
   def change
     create_table :interview_booked_times do |t|
       t.belongs_to :teacher, index: true

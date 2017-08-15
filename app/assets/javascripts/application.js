@@ -11,12 +11,10 @@
 // about supported directives.
 //
 //= require jquery
-//= require ahoy
 //= require jquery_ujs
 //  require turbolinks
 //= require_tree .
 
-ahoy.trackAll();
 
 $(document).ready(function(){
   $('select').material_select();

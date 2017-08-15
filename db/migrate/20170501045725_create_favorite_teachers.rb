@@ -1,4 +1,4 @@
-class CreateFavoriteTeachers < ActiveRecord::Migration
+class CreateFavoriteTeachers < ActiveRecord::Migration[5.1]
   def change
     create_table :favorite_teachers do |t|
       t.belongs_to :student, index: true

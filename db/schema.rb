@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -16,426 +15,355 @@ ActiveRecord::Schema.define(version: 20170730145613) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "ahoy_events", id: :uuid, default: nil, force: :cascade do |t|
-    t.uuid     "visit_id"
-    t.integer  "user_id"
-    t.string   "name"
-    t.text     "properties"
-    t.datetime "time"
-  end
-
-  add_index "ahoy_events", ["time"], name: "index_ahoy_events_on_time", using: :btree
-  add_index "ahoy_events", ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
-  add_index "ahoy_events", ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
-
   create_table "disbursements", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.string   "braintree_disbursement_id"
-    t.float    "amount"
-    t.date     "date_of_disbursement"
-    t.boolean  "successful_disbursement"
-    t.string   "exception_message"
-    t.string   "follow_up_action"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.bigint "teacher_id"
+    t.string "braintree_disbursement_id"
+    t.float "amount"
+    t.date "date_of_disbursement"
+    t.boolean "successful_disbursement"
+    t.string "exception_message"
+    t.string "follow_up_action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_disbursements_on_teacher_id"
   end
-
-  add_index "disbursements", ["teacher_id"], name: "index_disbursements_on_teacher_id", using: :btree
 
   create_table "disputes", force: :cascade do |t|
-    t.integer  "disbursement_id"
-    t.string   "braintree_dispute_id"
-    t.float    "amount_requested"
-    t.date     "received_date"
-    t.date     "reply_date"
-    t.date     "date_opened"
-    t.date     "date_won"
-    t.string   "status"
-    t.string   "reason"
-    t.string   "trans_id"
-    t.float    "trans_amount"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.bigint "disbursement_id"
+    t.string "braintree_dispute_id"
+    t.float "amount_requested"
+    t.date "received_date"
+    t.date "reply_date"
+    t.date "date_opened"
+    t.date "date_won"
+    t.string "status"
+    t.string "reason"
+    t.string "trans_id"
+    t.float "trans_amount"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["disbursement_id"], name: "index_disputes_on_disbursement_id"
   end
-
-  add_index "disputes", ["disbursement_id"], name: "index_disputes_on_disbursement_id", using: :btree
 
   create_table "favorite_teachers", force: :cascade do |t|
-    t.integer  "student_id"
-    t.integer  "teacher_id"
+    t.bigint "student_id"
+    t.bigint "teacher_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_favorite_teachers_on_student_id"
+    t.index ["teacher_id"], name: "index_favorite_teachers_on_teacher_id"
   end
-
-  add_index "favorite_teachers", ["student_id"], name: "index_favorite_teachers_on_student_id", using: :btree
-  add_index "favorite_teachers", ["teacher_id"], name: "index_favorite_teachers_on_teacher_id", using: :btree
 
   create_table "interview_booked_times", force: :cascade do |t|
-    t.integer   "teacher_id"
-    t.date      "interview_date"
+    t.bigint "teacher_id"
+    t.date "interview_date"
     t.tstzrange "time_range"
-    t.string    "teacher_timezone"
-    t.boolean   "teacher_cancelled"
-    t.boolean   "completed"
-    t.datetime  "created_at",        null: false
-    t.datetime  "updated_at",        null: false
+    t.string "teacher_timezone"
+    t.boolean "teacher_cancelled"
+    t.boolean "completed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_interview_booked_times_on_teacher_id"
   end
-
-  add_index "interview_booked_times", ["teacher_id"], name: "index_interview_booked_times_on_teacher_id", using: :btree
 
   create_table "payments", force: :cascade do |t|
-    t.integer  "student_id"
-    t.integer  "teacher_id"
-    t.float    "sales_tax"
-    t.float    "price_without_tax"
-    t.float    "total_price"
-    t.float    "yogalit_tax"
-    t.float    "yogalit_fee_amount"
-    t.float    "teacher_payout_amount"
-    t.string   "transaction_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.bigint "student_id"
+    t.bigint "teacher_id"
+    t.float "sales_tax"
+    t.float "price_without_tax"
+    t.float "total_price"
+    t.float "yogalit_tax"
+    t.float "yogalit_fee_amount"
+    t.float "teacher_payout_amount"
+    t.string "transaction_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_payments_on_student_id"
+    t.index ["teacher_id"], name: "index_payments_on_teacher_id"
   end
-
-  add_index "payments", ["student_id"], name: "index_payments_on_student_id", using: :btree
-  add_index "payments", ["teacher_id"], name: "index_payments_on_teacher_id", using: :btree
 
   create_table "student_reported_yoga_sessions", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.integer  "student_id"
-    t.integer  "yoga_session_id"
-    t.string   "description"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.bigint "teacher_id"
+    t.bigint "student_id"
+    t.bigint "yoga_session_id"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_student_reported_yoga_sessions_on_student_id"
+    t.index ["teacher_id"], name: "index_student_reported_yoga_sessions_on_teacher_id"
+    t.index ["yoga_session_id"], name: "index_student_reported_yoga_sessions_on_yoga_session_id"
   end
-
-  add_index "student_reported_yoga_sessions", ["student_id"], name: "index_student_reported_yoga_sessions_on_student_id", using: :btree
-  add_index "student_reported_yoga_sessions", ["teacher_id"], name: "index_student_reported_yoga_sessions_on_teacher_id", using: :btree
-  add_index "student_reported_yoga_sessions", ["yoga_session_id"], name: "index_student_reported_yoga_sessions_on_yoga_session_id", using: :btree
 
   create_table "students", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone"
-    t.string   "braintree_customer_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.bigint "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.string "braintree_customer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_students_on_user_id"
   end
-
-  add_index "students", ["user_id"], name: "index_students_on_user_id", using: :btree
 
   create_table "sub_merchants", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "email"
-    t.string   "phone"
-    t.string   "date_of_birth"
-    t.string   "street_address"
-    t.string   "locality"
-    t.string   "region"
-    t.string   "postal_code"
-    t.string   "payout_type"
-    t.boolean  "registered_business"
-    t.string   "legal_name"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.bigint "teacher_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "email"
+    t.string "phone"
+    t.string "date_of_birth"
+    t.string "street_address"
+    t.string "locality"
+    t.string "region"
+    t.string "postal_code"
+    t.string "payout_type"
+    t.boolean "registered_business"
+    t.string "legal_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_sub_merchants_on_teacher_id"
   end
-
-  add_index "sub_merchants", ["teacher_id"], name: "index_sub_merchants_on_teacher_id", using: :btree
 
   create_table "teacher_booked_times", force: :cascade do |t|
-    t.integer   "teacher_id"
-    t.integer   "student_id"
-    t.date      "session_date"
+    t.bigint "teacher_id"
+    t.bigint "student_id"
+    t.date "session_date"
     t.tstzrange "time_range"
-    t.integer   "duration"
-    t.string    "student_timezone"
-    t.string    "teacher_timezone"
-    t.boolean   "teacher_rating_given"
-    t.datetime  "created_at",           null: false
-    t.datetime  "updated_at",           null: false
+    t.integer "duration"
+    t.string "student_timezone"
+    t.string "teacher_timezone"
+    t.boolean "teacher_rating_given"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_teacher_booked_times_on_student_id"
+    t.index ["teacher_id"], name: "index_teacher_booked_times_on_teacher_id"
   end
-
-  add_index "teacher_booked_times", ["student_id"], name: "index_teacher_booked_times_on_student_id", using: :btree
-  add_index "teacher_booked_times", ["teacher_id"], name: "index_teacher_booked_times_on_teacher_id", using: :btree
 
   create_table "teacher_emergency_cancels", force: :cascade do |t|
-    t.integer  "teacher_id"
+    t.bigint "teacher_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_emergency_cancels_on_teacher_id"
   end
-
-  add_index "teacher_emergency_cancels", ["teacher_id"], name: "index_teacher_emergency_cancels_on_teacher_id", using: :btree
 
   create_table "teacher_friday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_friday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_friday_time_frames", ["teacher_id"], name: "index_teacher_friday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_holidays", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "holiday_date_range"
-    t.string    "description"
-    t.string    "teacher_timezone"
-    t.datetime  "created_at",         null: false
-    t.datetime  "updated_at",         null: false
+    t.string "description"
+    t.string "teacher_timezone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_holidays_on_teacher_id"
   end
-
-  add_index "teacher_holidays", ["teacher_id"], name: "index_teacher_holidays_on_teacher_id", using: :btree
 
   create_table "teacher_images", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
+    t.bigint "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
+    t.index ["teacher_id"], name: "index_teacher_images_on_teacher_id"
   end
-
-  add_index "teacher_images", ["teacher_id"], name: "index_teacher_images_on_teacher_id", using: :btree
 
   create_table "teacher_monday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_monday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_monday_time_frames", ["teacher_id"], name: "index_teacher_monday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_price_ranges", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.float    "thirty_minute_session"
-    t.float    "sixty_minute_session"
-    t.float    "ninety_minute_session"
-    t.float    "sales_tax"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.bigint "teacher_id"
+    t.float "thirty_minute_session"
+    t.float "sixty_minute_session"
+    t.float "ninety_minute_session"
+    t.float "sales_tax"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_price_ranges_on_teacher_id"
   end
-
-  add_index "teacher_price_ranges", ["teacher_id"], name: "index_teacher_price_ranges_on_teacher_id", using: :btree
 
   create_table "teacher_ratings", force: :cascade do |t|
-    t.integer  "yoga_session_id"
-    t.integer  "teacher_id"
-    t.float    "score"
-    t.string   "comment"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.bigint "yoga_session_id"
+    t.bigint "teacher_id"
+    t.float "score"
+    t.string "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_ratings_on_teacher_id"
+    t.index ["yoga_session_id"], name: "index_teacher_ratings_on_yoga_session_id"
   end
-
-  add_index "teacher_ratings", ["teacher_id"], name: "index_teacher_ratings_on_teacher_id", using: :btree
-  add_index "teacher_ratings", ["yoga_session_id"], name: "index_teacher_ratings_on_yoga_session_id", using: :btree
 
   create_table "teacher_reported_yoga_sessions", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.integer  "student_id"
-    t.integer  "yoga_session_id"
-    t.string   "description"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.bigint "teacher_id"
+    t.bigint "student_id"
+    t.bigint "yoga_session_id"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["student_id"], name: "index_teacher_reported_yoga_sessions_on_student_id"
+    t.index ["teacher_id"], name: "index_teacher_reported_yoga_sessions_on_teacher_id"
+    t.index ["yoga_session_id"], name: "index_teacher_reported_yoga_sessions_on_yoga_session_id"
   end
-
-  add_index "teacher_reported_yoga_sessions", ["student_id"], name: "index_teacher_reported_yoga_sessions_on_student_id", using: :btree
-  add_index "teacher_reported_yoga_sessions", ["teacher_id"], name: "index_teacher_reported_yoga_sessions_on_teacher_id", using: :btree
-  add_index "teacher_reported_yoga_sessions", ["yoga_session_id"], name: "index_teacher_reported_yoga_sessions_on_yoga_session_id", using: :btree
 
   create_table "teacher_saturday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_saturday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_saturday_time_frames", ["teacher_id"], name: "index_teacher_saturday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_sunday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_sunday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_sunday_time_frames", ["teacher_id"], name: "index_teacher_sunday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_thursday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_thursday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_thursday_time_frames", ["teacher_id"], name: "index_teacher_thursday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_tuesday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_tuesday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_tuesday_time_frames", ["teacher_id"], name: "index_teacher_tuesday_time_frames_on_teacher_id", using: :btree
 
   create_table "teacher_videos", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "video_file_name"
-    t.string   "video_content_type"
-    t.integer  "video_file_size"
+    t.bigint "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "video_file_name"
+    t.string "video_content_type"
+    t.integer "video_file_size"
     t.datetime "video_updated_at"
+    t.index ["teacher_id"], name: "index_teacher_videos_on_teacher_id"
   end
-
-  add_index "teacher_videos", ["teacher_id"], name: "index_teacher_videos_on_teacher_id", using: :btree
 
   create_table "teacher_wednesday_time_frames", force: :cascade do |t|
-    t.integer   "teacher_id"
+    t.bigint "teacher_id"
     t.int8range "time_range"
-    t.datetime  "created_at", null: false
-    t.datetime  "updated_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_teacher_wednesday_time_frames_on_teacher_id"
   end
-
-  add_index "teacher_wednesday_time_frames", ["teacher_id"], name: "index_teacher_wednesday_time_frames_on_teacher_id", using: :btree
 
   create_table "teachers", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "phone"
-    t.string   "bio"
-    t.string   "timezone"
-    t.float    "average_rating"
-    t.boolean  "is_searchable"
-    t.boolean  "is_verified"
-    t.boolean  "blacklisted"
-    t.date     "unblacklist_date"
-    t.boolean  "has_been_blacklisted"
-    t.boolean  "blocked"
-    t.boolean  "vacation_mode"
-    t.string   "merchant_account_id"
-    t.boolean  "merchant_account_requested"
-    t.boolean  "merchant_account_active"
-    t.boolean  "merchant_account_denied"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "profile_pic_file_name"
-    t.string   "profile_pic_content_type"
-    t.integer  "profile_pic_file_size"
+    t.bigint "user_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "phone"
+    t.string "bio"
+    t.string "timezone"
+    t.float "average_rating"
+    t.boolean "is_searchable"
+    t.boolean "is_verified"
+    t.boolean "blacklisted"
+    t.date "unblacklist_date"
+    t.boolean "has_been_blacklisted"
+    t.boolean "blocked"
+    t.boolean "vacation_mode"
+    t.string "merchant_account_id"
+    t.boolean "merchant_account_requested"
+    t.boolean "merchant_account_active"
+    t.boolean "merchant_account_denied"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "profile_pic_file_name"
+    t.string "profile_pic_content_type"
+    t.integer "profile_pic_file_size"
     t.datetime "profile_pic_updated_at"
-    t.string   "certificate_file_name"
-    t.string   "certificate_content_type"
-    t.integer  "certificate_file_size"
+    t.string "certificate_file_name"
+    t.string "certificate_content_type"
+    t.integer "certificate_file_size"
     t.datetime "certificate_updated_at"
+    t.index ["user_id"], name: "index_teachers_on_user_id"
   end
-
-  add_index "teachers", ["user_id"], name: "index_teachers_on_user_id", using: :btree
 
   create_table "transactions", force: :cascade do |t|
-    t.integer  "disbursement_id"
-    t.string   "trans_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.bigint "disbursement_id"
+    t.string "trans_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["disbursement_id"], name: "index_transactions_on_disbursement_id"
   end
-
-  add_index "transactions", ["disbursement_id"], name: "index_transactions_on_disbursement_id", using: :btree
 
   create_table "user_messages", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "email"
-    t.string   "subject"
-    t.string   "message"
+    t.bigint "user_id"
+    t.string "email"
+    t.string "subject"
+    t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_messages_on_user_id"
   end
-
-  add_index "user_messages", ["user_id"], name: "index_user_messages_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "teacher_or_student"
-    t.boolean  "blacklisted"
-    t.string   "reset_password_token"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "teacher_or_student"
+    t.boolean "blacklisted"
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer "sign_in_count", default: 0, null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  create_table "visits", id: :uuid, default: nil, force: :cascade do |t|
-    t.uuid     "visitor_id"
-    t.string   "ip"
-    t.text     "user_agent"
-    t.text     "referrer"
-    t.text     "landing_page"
-    t.integer  "user_id"
-    t.string   "referring_domain"
-    t.string   "search_keyword"
-    t.string   "browser"
-    t.string   "os"
-    t.string   "device_type"
-    t.integer  "screen_height"
-    t.integer  "screen_width"
-    t.string   "country"
-    t.string   "region"
-    t.string   "city"
-    t.string   "postal_code"
-    t.decimal  "latitude"
-    t.decimal  "longitude"
-    t.string   "utm_source"
-    t.string   "utm_medium"
-    t.string   "utm_term"
-    t.string   "utm_content"
-    t.string   "utm_campaign"
-    t.datetime "started_at"
-  end
-
-  add_index "visits", ["user_id"], name: "index_visits_on_user_id", using: :btree
-
-  create_table "yoga_sessions", force: :cascade do |t|
-    t.integer  "payment_id"
-    t.integer  "teacher_id"
-    t.integer  "student_id"
-    t.integer  "teacher_booked_time_id"
-    t.string   "opentok_session_id"
-    t.boolean  "teacher_payout_made"
-    t.boolean  "video_under_review"
-    t.boolean  "video_reviewed"
-    t.boolean  "teacher_cancelled_session"
-    t.boolean  "student_requested_refund"
-    t.boolean  "student_refund_given"
-    t.integer  "yoga_type"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
-  end
-
-  add_index "yoga_sessions", ["payment_id"], name: "index_yoga_sessions_on_payment_id", using: :btree
-  add_index "yoga_sessions", ["student_id"], name: "index_yoga_sessions_on_student_id", using: :btree
-  add_index "yoga_sessions", ["teacher_booked_time_id"], name: "index_yoga_sessions_on_teacher_booked_time_id", using: :btree
-  add_index "yoga_sessions", ["teacher_id"], name: "index_yoga_sessions_on_teacher_id", using: :btree
-
-  create_table "yoga_types", force: :cascade do |t|
-    t.integer  "teacher_id"
-    t.integer  "type_id"
+    t.inet "current_sign_in_ip"
+    t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_index "yoga_types", ["teacher_id"], name: "index_yoga_types_on_teacher_id", using: :btree
+  create_table "yoga_sessions", force: :cascade do |t|
+    t.bigint "payment_id"
+    t.bigint "teacher_id"
+    t.bigint "student_id"
+    t.bigint "teacher_booked_time_id"
+    t.string "opentok_session_id"
+    t.boolean "teacher_payout_made"
+    t.boolean "video_under_review"
+    t.boolean "video_reviewed"
+    t.boolean "teacher_cancelled_session"
+    t.boolean "student_requested_refund"
+    t.boolean "student_refund_given"
+    t.integer "yoga_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payment_id"], name: "index_yoga_sessions_on_payment_id"
+    t.index ["student_id"], name: "index_yoga_sessions_on_student_id"
+    t.index ["teacher_booked_time_id"], name: "index_yoga_sessions_on_teacher_booked_time_id"
+    t.index ["teacher_id"], name: "index_yoga_sessions_on_teacher_id"
+  end
+
+  create_table "yoga_types", force: :cascade do |t|
+    t.bigint "teacher_id"
+    t.integer "type_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["teacher_id"], name: "index_yoga_types_on_teacher_id"
+  end
 
 end

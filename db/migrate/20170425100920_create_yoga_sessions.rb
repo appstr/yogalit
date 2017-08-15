@@ -1,4 +1,4 @@
-class CreateYogaSessions < ActiveRecord::Migration
+class CreateYogaSessions < ActiveRecord::Migration[5.1]
   def change
     create_table :yoga_sessions do |t|
       t.belongs_to :payment, index: true
