@@ -162,7 +162,7 @@ class YogaTeacherSearchesController < ApplicationController
         stf = (stf.first..((stf.last - 60) + 86400))
       end
       if stf.first.between?(ttf.first, ttf.last) && stf.last.between?(ttf.first, ttf.last)
-        if stf.first.in_time_zone(teacher[:timezone]) >= Time.now.in_time_zone(teacher[:timezone]) + 3600
+        if stf.first.in_time_zone(teacher[:timezone]) >= Time.now.in_time_zone(teacher[:timezone]) + 900
           return true
         end
       end
