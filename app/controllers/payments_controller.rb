@@ -94,7 +94,7 @@ class PaymentsController < ApplicationController
         flash[:notice] = "Error! Something went wrong please try again."
         Payment.refund_successful?(payment[:transaction_id])
         payment.delete
-        @booked_time.delete
+        @booked_time.delete if !@booked_time.nil?
         return render json: {success: false}
       end
       yoga_session = YogaSession.new
@@ -280,7 +280,10 @@ class PaymentsController < ApplicationController
 
   def get_session_time_range
     session_split = params[:session_time].split("..")
-    @time_range = Time.parse(session_split.first)..(Time.parse(session_split.last) + 60)
+    a = Time.parse(session_split.first)
+    b = (Time.parse(session_split.last) + 60)
+    b = b.tomorrow if a > b
+    @time_range = a..b
   end
 
   def create_open_tok_session
