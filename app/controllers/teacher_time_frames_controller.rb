@@ -58,7 +58,7 @@ class TeacherTimeFramesController < ApplicationController
   end
 
   def get_day_of_week_info(teacher, dow)
-    @year = 2017
+    @year = Time.now.year
     if dow == "monday"
       @month = 03
       @day = 27
