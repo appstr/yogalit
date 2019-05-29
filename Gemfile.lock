@@ -946,7 +946,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
+  aws-sdk (~> 3)
   braintree
   byebug
   coffee-rails

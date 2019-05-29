@@ -170,7 +170,7 @@ ActiveRecord::Schema.define(version: 20170730145613) do
     t.datetime "updated_at", null: false
     t.string "image_file_name"
     t.string "image_content_type"
-    t.integer "image_file_size"
+    t.bigint "image_file_size"
     t.datetime "image_updated_at"
     t.index ["teacher_id"], name: "index_teacher_images_on_teacher_id"
   end
@@ -255,7 +255,7 @@ ActiveRecord::Schema.define(version: 20170730145613) do
     t.datetime "updated_at", null: false
     t.string "video_file_name"
     t.string "video_content_type"
-    t.integer "video_file_size"
+    t.bigint "video_file_size"
     t.datetime "video_updated_at"
     t.index ["teacher_id"], name: "index_teacher_videos_on_teacher_id"
   end
@@ -291,11 +291,11 @@ ActiveRecord::Schema.define(version: 20170730145613) do
     t.datetime "updated_at", null: false
     t.string "profile_pic_file_name"
     t.string "profile_pic_content_type"
-    t.integer "profile_pic_file_size"
+    t.bigint "profile_pic_file_size"
     t.datetime "profile_pic_updated_at"
     t.string "certificate_file_name"
     t.string "certificate_content_type"
-    t.integer "certificate_file_size"
+    t.bigint "certificate_file_size"
     t.datetime "certificate_updated_at"
     t.index ["user_id"], name: "index_teachers_on_user_id"
   end

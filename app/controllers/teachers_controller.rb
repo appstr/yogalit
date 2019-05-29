@@ -153,7 +153,7 @@ class TeachersController < ApplicationController
     @teacher = Teacher.new(teacher_params)
     @teacher[:user_id] = current_user[:id]
     @teacher[:average_rating] = 0
-    if @teacher.valid? && @teacher.save
+    if @teacher.valid? && @teacher.save!
       return google_authorize_teacher
     else
       error_message = ""

@@ -8,12 +8,12 @@ class TeacherImage < ActiveRecord::Base
                 :convert_options => { :all => "-quality 100" },
                 url: ":s3_domain_url",
                 path: "/image/:id/:filename",
-                s3_region: ENV["aws_region"],
+                s3_region: ENV["AWS_REGION"],
                 default_url: "/images/:style/missing.png",
                 :s3_credentials => Proc.new{|a| a.instance.s3_credentials }
 
   def s3_credentials
-    {:bucket => ENV["aws_bucket"], :access_key_id => ENV["aws_access_key_id"], :secret_access_key => ENV["aws_secret_access_key"]}
+    {:bucket => ENV["AWS_BUCKET"], :access_key_id => ENV["AWS_ACCESS_KEY_ID"], :secret_access_key => ENV["AWS_ACCESS_KEY_ID"]}
   end
 
   validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
