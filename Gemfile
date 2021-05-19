@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Back
 gem 'rails', '5.1.3'
 gem 'pg', '~> 0.18'
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 4.3'
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
